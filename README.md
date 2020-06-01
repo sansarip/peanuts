@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sansarip/peanuts.svg?branch=master)](https://travis-ci.org/sansarip/peanuts)
+
 # Peanuts
 
 > Packing peanuts for Reagent/Re-frame components

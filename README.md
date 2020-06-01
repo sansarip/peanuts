@@ -2,13 +2,13 @@
 
 # Peanuts
 
-> Packing peanuts for Reagent/Re-frame components
+> Packing peanuts for Reagent/Re-frame form-1 components
 
 Under development, but almost done! Check back soon! :construction_worker:
 
 # Rationale
 
-I dislike using the below structure to define Reagent components.
+I dislike using the below structure to define Reagent form-1 components.
 
 ```clojure
 ;; Method A

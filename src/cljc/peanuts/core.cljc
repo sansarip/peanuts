@@ -37,8 +37,8 @@
 
 (defn- make-cond-form [[k :as b]]
   `(cond
-     (-> ~k meta :pass) ~k
-     (keyword? ~k) (re-frame.core/subscribe ~b)
+     (-> ~k meta :exempt) ~k
+     (keyword? ~k) (deref (re-frame.core/subscribe ~b))
      :else ~k))
 
 (defn- seq->let-form [args seq*]
@@ -52,10 +52,10 @@
        reverse))
 
 (defn- ->component
-  ([n f {:keys [ignore def? sub-args]}]
+  ([n f {:keys [exempt def? sub-args]}]
    (let [[_ args & body] f
          bindings (->> args
-                       (remove-deep (set ignore))
+                       (remove-deep (set exempt))
                        flatten-maps
                        (seq->let-form sub-args))]
      (cond->> body

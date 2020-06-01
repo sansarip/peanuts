@@ -34,10 +34,10 @@
        flatten
        dedupe))
 
-(defn- make-ignore-options [[mf [_ a :as f]]]
+(defn- make-exempt-options [[mf [_ a :as f]]]
   (-> mf
       (concat (list f))
-      (concat (list {:ignore (->> a get-binding-vars (random-sample 0.5) vec)}))))
+      (concat (list {:exempt (->> a get-binding-vars (random-sample 0.5) vec)}))))
 
 (defn- make-sub-arg-options [[mf [_ a :as f] sa]]
   (let [binding-vars (vec (get-binding-vars a))
@@ -47,7 +47,7 @@
         (concat (list {:sub-args (reduce-kv (fn [c k v] (assoc c (get binding-vars k) v)) {} (vec sub-args))})))))
 
 (defn- get-subargs [bm]
-  (reduce-kv (fn [c k [_ _ _ _ [_ [_ & sub-args]]]]
+  (reduce-kv (fn [c k [_ _ _ _ [_ [_ [_ & sub-args]]]]]
                (assoc c k (or sub-args [])))
              {}
              bm))
@@ -65,7 +65,7 @@
 (def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen fn-body-gen)))
 (def defc-fc-form-gen (gen/fmap (fn [[l s]] (if (= l '(defc)) (concat l (list s)) l))
                                 (gen/tuple (gen/elements ['(fc) '(defc)]) gen/symbol)))
-(def defc-fc-form-with-ignore-opts-gen (gen/fmap make-ignore-options (gen/tuple defc-fc-form-gen fn-form-gen)))
+(def defc-fc-form-with-exempt-opts-gen (gen/fmap make-exempt-options (gen/tuple defc-fc-form-gen fn-form-gen)))
 (def defc-fc-form-with-sub-arg-opts-gen (gen/fmap make-sub-arg-options (gen/tuple defc-fc-form-gen
                                                                                   fn-form-gen
                                                                                   (-> gen/any
@@ -85,12 +85,12 @@
                          (is= 'fn* actual-callable))))
 
 ;; TODO: Use zippers
-(defspec test-defc-and-fc-ignore-specified-args 20
-         (prop/for-all [mf defc-fc-form-with-ignore-opts-gen]
+(defspec test-defc-and-fc-exempt-specified-args 20
+         (prop/for-all [mf defc-fc-form-with-exempt-opts-gen]
                        (let [[t] mf
                              fc? (= t 'fc)
                              defc? (= t 'defc)
-                             {ignored :ignore} (nth mf (if fc? 2 3))
+                             {exempted :exempt} (nth mf (if fc? 2 3))
                              bindings (cond-> mf
                                               '-> macroexpand
                                               fc? (-> second second)
@@ -98,7 +98,7 @@
                              bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
                                                     (-> bindings (nth 2) second)
                                                     (second bindings)))]
-                         (every? (complement (set bindings)) ignored))))
+                         (every? (complement (set bindings)) exempted))))
 
 (defspec test-defc-and-fc-include-specified-sub-args 20
          (prop/for-all [mf defc-fc-form-with-sub-arg-opts-gen]

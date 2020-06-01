@@ -54,6 +54,6 @@ The usage for `defc` is more concise than `fc`, but may not be as IDE friendly.
 (ns my-ns 
   (:require [peanuts.core :refer-macros [defc]])
 
-;; 'a' might be syntax highlighted, as your IDE may think it's undefined
+;; 'a' might be syntax highlighted as your IDE may think it's undefined
 (defc a (fn [& {:keys [a b c]}]))
 ```

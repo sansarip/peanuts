@@ -5,9 +5,11 @@
   (if (coll? thing) (not-empty thing) thing))
 
 (defn- not-empty-vals [thing]
-  (if (map? thing)
-    (some #(not-empty-coll (second %)) thing)
-    (not-empty-coll thing)))
+  (cond
+    (map? thing) (some #(not-empty-coll (second %)) thing)
+    (coll? thing) (not-empty-coll thing)
+    thing thing
+    :else nil))
 
 (defn- binding-vector? [thing]
   (and (vector? thing) (-> thing first symbol?)))
@@ -18,6 +20,7 @@
                     (cond
                       (binding-vector? node) (vec (remove key-set node))
                       (map? node) (apply dissoc node key-set)
+                      (get key-set node) nil
                       :else node)))
        (filterv not-empty-vals)
        (remove #{'&})))

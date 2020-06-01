@@ -47,6 +47,7 @@ The usage for `fc` is simple, but it's a little more verbose than its `defc` cou
 
 The usage for `defc` is more concise than `fc`, but may not be as IDE friendly.
 
-```
+```clojure
+;; 'a' might be syntax highlighted, as your IDE may think it's undefined
 (defc a (fn [& {:keys [a b c]}]))
 ```

@@ -27,7 +27,7 @@ I prefer this...
   [:div "hiccup stuff"])
 ```
 
-In my preferred method (Method B) the subscriptions would happen outside of the components (in a root component/view), and the data would just simply be passed in. The problem with my preferred method is that it can be noticeable affect performance when you have nested components due to Re-frame subscription mumbo-jumbo.
+In my preferred method (Method B) the subscriptions would happen outside of the components (in a root component/view), and the data would just simply be passed in. The problem with my preferred method is that it can noticeably affect performance when you have nested components - due to Re-frame subscription mumbo-jumbo.
 
 Enter Peanuts. Peanut component macros are intended to wrap components implemented like Method B, turning them into components that behave like Method A. The component will use any args passed in as is _or_ subscribe to them if the args are keywords!
 
@@ -114,3 +114,9 @@ Here's an example of caveat #2.
   ;; and not the value of 'b's subscription
   {:sub-args {a [b 1 2 3]}})
 ```
+
+## Suggestions
+
+If you know that certain function parameters in your component will always be constant values/non-subscribeable keywords, then go ahead and exempt them all using the `:exempt` option. This will reduce the size of the function that the macros generate.
+
+Furthermore, it won't hurt to tag args you never want to subscribe to with the `^:exempt` metadata when using components.

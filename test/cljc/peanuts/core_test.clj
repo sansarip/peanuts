@@ -84,8 +84,8 @@
                        (let [[actual-callable] (macroexpand (list 'fc f))]
                          (is= 'fn* actual-callable))))
 
-;; TODO: Use zippers
-(defspec test-defc-and-fc-exempt-specified-args 20
+;; TODO: Use zippers?
+(defspec test-defc-and-fc-exempt-specified-params 20
          (prop/for-all [mf defc-fc-form-with-exempt-opts-gen]
                        (let [[t] mf
                              fc? (= t 'fc)
@@ -114,4 +114,3 @@
                                                                         (-> bindings (nth 2) second)
                                                                         (second bindings))))]
                          (every? (fn [[k v]] (= (get binding-map k) v)) sub-args))))
-

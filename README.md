@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sansarip/peanuts.svg?branch=master)](https://travis-ci.org/sansarip/peanuts)
+[![Build Status](https://travis-ci.org/sansarip/peanuts.svg?branch=master)](https://travis-ci.org/sansarip/peanuts) [![Clojars Project](https://img.shields.io/clojars/v/peanuts.svg)](https://clojars.org/peanuts)
 
 # Peanuts
 

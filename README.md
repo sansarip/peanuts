@@ -1,22 +1,52 @@
-# peanuts
+# Peanuts
 
-A Clojure library designed to ... well, that part is up to you.
+> Packing peanuts for Reagent/Re-frame components
+
+Under development, but almost done! Check back soon! :construction_worker:
+
+# Rationale
+
+I dislike using the below structure to define Reagent components.
+
+```clojure
+;; Method A
+
+(defn my-component []
+  (let [... bunch of re-frame subscriptions here ...]
+    [:hiccup-stuff]))
+```
+
+The functions become impure in that they heavily depend on the Re-frame subscriptions bound in their let-forms. This makes it harder to create a library of components that you can share between projects, and it makes the components harder to test.
+
+I prefer this...
+
+```clojure
+;; Method B
+
+(defn my-component [& {:keys [arg-0 ... arg-n]}]
+  [:hiccup-stuff])
+```
+
+In my preferred method (Method B) the subscriptions would happen outside of the components (in a root component/view), and the data would just simply be passed in. The problem with my preferred method is that it can be costly at a preformance level due to Re-frame subscription mumbo-jumbo.
+
+Enter Peanuts. Peanut component macros are intended to wrap components implemented like Method B, turning them into components that behave like Method A. The component will use any args passed in as is _or_ subscribe to them if the args are keywords!
 
 ## Usage
 
-FIXME
+There are two ways to use peanut components, `fc` and `defc`.
 
-## License
+### fc
 
-Copyright © 2020 FIXME
+The usage for `fc` is simple, but it's a little more verbose than its `defc` counterpart's.
 
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
+```clojure
+(def a (fc (fn [& {:keys [a b c]}])))
+```
 
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+### defc
+
+The usage for `defc` is more concise than `fc`, but may not be as IDE friendly.
+
+```
+(defc a (fn [& {:keys [a b c]}]))
+```

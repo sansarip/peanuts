@@ -4,8 +4,6 @@
 
 > Packing peanuts for Reagent/Re-frame Form-1 components
 
-Under development, but almost done! Check back soon! :construction_worker:
-
 # Rationale
 
 I dislike using the below structure to define Reagent Form-1 components.

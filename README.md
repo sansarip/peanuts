@@ -121,4 +121,4 @@ Here's an example of caveat #2.
 
 If you know that certain function parameters in your component will always be constant values/non-subscribeable keywords, then go ahead and exempt them all using the `:exempt` option. This will reduce the size of the function that the macros generate.
 
-Furthermore, it won't hurt to tag args you never want to subscribe to with the `^:exempt` metadata when using components.
+Furthermore, it won't hurt to tag args you never want to subscribe to with the `^:exempt` metadata.

@@ -20,7 +20,7 @@ This bit is pretty opinionated, but I dislike using the below structure to defin
     [:div "hiccup stuff"]))
 ```
 
-The problem with the above example is that functions defined as such become impure, heavily depending on the Re-frame subscriptions bound in their let-forms - coupling your components and your subscriptions. This makes it harder to create a library of components that you can share between projects, and it makes the components harder to test.
+The problem with the above example is that functions defined as such become impure, heavily depending on the Re-frame subscriptions bound in their let-forms - coupling the components and the subscriptions. This makes it harder to create a library of components that you can share between projects, and it makes the components harder to test.
 
 I prefer this...
 

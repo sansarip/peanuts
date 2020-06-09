@@ -4,7 +4,6 @@
 
 > Packing peanuts for Reagent/Re-frame Form-1 components
 
-In active development :construction_worker:
 
 # Rationale
 

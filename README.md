@@ -1,8 +1,10 @@
-[![Build Status](https://travis-ci.org/sansarip/peanuts.svg?branch=master)](https://travis-ci.org/sansarip/peanuts) [![Clojars Project](https://img.shields.io/clojars/v/peanuts.svg)](https://clojars.org/peanuts)
-
-[![Image from Gyazo](https://i.gyazo.com/b7a7812899f629f60c1e2d698742cd88.png)](https://gyazo.com/b7a7812899f629f60c1e2d698742cd88)
+<a href="http://hoplon.io/">
+  <img src="https://i.gyazo.com/b7a7812899f629f60c1e2d698742cd88.png" alt="Peanuts Logo" title="Peanuts" align="right" width="175px" />
+</a>
 
 # Peanuts
+
+[![Clojars Project](https://img.shields.io/clojars/v/peanuts.svg)](https://clojars.org/peanuts) [![Build Status](https://travis-ci.org/sansarip/peanuts.svg?branch=master)](https://travis-ci.org/sansarip/peanuts) 
 
 > Packing peanuts for Reagent/Re-frame Form-1 components
 

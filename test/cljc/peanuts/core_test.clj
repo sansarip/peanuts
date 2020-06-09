@@ -34,10 +34,16 @@
        flatten
        dedupe))
 
-(defn- make-exempt-options [[mf [_ a :as f]]]
+(defn- make-vector-options [k [mf [_ a :as f]]]
   (-> mf
       (concat (list f))
-      (concat (list {:exempt (->> a get-binding-vars (random-sample 0.5) vec)}))))
+      (concat (list {k (->> a get-binding-vars (random-sample 0.5) vec)}))))
+
+(defn- make-exempt-options [f]
+  (make-vector-options :exempt f))
+
+(defn- make-only-options [f]
+  (make-vector-options :only f))
 
 (defn- make-sub-arg-options [[mf [_ a :as f] sa]]
   (let [binding-vars (vec (get-binding-vars a))
@@ -66,6 +72,7 @@
 (def defc-fc-form-gen (gen/fmap (fn [[l s]] (if (= l '(defc)) (concat l (list s)) l))
                                 (gen/tuple (gen/elements ['(fc) '(defc)]) gen/symbol)))
 (def defc-fc-form-with-exempt-opts-gen (gen/fmap make-exempt-options (gen/tuple defc-fc-form-gen fn-form-gen)))
+(def defc-fc-form-with-only-opts-gen (gen/fmap make-only-options (gen/tuple defc-fc-form-gen fn-form-gen)))
 (def defc-fc-form-with-sub-arg-opts-gen (gen/fmap make-sub-arg-options (gen/tuple defc-fc-form-gen
                                                                                   fn-form-gen
                                                                                   (-> gen/any
@@ -99,6 +106,21 @@
                                                     (-> bindings (nth 2) second)
                                                     (second bindings)))]
                          (every? (complement (set bindings)) exempted))))
+
+(defspec test-defc-and-fc-only-specified-params 20
+         (prop/for-all [mf defc-fc-form-with-only-opts-gen]
+                       (let [[t] mf
+                             fc? (= t 'fc)
+                             defc? (= t 'defc)
+                             {only :only} (nth mf (if fc? 2 3))
+                             bindings (cond-> mf
+                                              '-> macroexpand
+                                              fc? (-> second second)
+                                              defc? (-> (nth 2) (nth 2)))
+                             bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
+                                                    (-> bindings (nth 2) second)
+                                                    (second bindings)))]
+                         (every? (set bindings) only))))
 
 (defspec test-defc-and-fc-include-specified-sub-args 20
          (prop/for-all [mf defc-fc-form-with-sub-arg-opts-gen]

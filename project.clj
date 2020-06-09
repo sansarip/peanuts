@@ -1,4 +1,4 @@
-(defproject peanuts "0.1.0"
+(defproject peanuts "0.2.0"
   :description "Packing peanut macros for Reagent/Re-frame Form-1 components"
   :url "https://github.com/sansarip/peanuts"
   :source-paths ["src/cljc"]

@@ -15,15 +15,43 @@
   (and (vector? thing) (-> thing first symbol?)))
 
 (defn- remove-deep [key-set data]
-  (->> data
-       (w/prewalk (fn [node]
-                    (cond
-                      (binding-vector? node) (vec (remove key-set node))
-                      (map? node) (apply dissoc node key-set)
-                      (get key-set node) nil
-                      :else node)))
-       (filterv not-empty-vals)
-       (remove #{'&})))
+  (if (not-empty key-set)
+    (->> data
+         (w/prewalk (fn [node]
+                      (cond
+                        (binding-vector? node) (vec (remove key-set node))
+                        (map? node) (apply dissoc node key-set)
+                        (get key-set node) nil
+                        :else node)))
+         (filterv not-empty-vals)
+         (remove #{'&}))
+    data))
+
+(defn- symbol-in? [key-set s]
+  (if (symbol? s)
+    (get key-set s)
+    s))
+
+(defn- filter-symbol-keys [key-set m]
+  (reduce-kv (fn [c k v]
+               (if (symbol-in? key-set k)
+                 (assoc c k v)
+                 c))
+             {}
+             m))
+
+(defn- filter-deep [key-set data]
+  (if (not-empty key-set)
+    (->> data
+         (w/prewalk (fn [node]
+                      (cond
+                        (binding-vector? node) (filterv #(symbol-in? key-set %) node)
+                        (map? node) (filter-symbol-keys key-set (dissoc node :or))
+                        (not (symbol-in? key-set node)) nil
+                        :else node)))
+         (filterv not-empty-vals)
+         (remove #{'&}))
+    data))
 
 (defn- flatten-maps [args]
   (->> args
@@ -52,10 +80,12 @@
        reverse))
 
 (defn- ->component
-  ([n f {:keys [exempt def? sub-args]}]
+  ([n f {:keys [exempt only def? sub-args]}]
    (let [[_ args & body] f
          bindings (->> args
                        (remove-deep (set exempt))
+                       vec
+                       (filter-deep (set only))
                        flatten-maps
                        (seq->let-form sub-args))]
      (cond->> body
@@ -69,7 +99,6 @@
   ([f opts]
    (->component nil f (merge opts {:def? false})))
   ([f] `(fc ~f {})))
-
 
 (defmacro defc
   ([n f opts]

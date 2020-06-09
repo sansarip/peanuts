@@ -89,6 +89,21 @@ Arguments can also be exempt dynamically by attaching the `^{:exempt true}` or `
 
 In the above example, `:some-key` will be used as a regular keyword and will be exempt.
 
+#### Only Specified Args
+
+Sometimes it's nice to only have certain args involved with subs and have the rest be untouched. The `:only` option is there for such cases.
+
+```clojure
+(defc my-component
+  (fn [a & {:keys [b c d]}]
+    [:div a b c d])
+  {:only [a c]})
+```
+
+In the example above, only the values of the `a` and `c` will potentially be rebound to subscriptions. 
+One thing to note is that the `:exempt` option always takes precedence over the `:only` option in odd cases where both 
+options are defined with conflicting args. 
+
 #### Subscription Args
 
 Sometimes one may want to pass additional arguments to their subscriptions. The `:sub-args` option assists with this use-case.

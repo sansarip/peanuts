@@ -102,7 +102,7 @@ Sometimes it's nice to only have certain args involved with subs and have the re
   {:only [a c]})
 ```
 
-In the example above, only the values of the `a` and `c` will potentially be rebound to subscriptions. 
+In the example above, only the `a` and `c` args will potentially be rebound to subscriptions. 
 One thing to note is that the `:exempt` option always takes precedence over the `:only` option in odd cases where both 
 options are defined with conflicting args. 
 
@@ -139,3 +139,5 @@ Here's an example of caveat #2.
 If you know that certain function parameters in your component will always be constant values/non-subscribeable keywords, then go ahead and exempt them all using the `:exempt` option. This will reduce the size of the function that the macros generate.
 
 Furthermore, it won't hurt to tag args you never want to subscribe to with the `^:exempt` metadata.
+
+The `:only` option really comes in handy when wrapping existing components with peanut components.

@@ -1,5 +1,5 @@
 <a href="http://hoplon.io/">
-  <img src="https://i.gyazo.com/b7a7812899f629f60c1e2d698742cd88.png" alt="Peanuts Logo" title="Peanuts" align="right" width="200px" />
+  <img src="https://i.gyazo.com/6b5da1a1dfaf5bbdc5e8e478431c6281.png" alt="Peanuts Logo" title="Peanuts" align="right" width="250px" />
 </a>
 
 # Peanuts

@@ -37,6 +37,8 @@ Enter Peanuts. Peanut component macros are intended to wrap components implement
 
 ## Usage
 
+It goes without saying that you should have [re-frame](https://github.com/Day8/re-frame) as a project dependency. You may also need to require it in the namespace(s) you use Peanuts. 
+
 There are two ways to use peanut components, `fc` and `defc`.
 
 #### fc
@@ -133,6 +135,7 @@ Here's an example of caveat #2.
   ;; and not the value of 'b's subscription
   {:sub-args {a [b 1 2 3]}})
 ```
+Note that doing this _will_ couple your component with re-frame subscriptions, so you lose the benefit of being able to pass in raw data instead of a subscription key, but you'll at least still be able to conveniently reuse the component in other projects where namespaces/keys differ!
 
 ## Suggestions
 

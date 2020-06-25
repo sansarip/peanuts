@@ -58,6 +58,12 @@
              {}
              bm))
 
+(defn- get-subfnargs [bm]
+  (reduce-kv (fn [c k [_ _ _ _ _ _ [_ & sub-args]]]
+               (assoc c k (or sub-args [])))
+             {}
+             bm))
+
 (def kv-destructured-map-gen (gen/map
                                (gen/such-that identity gen/symbol)
                                (gen/such-that identity gen/keyword)))
@@ -135,4 +141,19 @@
                              binding-map (get-subargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
                                                                         (-> bindings (nth 2) second)
                                                                         (second bindings))))]
+                         (every? (fn [[k v]] (= (get binding-map k) v)) sub-args))))
+
+(defspec test-defc-and-fc-include-specified-subfn-args 20
+         (prop/for-all [mf defc-fc-form-with-sub-arg-opts-gen]
+                       (let [[t] mf
+                             fc? (= t 'fc)
+                             defc? (= t 'defc)
+                             {sub-args :sub-args} (nth mf (if fc? 2 3))
+                             bindings (cond-> mf
+                                              '-> macroexpand
+                                              fc? (-> second second)
+                                              defc? (-> (nth 2) (nth 2)))
+                             binding-map (get-subfnargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
+                                                                          (-> bindings (nth 2) second)
+                                                                          (second bindings))))]
                          (every? (fn [[k v]] (= (get binding-map k) v)) sub-args))))

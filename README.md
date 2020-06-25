@@ -120,7 +120,7 @@ Sometimes one may want to pass additional arguments to their subscriptions. The 
    :sub-args {b [a 1 2 3]}})
 ```
 
-Notice that in the above example I'm passing both literals and a reference to `a`. There are a couple caveats to note here.
+In the above example, `b` can be a function or a subscription key. Notice that I'm passing both literals and a reference to `a`. There are a couple caveats to note here.
 
 1. If you define a `sub-arg` key that is also exempt, then the exemption takes precedence.
 2. There is an order to things when it comes to the `sub-arg` values. For example, if you define a `sub-arg`, `a`, that uses a component parameter specified later than itself in the function args, `b`, then the value of `b` will be the original value passed into the component and not the subscribed-value.
@@ -135,7 +135,25 @@ Here's an example of caveat #2.
   ;; and not the value of 'b's subscription
   {:sub-args {a [b 1 2 3]}})
 ```
-Note that doing this _will_ couple your component with re-frame subscriptions, so you lose the benefit of being able to pass in raw data instead of a subscription key, but you'll at least still be able to conveniently reuse the component in other projects where namespaces/keys differ!
+
+Below are some examples of using a component that contains `sub-args`:
+
+```clojure
+(defc my-component
+  (fn [id selected?}]
+    [:div {:style {:background-color (if selected? :green :white)}} 
+      "✋"])
+  {:sub-args {selected? [id]}})
+
+;; Use a subscription keyword directly
+[my-component 1 ::subs/selected?]
+
+;; Subscribe in a function
+[my-component 1 (fn [id] @(rf/subscribe [::subs/selected? id]))]
+
+;; Do w/e you want - you don't need Re-frame! This is especially great for testing components!
+[my-component 1 (fn [id] (selected? id))]
+```
 
 ## Suggestions
 

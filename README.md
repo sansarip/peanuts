@@ -120,7 +120,7 @@ Sometimes one may want to pass additional arguments to their subscriptions. The 
    :sub-args {b [a 1 2 3]}})
 ```
 
-In the above example, `b` can be a function or a subscription key. Notice that I'm passing both literals and a reference to `a`. There are a couple caveats to note here.
+In the above example, `b` can be a function or a subscription key. Notice that I'm passing both literals and `a` reference as args for `b`. There are a couple caveats to note here.
 
 1. If you define a `sub-arg` key that is also exempt, then the exemption takes precedence.
 2. There is an order to things when it comes to the `sub-arg` values. For example, if you define a `sub-arg`, `a`, that uses a component parameter specified later than itself in the function args, `b`, then the value of `b` will be the original value passed into the component and not the subscribed-value.

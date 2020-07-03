@@ -63,11 +63,11 @@
        flatten
        dedupe))
 
-(defn- make-cond-form [[binding :as binding-vec]]
+(defn- make-cond-form [[binding & binding-args :as binding-vec]]
   `(cond
      (-> ~binding meta :exempt) ~binding
      (keyword? ~binding) (deref (re-frame.core/subscribe ~binding-vec))
-     (fn? ~binding) ~(seq binding-vec)
+     (and (fn? ~binding) (not-empty ~binding-args)) ~(seq binding-vec)
      :else ~binding))
 
 (defn- seq->let-form [args seq*]

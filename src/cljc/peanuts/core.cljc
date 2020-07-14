@@ -23,8 +23,7 @@
                         (map? node) (apply dissoc node key-set)
                         (get key-set node) nil
                         :else node)))
-         (filterv not-empty-vals)
-         (remove #{'&}))
+         (filterv not-empty-vals))
     data))
 
 (defn- symbol-in? [key-set s]
@@ -88,6 +87,7 @@
                        vec
                        (filter-deep (set only))
                        flatten-maps
+                       (remove #{'&})
                        (seq->let-form sub-args))]
      (cond->> body
               '->> (concat bindings)

@@ -1,4 +1,4 @@
-(defproject peanuts "0.3.4.1"
+(defproject peanuts "0.3.5"
   :description "Packing peanuts for decoupling Reagent Form-1 components from Re-frame subscriptions"
   :url "https://github.com/sansarip/peanuts"
   :source-paths ["src/cljc"]

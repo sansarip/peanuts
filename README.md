@@ -102,7 +102,7 @@ Sometimes it's nice to only have certain args involved with subs and have the re
   {:only [a c]})
 ```
 
-In the example above, only the `a` and `c` args will potentially be rebound to subscriptions. 
+In the example above, only the `a` and `c` args can be rebound to subscriptions. 
 One thing to note is that the `:exempt` option always takes precedence over the `:only` option in odd cases where both 
 options are defined with conflicting args. 
 
@@ -129,7 +129,7 @@ Here's an example of caveat #2.
 (defc my-component
   (fn [a & {:keys [b c d]}]
     [:div a b c])
-  ;; here the value of 'b' will be the original value provided to the component in 'a's supscription args
+  ;; here the value of 'b' will be the original value provided to the component in 'a's subscription args
   ;; and not the value of 'b's subscription
   {:sub-args {a [b 1 2 3]}})
 ```
@@ -138,7 +138,7 @@ Below are some examples of using a component that contains `sub-args`:
 
 ```clojure
 (defc my-component
-  (fn [id selected?}]
+  (fn [id selected?]
     [:div {:style {:background-color (if selected? :green :white)}} 
       "✋"])
   {:sub-args {selected? [id]}})
@@ -151,6 +151,34 @@ Below are some examples of using a component that contains `sub-args`:
 
 ;; Do w/e you want - you don't need Re-frame! This is especially great for testing components!
 [my-component 1 (fn [id] (selected? id))]
+```
+
+#### More on Subscription Functions
+
+As the examples in the previous section show-case, args that are specified in the `sub-args` option - that are functions 
+- will be called. If you want a function to be called without any args passed to it, that's fine too.
+
+```clojure
+(defc my-component
+  (fn [selected?]
+    [:div {:style {:background-color (if selected? :green :white)}} 
+      "✋"])
+  ;; Specifying an empty arg-vector will result in a function being called without any args as one might expect
+  {:sub-args {selected? []}})
+
+[my-component 1 (fn [] @(rf/subscribe [::subs/selected?]))]
+```
+
+An alternative way to have function arguments be called (dynamically) is with the `sub-fn` metadata 
+as demonstrated below.
+
+```clojure
+(defc my-component
+  (fn [selected?]
+    [:div {:style {:background-color (if selected? :green :white)}} 
+      "✋"]))
+
+[my-component 1 ^:sub-fn (fn [] @(rf/subscribe [::subs/selected?]))]
 ```
 
 ## Suggestions

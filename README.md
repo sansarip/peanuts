@@ -155,8 +155,7 @@ Below are some examples of using a component that contains `sub-args`:
 
 #### More on Subscription Functions
 
-As the examples in the previous section show-case, args that are specified in the `sub-args` option - that are functions 
-- will be called. If you want a function to be called without any args passed to it, that's fine too.
+As the examples in the previous section show-case, args that are specified in the `sub-args` option - that are functions - will be called. If you want a function to be called without any args passed to it, that's fine too.
 
 ```clojure
 (defc my-component

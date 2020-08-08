@@ -62,19 +62,20 @@
        flatten
        dedupe))
 
-(defn- make-cond-form [[binding & binding-args :as binding-vec]]
-  `(cond
-     (-> ~binding meta :exempt) ~binding
-     (keyword? ~binding) (deref (re-frame.core/subscribe ~binding-vec))
-     (and (fn? ~binding) (not-empty ~binding-args)) ~(seq binding-vec)
-     :else ~binding))
+(defn- make-cond-form [binding binding-args]
+  (let [binding-vec (into [binding] binding-args)]
+    `(cond
+       (-> ~binding meta :exempt) ~binding
+       (keyword? ~binding) (deref (re-frame.core/subscribe ~binding-vec))
+       (or (-> ~binding meta :sub-fn) (and (fn? ~binding) ~binding-args)) ~(seq binding-vec)
+       :else ~binding)))
 
 (defn- seq->let-form [args seq*]
   (->> seq*
        (reduce (fn [c b]
                  (-> c
                      (conj b)
-                     (conj (make-cond-form (into [b] (get args b))))))
+                     (conj (make-cond-form b (get args b)))))
                [])
        (conj '(let))
        reverse))

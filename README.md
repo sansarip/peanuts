@@ -35,6 +35,8 @@ Enter Peanuts. Peanut component macros are intended to wrap components implement
 
 ## Usage
 
+[![Image from Gyazo](https://i.gyazo.com/57f7521575edbdcd6543f68ed370bf7b.gif)](https://gyazo.com/57f7521575edbdcd6543f68ed370bf7b)
+
 It goes without saying that you should have [re-frame](https://github.com/Day8/re-frame) as a project dependency. You may also need to require it in the namespace(s) you use Peanuts. 
 
 There are two ways to use peanut components, `fc` and `defc`.

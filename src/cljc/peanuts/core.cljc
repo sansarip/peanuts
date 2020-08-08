@@ -20,7 +20,7 @@
          (w/prewalk (fn [node]
                       (cond
                         (binding-vector? node) (vec (remove key-set node))
-                        (map? node) (apply dissoc node key-set)
+                        (map? node) (apply dissoc (dissoc node :or) key-set)
                         (get key-set node) nil
                         :else node)))
          (filterv not-empty-vals))

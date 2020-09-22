@@ -33,6 +33,8 @@ In my preferred method (Method B) the subscriptions would happen outside of the 
 
 Enter Peanuts. Peanut component macros are intended to wrap components implemented like Method B, turning them into components that behave like Method A. The component will use any args passed in as is _or_ subscribe to them if the args are keywords!
 
+I utilize this simple library at my workplace to great extents, and it has really scratched in an itch for me!
+
 ## Usage
 
 [![Image from Gyazo](https://i.gyazo.com/57f7521575edbdcd6543f68ed370bf7b.gif)](https://gyazo.com/57f7521575edbdcd6543f68ed370bf7b)
@@ -70,13 +72,16 @@ The usage for `defc` is more concise than `fc`, but may not be as IDE friendly.
     [:div a b c]))
 ```
 
+If you're using Cursive with IntelliJ as your IDE, then you can resolve `defc` as a `def` and be a-ok! 
+See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wish to do that!
+
 ### Options
 
 Both `fc` and `defc` macros accept an optional options map as a final argument.
 
 #### Exempting Args
 
-There may be instances where a component expects certain args to always be keywords and wishes them to be exempt from being used as subscriptions. In such cases, the `:exempt` option comes in handy.
+There may be instances where a component expects certain args to _always_ be keywords and wishes them to be exempt from being used as subscriptions. In such cases, the `:exempt` option comes in handy.
 
 ```clojure
 (defc my-component

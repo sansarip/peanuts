@@ -33,7 +33,7 @@ In my preferred method (Method B) the subscriptions would happen outside of the 
 
 Enter Peanuts. Peanut component macros are intended to wrap components implemented like Method B, turning them into components that behave like Method A. The component will use any args passed in as is _or_ subscribe to them if the args are keywords!
 
-I utilize this simple library at my workplace to great extents, and it has really scratched in an itch for me!
+I utilize this simple library at my workplace to great extents, and it has really scratched an itch for me!
 
 ## Usage
 

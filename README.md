@@ -51,7 +51,7 @@ The usage for `fc` is simple, but it's a little more verbose than its `defc` cou
 
 ```clojure
 (ns my-ns
-  (:require [peanuts.core :refer-macros [fc]])
+  (:require [peanuts.core :refer [fc]])
 
 (def a 
   (fc (fn [& {:keys [a b c]}] 
@@ -64,7 +64,7 @@ The usage for `defc` is more concise than `fc`, but may not be as IDE friendly.
 
 ```clojure
 (ns my-ns 
-  (:require [peanuts.core :refer-macros [defc]])
+  (:require [peanuts.core :refer [defc]])
 
 ;; Usages of 'a' might be syntax highlighted as your IDE may think it's undefined
 (defc a 

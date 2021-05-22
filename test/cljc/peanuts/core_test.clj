@@ -3,7 +3,7 @@
             [clojure.test.check.clojure-test :refer [defspec]]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]
-            [clojure.test :refer [use-fixtures]]
+            [clojure.test :refer [use-fixtures testing]]
             [peanuts.test-utilities :refer [is=]]))
 
 ;; necessary for macro-expanding to work with `lein test`
@@ -111,7 +111,8 @@
                              bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
                                                     (-> bindings (nth 2) second)
                                                     (second bindings)))]
-                         (every? (complement (set bindings)) exempted))))
+                         (testing "Every exempted arg is not included in the let bindings"
+                           (every? (complement (set bindings)) exempted)))))
 
 (defspec test-defc-and-fc-only-specified-params 20
          (prop/for-all [mf defc-fc-form-with-only-opts-gen]
@@ -126,7 +127,8 @@
                              bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
                                                     (-> bindings (nth 2) second)
                                                     (second bindings)))]
-                         (every? (set bindings) only))))
+                         (testing "Every specified only-arg is included in the let bindings"
+                           (every? (set bindings) only)))))
 
 (defspec test-defc-and-fc-include-specified-sub-args 20
          (prop/for-all [mf defc-fc-form-with-sub-arg-opts-gen]
@@ -141,7 +143,8 @@
                              binding-map (get-subargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
                                                                         (-> bindings (nth 2) second)
                                                                         (second bindings))))]
-                         (every? (fn [[k v]] (= (get binding-map k) v)) sub-args))))
+                         (testing "Every specified subscription arg is included in the let bindings"
+                           (every? (fn [[k v]] (= (get binding-map k) v)) sub-args)))))
 
 (defspec test-defc-and-fc-include-specified-subfn-args 20
          (prop/for-all [mf defc-fc-form-with-sub-arg-opts-gen]
@@ -156,4 +159,5 @@
                              binding-map (get-subfnargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
                                                                           (-> bindings (nth 2) second)
                                                                           (second bindings))))]
-                         (every? (fn [[k v]] (= (get binding-map k) v)) sub-args))))
+                         (testing "Every specified subscription fn is included in the let bindings"
+                           (every? (fn [[k v]] (= (get binding-map k) v)) sub-args)))))

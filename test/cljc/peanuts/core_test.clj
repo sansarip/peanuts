@@ -107,78 +107,80 @@
                    gen/vector))))
 
 (defspec test-defc-always-defs 20
-         (prop/for-all [f fn-form-gen
-                        expected-name gen/symbol]
-                       (let [[actual-callable actual-name] (macroexpand (list 'defc expected-name f))]
-                         (and (is= 'def actual-callable)
-                              (is= expected-name actual-name)))))
+  (prop/for-all [fn-form fn-form-gen
+                 expected-name gen/symbol]
+    (let [[first-symbol actual-name] (macroexpand (list 'defc expected-name fn-form))]
+      (testing "Always defs the correct name"
+        (and (is= 'def first-symbol)
+             (is= expected-name actual-name))))))
 
 (defspec test-fc-always-fns 20
-         (prop/for-all [f fn-form-gen]
-                       (let [[actual-callable] (macroexpand (list 'fc f))]
-                         (is= 'fn* actual-callable))))
+  (prop/for-all [fn-form fn-form-gen]
+    (let [[first-symbol] (macroexpand (list 'fc fn-form))]
+      (testing "First symbol in returned form is fn*"
+        (is= 'fn* first-symbol)))))
 
 ;; TODO: Use zippers?
-(defspec test-defc-and-fc-exempt-specified-params 20
-         (prop/for-all [mf peanuts-form-gen-with-exempt-opt-gen]
-                       (let [[t] mf
-                             fc? (= t 'fc)
-                             defc? (= t 'defc)
-                             {exempted :exempt} (nth mf (if fc? 2 3))
-                             bindings (cond-> mf
-                                              '-> macroexpand
-                                              fc? (-> second second)
-                                              defc? (-> (nth 2) (nth 2)))
-                             bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
-                                                    (-> bindings (nth 2) second)
-                                                    (second bindings)))]
-                         (testing "Every exempted arg is not included in the let bindings"
-                           (every? (complement (set bindings)) exempted)))))
+(defspec test-peanuts-macros-exempt-specified-params 20
+  (prop/for-all [peanuts-form peanuts-form-gen-with-exempt-opt-gen]
+    (let [[peanuts-macro-symbol] peanuts-form
+          fc? (= peanuts-macro-symbol 'fc)
+          defc? (= peanuts-macro-symbol 'defc)
+          {exempted :exempt} (nth peanuts-form (if fc? 2 3))
+          bindings (cond-> peanuts-form
+                           '-> macroexpand
+                           fc? (-> second second)
+                           defc? (-> (nth 2) (nth 2)))
+          bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
+                                 (-> bindings (nth 2) second)
+                                 (second bindings)))]
+      (testing "Every exempted arg is not included in the let bindings"
+        (every? (complement (set bindings)) exempted)))))
 
-(defspec test-defc-and-fc-only-specified-params 20
-         (prop/for-all [mf peanuts-form-with-only-opt-gen]
-                       (let [[t] mf
-                             fc? (= t 'fc)
-                             defc? (= t 'defc)
-                             {only :only} (nth mf (if fc? 2 3))
-                             bindings (cond-> mf
-                                              '-> macroexpand
-                                              fc? (-> second second)
-                                              defc? (-> (nth 2) (nth 2)))
-                             bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
-                                                    (-> bindings (nth 2) second)
-                                                    (second bindings)))]
-                         (testing "Every specified only-arg is included in the let bindings"
-                           (every? (set bindings) only)))))
+(defspec test-peanuts-macros-only-specified-params 20
+  (prop/for-all [peanuts-form peanuts-form-with-only-opt-gen]
+    (let [[peanuts-macro-symbol] peanuts-form
+          fc? (= peanuts-macro-symbol 'fc)
+          defc? (= peanuts-macro-symbol 'defc)
+          {only :only} (nth peanuts-form (if fc? 2 3))
+          bindings (cond-> peanuts-form
+                           '-> macroexpand
+                           fc? (-> second second)
+                           defc? (-> (nth 2) (nth 2)))
+          bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
+                                 (-> bindings (nth 2) second)
+                                 (second bindings)))]
+      (testing "Every specified only-arg is included in the let bindings"
+        (every? (set bindings) only)))))
 
-(defspec test-defc-and-fc-include-specified-sub-args 20
-         (prop/for-all [mf peanuts-form-with-sub-args-opt-gen]
-                       (let [[t] mf
-                             fc? (= t 'fc)
-                             defc? (= t 'defc)
-                             {sub-args :sub-args} (nth mf (if fc? 2 3))
-                             bindings (cond-> mf
-                                              '-> macroexpand
-                                              fc? (-> second second)
-                                              defc? (-> (nth 2) (nth 2)))
-                             binding-map (get-subargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
-                                                                        (-> bindings (nth 2) second)
-                                                                        (second bindings))))]
-                         (testing "Every specified subscription arg is included in the let bindings"
-                           (every? (fn [[k v]] (= (get binding-map k) v)) sub-args)))))
+(defspec test-peanuts-macros-include-specified-sub-args 20
+  (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
+    (let [[peanuts-macro-symbol] peanuts-form
+          fc? (= peanuts-macro-symbol 'fc)
+          defc? (= peanuts-macro-symbol 'defc)
+          {sub-args :sub-args} (nth peanuts-form (if fc? 2 3))
+          bindings (cond-> peanuts-form
+                           '-> macroexpand
+                           fc? (-> second second)
+                           defc? (-> (nth 2) (nth 2)))
+          binding-map (get-subargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
+                                                     (-> bindings (nth 2) second)
+                                                     (second bindings))))]
+      (testing "Every specified subscription arg is included in the let bindings"
+        (every? (fn [[k v]] (= (get binding-map k) v)) sub-args)))))
 
-(defspec test-defc-and-fc-include-specified-subfn-args 20
-         (prop/for-all [mf peanuts-form-with-sub-args-opt-gen]
-                       (let [[t] mf
-                             fc? (= t 'fc)
-                             defc? (= t 'defc)
-                             {sub-args :sub-args} (nth mf (if fc? 2 3))
-                             bindings (cond-> mf
-                                              '-> macroexpand
-                                              fc? (-> second second)
-                                              defc? (-> (nth 2) (nth 2)))
-                             binding-map (get-subfnargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
-                                                                          (-> bindings (nth 2) second)
-                                                                          (second bindings))))]
-                         (testing "Every specified subscription fn is included in the let bindings"
-                           (every? (fn [[k v]] (= (get binding-map k) v)) sub-args)))))
+(defspec test-peanuts-macros-include-specified-subfn-args 20
+  (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
+    (let [[peanuts-macro-symbol] peanuts-form
+          fc? (= peanuts-macro-symbol 'fc)
+          defc? (= peanuts-macro-symbol 'defc)
+          {sub-args :sub-args} (nth peanuts-form (if fc? 2 3))
+          bindings (cond-> peanuts-form
+                           '-> macroexpand
+                           fc? (-> second second)
+                           defc? (-> (nth 2) (nth 2)))
+          binding-map (get-subfnargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
+                                                       (-> bindings (nth 2) second)
+                                                       (second bindings))))]
+      (testing "Every specified subscription fn is included in the let bindings"
+        (every? (fn [[k v]] (= (get binding-map k) v)) sub-args)))))

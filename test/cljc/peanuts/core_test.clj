@@ -25,11 +25,11 @@
                (assoc m :or {}))
        (update* :keys #(mapv first %))))
 
-(defn- get-binding-vars [args]
+(defn- get-bindings [args]
   (->> args
        (mapv (fn [a] (cond (and (map? a) (:keys a)) (:keys a)
                            (map? a) (vec (keys a))
-                           (vector? a) (get-binding-vars a)
+                           (vector? a) (get-bindings a)
                            :else a)))
        flatten
        dedupe))
@@ -46,7 +46,7 @@
         (concat (list opts)))))
 
 (defn- assemble-peanuts-form-with-vector-options [k [partial-peanuts-form [_fn args :as fn-form]]]
-  (let [opts {k (->> args get-binding-vars (random-sample 0.5) vec)}]
+  (let [opts {k (->> args get-bindings (random-sample 0.5) vec)}]
     (assemble-peanuts-form partial-peanuts-form fn-form opts)))
 
 (defn- assemble-peanuts-form-with-exempt-option [f]
@@ -57,22 +57,39 @@
 
 (defn- assemble-peanuts-form-with-sub-args-option
   [[partial-peanuts-form [_fn args :as fn-form] sub-args]]
-  (let [binding-vars (vec (get-binding-vars args))
+  (let [binding-vars (vec (get-bindings args))
         sub-args (-> binding-vars count (take sub-args))
         opts {:sub-args (reduce-kv (fn [c k v] (assoc c (get binding-vars k) v)) {} (vec sub-args))}]
     (assemble-peanuts-form partial-peanuts-form fn-form opts)))
 
-(defn- get-subargs [bindings-map]
+(defn- get-options [[peanuts-macro-symbol _first second* _third fourth*]]
+  (if (= peanuts-macro-symbol 'defc) fourth* second*))
+
+(defn- get-sub-args [bindings-map]
   (reduce-kv (fn [c k [_ _ _ _ [_ [_ [_ & sub-args]]]]]
                (assoc c k (or sub-args [])))
              {}
              bindings-map))
 
-(defn- get-subfnargs [bindings-map]
+(defn- get-subfn-args [bindings-map]
   (reduce-kv (fn [c k [_ _ _ _ _ _ [_ & sub-args]]]
                (assoc c k (or sub-args [])))
              {}
              bindings-map))
+
+(defn- get-let-form [[peanuts-macro-symbol :as peanuts-form]]
+  (cond-> peanuts-form
+          '-> macroexpand
+          (= peanuts-macro-symbol 'fc) (-> second second)
+          (#{'defnc 'defc} peanuts-macro-symbol) (-> (nth 2) (nth 2))))
+
+;; TODO: Use zippers?
+(defn- let-form->bindings [[let-symbol :as let-form] & [as-map?]]
+  (-> let-form
+      (cond-> (= let-symbol 'clojure.core/let) (nth 2))
+      second
+      (cond->> (not as-map?) (take-nth 2)
+               as-map? (apply hash-map))))
 
 (def kv-destructured-map-gen (gen/map
                                (gen/such-that identity gen/symbol)
@@ -87,7 +104,7 @@
 (def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen fn-body-gen)))
 (def partial-peanuts-form-gen (gen/fmap (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
                                         (gen/tuple (gen/elements ['(fc) '(defc) '(defnc)]) gen/symbol)))
-(def peanuts-form-gen-with-exempt-opt-gen
+(def peanuts-form-with-exempt-opt-gen
   (gen/fmap
     assemble-peanuts-form-with-exempt-option
     (gen/tuple partial-peanuts-form-gen fn-form-gen)))
@@ -120,67 +137,36 @@
       (testing "First symbol in returned form is fn*"
         (is= 'fn* first-symbol)))))
 
-;; TODO: Use zippers?
 (defspec test-peanuts-macros-exempt-specified-params 20
-  (prop/for-all [peanuts-form peanuts-form-gen-with-exempt-opt-gen]
-    (let [[peanuts-macro-symbol] peanuts-form
-          fc? (= peanuts-macro-symbol 'fc)
-          defc? (= peanuts-macro-symbol 'defc)
-          {exempted :exempt} (nth peanuts-form (if fc? 2 3))
-          bindings (cond-> peanuts-form
-                           '-> macroexpand
-                           fc? (-> second second)
-                           defc? (-> (nth 2) (nth 2)))
-          bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
-                                 (-> bindings (nth 2) second)
-                                 (second bindings)))]
+  (prop/for-all [peanuts-form peanuts-form-with-exempt-opt-gen]
+    (let [{exempted :exempt} (get-options peanuts-form)
+          bindings (let-form->bindings (get-let-form peanuts-form))]
       (testing "Every exempted arg is not included in the let bindings"
         (every? (complement (set bindings)) exempted)))))
 
 (defspec test-peanuts-macros-only-specified-params 20
   (prop/for-all [peanuts-form peanuts-form-with-only-opt-gen]
-    (let [[peanuts-macro-symbol] peanuts-form
-          fc? (= peanuts-macro-symbol 'fc)
-          defc? (= peanuts-macro-symbol 'defc)
-          {only :only} (nth peanuts-form (if fc? 2 3))
-          bindings (cond-> peanuts-form
-                           '-> macroexpand
-                           fc? (-> second second)
-                           defc? (-> (nth 2) (nth 2)))
-          bindings (take-nth 2 (if (= (first bindings) 'clojure.core/let)
-                                 (-> bindings (nth 2) second)
-                                 (second bindings)))]
+    (let [{only :only} (get-options peanuts-form)
+          bindings (let-form->bindings (get-let-form peanuts-form))]
+      (println "ONLY: " only)
+      (println "BINDINGS: " bindings)
       (testing "Every specified only-arg is included in the let bindings"
         (every? (set bindings) only)))))
 
 (defspec test-peanuts-macros-include-specified-sub-args 20
   (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
-    (let [[peanuts-macro-symbol] peanuts-form
-          fc? (= peanuts-macro-symbol 'fc)
-          defc? (= peanuts-macro-symbol 'defc)
-          {sub-args :sub-args} (nth peanuts-form (if fc? 2 3))
-          bindings (cond-> peanuts-form
-                           '-> macroexpand
-                           fc? (-> second second)
-                           defc? (-> (nth 2) (nth 2)))
-          binding-map (get-subargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
-                                                     (-> bindings (nth 2) second)
-                                                     (second bindings))))]
+    (let [{sub-args :sub-args} (get-options peanuts-form)
+          bindings-map (-> peanuts-form get-let-form
+                           (let-form->bindings :as-map)
+                           get-sub-args)]
       (testing "Every specified subscription arg is included in the let bindings"
-        (every? (fn [[k v]] (= (get binding-map k) v)) sub-args)))))
+        (every? (fn [[k v]] (= (get bindings-map k) v)) sub-args)))))
 
 (defspec test-peanuts-macros-include-specified-subfn-args 20
   (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
-    (let [[peanuts-macro-symbol] peanuts-form
-          fc? (= peanuts-macro-symbol 'fc)
-          defc? (= peanuts-macro-symbol 'defc)
-          {sub-args :sub-args} (nth peanuts-form (if fc? 2 3))
-          bindings (cond-> peanuts-form
-                           '-> macroexpand
-                           fc? (-> second second)
-                           defc? (-> (nth 2) (nth 2)))
-          binding-map (get-subfnargs (apply hash-map (if (= (first bindings) 'clojure.core/let)
-                                                       (-> bindings (nth 2) second)
-                                                       (second bindings))))]
+    (let [{sub-args :sub-args} (get-options peanuts-form)
+          bindings-map (-> peanuts-form get-let-form
+                           (let-form->bindings :as-map)
+                           get-subfn-args)]
       (testing "Every specified subscription fn is included in the let bindings"
-        (every? (fn [[k v]] (= (get binding-map k) v)) sub-args)))))
+        (every? (fn [[k v]] (= (get bindings-map k) v)) sub-args)))))

@@ -61,16 +61,18 @@
         sub-args (-> binding-vars count (take sub-args))
         opts {:sub-args (reduce-kv (fn [c k v] (assoc c (get binding-vars k) v)) {} (vec sub-args))}]
     (assemble-peanuts-form partial-peanuts-form fn-form opts)))
+
+(defn- get-subargs [bindings-map]
   (reduce-kv (fn [c k [_ _ _ _ [_ [_ [_ & sub-args]]]]]
                (assoc c k (or sub-args [])))
              {}
-             bm))
+             bindings-map))
 
-(defn- get-subfnargs [bm]
+(defn- get-subfnargs [bindings-map]
   (reduce-kv (fn [c k [_ _ _ _ _ _ [_ & sub-args]]]
                (assoc c k (or sub-args [])))
              {}
-             bm))
+             bindings-map))
 
 (def kv-destructured-map-gen (gen/map
                                (gen/such-that identity gen/symbol)
@@ -83,15 +85,26 @@
 (def form-gen (gen/fmap (fn [[s v]] (seq (into [s] v))) (gen/tuple gen/symbol (gen/vector gen/any))))
 (def fn-body-gen (gen/vector form-gen))
 (def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen fn-body-gen)))
-(def defc-fc-form-gen (gen/fmap (fn [[l s]] (if (= l '(defc)) (concat l (list s)) l))
-                                (gen/tuple (gen/elements ['(fc) '(defc)]) gen/symbol)))
-(def defc-fc-form-with-exempt-opts-gen (gen/fmap make-exempt-options (gen/tuple defc-fc-form-gen fn-form-gen)))
-(def defc-fc-form-with-only-opts-gen (gen/fmap make-only-options (gen/tuple defc-fc-form-gen fn-form-gen)))
-(def defc-fc-form-with-sub-arg-opts-gen (gen/fmap make-sub-arg-options (gen/tuple defc-fc-form-gen
-                                                                                  fn-form-gen
-                                                                                  (-> gen/any
-                                                                                      gen/vector
-                                                                                      gen/vector))))
+(def partial-peanuts-form-gen (gen/fmap (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
+                                        (gen/tuple (gen/elements ['(fc) '(defc) '(defnc)]) gen/symbol)))
+(def peanuts-form-gen-with-exempt-opt-gen
+  (gen/fmap
+    assemble-peanuts-form-with-exempt-option
+    (gen/tuple partial-peanuts-form-gen fn-form-gen)))
+
+(def peanuts-form-with-only-opt-gen
+  (gen/fmap
+    assemble-peanuts-form-with-only-option
+    (gen/tuple partial-peanuts-form-gen fn-form-gen)))
+
+(def peanuts-form-with-sub-args-opt-gen
+  (gen/fmap
+    assemble-peanuts-form-with-sub-args-option
+    (gen/tuple partial-peanuts-form-gen
+               fn-form-gen
+               (-> gen/any
+                   gen/vector
+                   gen/vector))))
 
 (defspec test-defc-always-defs 20
          (prop/for-all [f fn-form-gen
@@ -107,7 +120,7 @@
 
 ;; TODO: Use zippers?
 (defspec test-defc-and-fc-exempt-specified-params 20
-         (prop/for-all [mf defc-fc-form-with-exempt-opts-gen]
+         (prop/for-all [mf peanuts-form-gen-with-exempt-opt-gen]
                        (let [[t] mf
                              fc? (= t 'fc)
                              defc? (= t 'defc)
@@ -123,7 +136,7 @@
                            (every? (complement (set bindings)) exempted)))))
 
 (defspec test-defc-and-fc-only-specified-params 20
-         (prop/for-all [mf defc-fc-form-with-only-opts-gen]
+         (prop/for-all [mf peanuts-form-with-only-opt-gen]
                        (let [[t] mf
                              fc? (= t 'fc)
                              defc? (= t 'defc)
@@ -139,7 +152,7 @@
                            (every? (set bindings) only)))))
 
 (defspec test-defc-and-fc-include-specified-sub-args 20
-         (prop/for-all [mf defc-fc-form-with-sub-arg-opts-gen]
+         (prop/for-all [mf peanuts-form-with-sub-args-opt-gen]
                        (let [[t] mf
                              fc? (= t 'fc)
                              defc? (= t 'defc)
@@ -155,7 +168,7 @@
                            (every? (fn [[k v]] (= (get binding-map k) v)) sub-args)))))
 
 (defspec test-defc-and-fc-include-specified-subfn-args 20
-         (prop/for-all [mf defc-fc-form-with-sub-arg-opts-gen]
+         (prop/for-all [mf peanuts-form-with-sub-args-opt-gen]
                        (let [[t] mf
                              fc? (= t 'fc)
                              defc? (= t 'defc)

@@ -34,25 +34,33 @@
        flatten
        dedupe))
 
-(defn- make-vector-options [k [mf [_ a :as f]]]
-  (-> mf
-      (concat (list f))
-      (concat (list {k (->> a get-binding-vars (random-sample 0.5) vec)}))))
+(defn- assemble-peanuts-form
+  [[peanuts-macro-symbol :as partial-peanuts-form] [_fn args & body :as fn-form] opts]
+  (if (= peanuts-macro-symbol 'defnc)
+    (-> partial-peanuts-form
+        (concat (list opts))
+        (concat (list args))
+        (concat body))
+    (-> partial-peanuts-form
+        (concat (list fn-form))
+        (concat (list opts)))))
 
-(defn- make-exempt-options [f]
-  (make-vector-options :exempt f))
+(defn- assemble-peanuts-form-with-vector-options [k [partial-peanuts-form [_fn args :as fn-form]]]
+  (let [opts {k (->> args get-binding-vars (random-sample 0.5) vec)}]
+    (assemble-peanuts-form partial-peanuts-form fn-form opts)))
 
-(defn- make-only-options [f]
-  (make-vector-options :only f))
+(defn- assemble-peanuts-form-with-exempt-option [f]
+  (assemble-peanuts-form-with-vector-options :exempt f))
 
-(defn- make-sub-arg-options [[mf [_ a :as f] sa]]
-  (let [binding-vars (vec (get-binding-vars a))
-        sub-args (-> binding-vars count (take sa))]
-    (-> mf
-        (concat (list f))
-        (concat (list {:sub-args (reduce-kv (fn [c k v] (assoc c (get binding-vars k) v)) {} (vec sub-args))})))))
+(defn- assemble-peanuts-form-with-only-option [f]
+  (assemble-peanuts-form-with-vector-options :only f))
 
-(defn- get-subargs [bm]
+(defn- assemble-peanuts-form-with-sub-args-option
+  [[partial-peanuts-form [_fn args :as fn-form] sub-args]]
+  (let [binding-vars (vec (get-binding-vars args))
+        sub-args (-> binding-vars count (take sub-args))
+        opts {:sub-args (reduce-kv (fn [c k v] (assoc c (get binding-vars k) v)) {} (vec sub-args))}]
+    (assemble-peanuts-form partial-peanuts-form fn-form opts)))
   (reduce-kv (fn [c k [_ _ _ _ [_ [_ [_ & sub-args]]]]]
                (assoc c k (or sub-args [])))
              {}

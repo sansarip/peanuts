@@ -37,7 +37,7 @@ I utilize this simple library at my workplace to great extents, and it has reall
 
 ## Usage
 
-[![Image from Gyazo](https://i.gyazo.com/fad16c281607d88bcff4a3a117ce1ccf.gif)](https://gyazo.com/fad16c281607d88bcff4a3a117ce1ccf)
+[![Image from Gyazo](https://i.gyazo.com/541408228e8a9a313b99f5278d59caef.gif)](https://gyazo.com/541408228e8a9a313b99f5278d59caef)
 
 *An example of wrapping an existing Form-1 component*
 

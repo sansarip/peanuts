@@ -75,9 +75,14 @@ See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wi
 
 ### Options
 
-Both `fnc` and `defnc` accept an optional options map as a second argument.
+Both `fnc` and `defnc` accept an optional options map as a second argument exmplained below:
 
-#### Exempting Args
+1. [Exempting Args](#exempting-args)
+2. [Greenlisting Args](#greenlisting-args)
+3. [Subscription Args](#subscription-args)
+4. [Subscription Functions](#subscription-functions)
+
+#### Exempting Args <a name="exempting-args"></a>
 
 There may be instances where a component expects certain args to _always_ be keywords and wishes them to be exempt from being used as subscriptions. In such cases, the `:exempt` option comes in handy.
 
@@ -98,9 +103,9 @@ Arguments can also be exempt dynamically by attaching the `^{:exempt true}` or `
 
 In the above example, `:some-key` will be used as a regular keyword and will be exempt.
 
-#### Only Specified Args
+#### Greenlisting Args <a name="greenlisting-args"></a>
 
-Sometimes it's nice to only have certain args involved with subs and have the rest be untouched. The `:only` option is there for such cases.
+Sometimes it's nice to only have certain args involved with subs and have the rest be untouched. The `:only` option is there for such cases, comparable to a greenlist.
 
 ```clojure
 (defnc my-component
@@ -113,7 +118,7 @@ In the example above, only the `a` and `c` args can be rebound to subscriptions.
 One thing to note is that the `:exempt` option always takes precedence over the `:only` option in odd cases where both 
 options are defined with conflicting args. 
 
-#### Subscription Args
+#### Subscription Args <a name="subscription-args"></a>
 
 Sometimes one may want to pass additional arguments to their subscriptions. The `:sub-args` option assists with this use-case.
 
@@ -160,7 +165,7 @@ Below are some examples of using a component that contains `sub-args`:
 [my-component 1 (fn [id] (selected? id))]
 ```
 
-#### More on Subscription Functions
+#### More on Subscription Functions <a name="subscription-functions"></a>
 
 As the examples in the previous section show-case, args that are specified in the `sub-args` option - that are functions - will be called. If you want a function to be called without any args passed to it, that's fine too.
 

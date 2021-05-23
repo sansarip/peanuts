@@ -115,3 +115,11 @@
           args opts]
       `(defnc ~n {} ~args ~@body))
     (->component n `(fn ~args ~@body) (merge opts {:def? true}))))
+
+(defmacro fnc
+  [opts args & body]
+  (if (vector? opts)
+    (let [body (into [args] body)
+          args opts]
+      `(fnc {} ~args ~@body))
+    (->component nil `(fn ~args ~@body) (merge opts {:def? false}))))

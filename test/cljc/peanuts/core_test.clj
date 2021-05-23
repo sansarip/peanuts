@@ -36,7 +36,7 @@
 
 (defn- assemble-peanuts-form
   [[peanuts-macro-symbol :as partial-peanuts-form] [_fn args & body :as fn-form] opts]
-  (if (= peanuts-macro-symbol 'defnc)
+  (if (#{'defnc 'fnc} peanuts-macro-symbol)
     (-> partial-peanuts-form
         (concat (list opts))
         (concat (list args))
@@ -80,7 +80,7 @@
 (defn- get-let-form [[peanuts-macro-symbol :as peanuts-form]]
   (cond-> peanuts-form
           '-> macroexpand
-          (= peanuts-macro-symbol 'fc) (-> second second)
+          (#{'fnc 'fc} peanuts-macro-symbol) (-> second second)
           (#{'defnc 'defc} peanuts-macro-symbol) (-> (nth 2) (nth 2))))
 
 ;; TODO: Use zippers?
@@ -102,8 +102,12 @@
 (def form-gen (gen/fmap (fn [[s v]] (seq (into [s] v))) (gen/tuple gen/symbol (gen/vector gen/any))))
 (def fn-body-gen (gen/vector form-gen))
 (def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen fn-body-gen)))
-(def partial-peanuts-form-gen (gen/fmap (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
-                                        (gen/tuple (gen/elements ['(fc) '(defc) '(defnc)]) gen/symbol)))
+(def partial-peanuts-form-gen
+  (gen/fmap
+    (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
+    (gen/tuple
+      (gen/elements ['(fc) '(defc) '(fnc) '(defnc)])
+      gen/symbol)))
 (def peanuts-form-with-exempt-opt-gen
   (gen/fmap
     assemble-peanuts-form-with-exempt-option
@@ -148,8 +152,6 @@
   (prop/for-all [peanuts-form peanuts-form-with-only-opt-gen]
     (let [{only :only} (get-options peanuts-form)
           bindings (let-form->bindings (get-let-form peanuts-form))]
-      (println "ONLY: " only)
-      (println "BINDINGS: " bindings)
       (testing "Every specified only-arg is included in the let bindings"
         (every? (set bindings) only)))))
 

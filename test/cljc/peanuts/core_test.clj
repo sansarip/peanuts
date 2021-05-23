@@ -152,8 +152,6 @@
   (prop/for-all [peanuts-form peanuts-form-with-only-opt-gen]
     (let [{only :only} (get-options peanuts-form)
           bindings (let-form->bindings (get-let-form peanuts-form))]
-      (println "ONLY: " only)
-      (println "BINDINGS: " bindings)
       (testing "Every specified only-arg is included in the let bindings"
         (every? (set bindings) only)))))
 

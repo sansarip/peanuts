@@ -43,13 +43,27 @@ I utilize this simple library at my workplace to great extents, and it has reall
 
 It goes without saying that you should have [re-frame](https://github.com/Day8/re-frame) as a project dependency. You may also need to require it in the namespace(s) you use Peanuts. 
 
-The main way to use peanut components is `defnc`. For documentation on the older `defc` and `fc` macros, see [the README here](https://github.com/sansarip/peanuts/tree/7b9718519760c254942c2df2eeb5aa52e4ec2181)
+The main ways to use peanut components are the `fnc` and `defnc` macros. 
+For documentation on the older `defc` and `fc` macros, see [the README here](https://github.com/sansarip/peanuts/tree/7b9718519760c254942c2df2eeb5aa52e4ec2181)
+
+#### fnc
+
+Similar to `fn`
+
+```clojure
+(ns my-ns
+  (:require [peanuts.core :refer [defnc]]))
+
+(def a (fnc [& {:keys [a b c]}] [:div a b c]))
+```
 
 #### defnc
 
+Similar to `defn`
+
 ```clojure
 (ns my-ns 
-  (:require [peanuts.core :refer [defnc]])
+  (:require [peanuts.core :refer [defnc]]))
 
 ;; Usages of 'a' might be syntax highlighted as your IDE may think it's undefined
 (defnc a [& {:keys [a b c]}]
@@ -61,7 +75,7 @@ See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wi
 
 ### Options
 
-`defnc` accepts an optional options map as a the second argument.
+Both `fnc` and `defnc` accept an optional options map as a second argument.
 
 #### Exempting Args
 

@@ -36,7 +36,7 @@
 
 (defn- assemble-peanuts-form
   [[peanuts-macro-symbol :as partial-peanuts-form] [_fn args & body :as fn-form] opts]
-  (if (= peanuts-macro-symbol 'defnc)
+  (if (#{'defnc 'fnc} peanuts-macro-symbol)
     (-> partial-peanuts-form
         (concat (list opts))
         (concat (list args))
@@ -80,7 +80,7 @@
 (defn- get-let-form [[peanuts-macro-symbol :as peanuts-form]]
   (cond-> peanuts-form
           '-> macroexpand
-          (= peanuts-macro-symbol 'fc) (-> second second)
+          (#{'fnc 'fc} peanuts-macro-symbol) (-> second second)
           (#{'defnc 'defc} peanuts-macro-symbol) (-> (nth 2) (nth 2))))
 
 ;; TODO: Use zippers?
@@ -106,7 +106,7 @@
   (gen/fmap
     (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
     (gen/tuple
-      (gen/elements ['(fc) '(defc) '(defnc)])
+      (gen/elements ['(fc) '(defc) '(fnc) '(defnc)])
       gen/symbol)))
 (def peanuts-form-with-exempt-opt-gen
   (gen/fmap

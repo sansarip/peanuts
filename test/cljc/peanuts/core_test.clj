@@ -102,8 +102,12 @@
 (def form-gen (gen/fmap (fn [[s v]] (seq (into [s] v))) (gen/tuple gen/symbol (gen/vector gen/any))))
 (def fn-body-gen (gen/vector form-gen))
 (def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen fn-body-gen)))
-(def partial-peanuts-form-gen (gen/fmap (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
-                                        (gen/tuple (gen/elements ['(fc) '(defc) '(defnc)]) gen/symbol)))
+(def partial-peanuts-form-gen
+  (gen/fmap
+    (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
+    (gen/tuple
+      (gen/elements ['(fc) '(defc) '(defnc)])
+      gen/symbol)))
 (def peanuts-form-with-exempt-opt-gen
   (gen/fmap
     assemble-peanuts-form-with-exempt-option

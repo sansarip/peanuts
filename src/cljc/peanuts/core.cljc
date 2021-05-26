@@ -81,7 +81,7 @@
        reverse))
 
 (defn- ->component
-  ([n f {:keys [exempt only def? sub-args]}]
+  ([n f {:keys [exempt only def? sub-args meta*]}]
    (let [[_ args & body] f
          bindings (->> args
                        (remove-deep (set exempt))
@@ -95,8 +95,7 @@
               '->> list
               '->> (concat `(fn ~args))
               def? list
-              def? (concat `(def ~n))))))
-
+              def? (concat `(def ~(with-meta n (merge (meta n) meta*))))))))
 (defmacro fc
   ([f opts]
    (->component nil f (merge opts {:def? false})))
@@ -109,15 +108,25 @@
    `(defc ~n ~f {})))
 
 (defmacro defnc
-  [n & [opts args & body]]
-  (if (vector? opts)
-    (let [body (into [args] body)
-          args opts]
-      `(defnc ~n {} ~args ~@body))
-    (->component n `(fn ~args ~@body) (merge opts {:def? true}))))
   "Takes similar arguments to defn and returns a similar result.
    The returned function body will be wrapped in a let-block which will
    conditionally rebind the function args to values of re-frame subscriptions."
+  [n & [doc-str opts & [args & body :as args-and-body]]]
+  (cond
+    ;; no doc-str or opts
+    (vector? doc-str) (let [args doc-str
+                            body (into [opts] args-and-body)]
+                        `(defnc ~n nil {} ~args ~@body))
+    ;; opts, but no doc-str
+    (map? doc-str) (let [opts doc-str
+                         args opts
+                         body args-and-body]
+                     `(defnc ~n nil ~opts ~args ~@body))
+    ;; doc-str, but not opts
+    (vector? opts) (let [args opts
+                         body args-and-body]
+                     `(defnc ~n ~doc-str {} ~args ~@body))
+    :else (->component n `(fn ~args ~@body) (merge opts {:def? true :meta* {:doc doc-str}}))))
 
 (defmacro fnc
   "Returns an fn form.

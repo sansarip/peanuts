@@ -81,7 +81,7 @@
        reverse))
 
 (defn- ->component
-  ([n f {:keys [exempt only def? sub-args meta*]}]
+  ([n f {:keys [exempt only def? sub-args] :as opts}]
    (let [[_ args & body] f
          bindings (->> args
                        (remove-deep (set exempt))
@@ -89,13 +89,14 @@
                        (filter-deep (set only))
                        flatten-maps
                        (remove #{'&})
-                       (seq->let-form sub-args))]
+                       (seq->let-form sub-args))
+         meta* (dissoc opts :exempt :only :def? :sub-args)]
      (cond->> body
               '->> (concat bindings)
               '->> list
               '->> (concat `(fn ~args))
               def? list
-              def? (concat `(def ~(with-meta n (merge (meta n) meta*))))))))
+              def? (concat `(def ~(with-meta n (merge meta* (meta n)))))))))
 (defmacro fc
   ([f opts]
    (->component nil f (merge opts {:def? false})))
@@ -126,7 +127,7 @@
     (vector? opts) (let [args opts
                          body args-and-body]
                      `(defnc ~n ~doc-str {} ~args ~@body))
-    :else (->component n `(fn ~args ~@body) (merge opts {:def? true :meta* {:doc doc-str}}))))
+            (merge opts {:def? true} (if doc-str {:doc doc-str})))))
 
 (defmacro fnc
   "Returns an fn form.

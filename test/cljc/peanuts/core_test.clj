@@ -3,7 +3,7 @@
             [clojure.test.check.clojure-test :refer [defspec]]
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]
-            [clojure.test :refer [use-fixtures testing]]
+            [clojure.test :refer [is use-fixtures testing deftest]]
             [peanuts.test-utilities :refer [is=]]))
 
 ;; necessary for macro-expanding to work with `lein test`
@@ -126,6 +126,17 @@
                (-> gen/any
                    gen/vector
                    gen/vector))))
+
+(deftest test-noop-peanuts-macro
+  (defc defc** (fn []))
+  (defnc defnc** [])
+  (let [fc** (fc (fn []))
+        fnc** (fnc [])]
+    (testing "No-op peanuts macros return no-op functions"
+      (is (nil? (defc**)))
+      (is (nil? (fc**)))
+      (is (nil? (defnc**)))
+      (is (nil? (fnc**))))))
 
 (defspec test-defc-always-defs 20
   (prop/for-all [fn-form fn-form-gen

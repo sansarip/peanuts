@@ -109,7 +109,7 @@
    `(defc ~n ~f {})))
 
 (defmacro defnc
-  [n opts args & body]
+  [n & [opts args & body]]
   (if (vector? opts)
     (let [body (into [args] body)
           args opts]
@@ -117,7 +117,7 @@
     (->component n `(fn ~args ~@body) (merge opts {:def? true}))))
 
 (defmacro fnc
-  [opts args & body]
+  [& [opts args & body]]
   (if (vector? opts)
     (let [body (into [args] body)
           args opts]

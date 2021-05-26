@@ -123,7 +123,7 @@
                          args* opts
                          body args-and-body]
                      `(defnc ~n nil ~opts* ~args* ~@body))
-    ;; doc-str, but not opts
+    ;; doc-str, but no opts
     (vector? opts) (let [args* opts
                          body* args-and-body]
                      `(defnc ~n ~doc-str {} ~args* ~@body*))

@@ -138,7 +138,7 @@
    conditionally rebind the function args to values of re-frame subscriptions."
   [& [opts args & body]]
   (if (vector? opts)
-    (let [body (into [args] body)
-          args opts]
-      `(fnc {} ~args ~@body))
+    (let [body* (into [args] body)
+          args* opts]
+      `(fnc {} ~args* ~@body*))
     (->component nil `(fn ~args ~@body) (merge opts {:def? false}))))

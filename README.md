@@ -6,7 +6,18 @@
 
 > Packing peanuts for decoupling Reagent Form-1 components from Re-frame subscriptions
 
-## Rationale
+1. [Rationale](#rationale)
+2. [Usage](#usage)
+    1. [fnc macro](#fnc)
+    2. [defnc macro](#defnc)
+    3. [Options](#options)
+        1. [Exempting Args](#exempting-args)
+        2. [Greenlisting Args](#greenlisting-args)
+        3. [Subscription Args](#subscription-args)
+        4. [Subscription Functions](#subscription-functions)
+3. [Known Limitations](#limitations)
+
+## Rationale <a name="rationale"></a>
 
 This bit is pretty opinionated, but I dislike using the below structure to define Reagent Form-1 components.
 
@@ -35,7 +46,7 @@ Enter Peanuts. Peanuts component macros are intended to wrap components implemen
 
 I've utilize this simple library in production to great extents, and it has really scratched an itch for me!
 
-## Usage
+## Usage <a name="usage"></a>
 
 [![Image from Gyazo](https://i.gyazo.com/541408228e8a9a313b99f5278d59caef.gif)](https://gyazo.com/541408228e8a9a313b99f5278d59caef)
 
@@ -46,7 +57,7 @@ It goes without saying that you should have [re-frame](https://github.com/Day8/r
 The main ways to use peanut components are the `fnc` and `defnc` macros. 
 For documentation on the older `defc` and `fc` macros, see [the README here](https://github.com/sansarip/peanuts/tree/7b9718519760c254942c2df2eeb5aa52e4ec2181)
 
-#### fnc
+#### fnc <a name="fnc"></a>
 
 Similar to `fn`
 
@@ -57,7 +68,7 @@ Similar to `fn`
 (def a (fnc [& {:keys [a b c]}] [:div a b c]))
 ```
 
-#### defnc
+#### defnc <a name="defnc"></a>
 
 Similar to `defn`
 
@@ -73,14 +84,9 @@ Similar to `defn`
 If you're using Cursive with IntelliJ as your IDE, then you can resolve `defnc` as a `defn` and be a-ok! 
 See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wish to do that!
 
-### Options
+### Options <a name="options"></a>
 
-Both `fnc` and `defnc` accept an optional options map as a second argument exmplained below:
-
-1. [Exempting Args](#exempting-args)
-2. [Greenlisting Args](#greenlisting-args)
-3. [Subscription Args](#subscription-args)
-4. [Subscription Functions](#subscription-functions)
+Both `fnc` and `defnc` accept an optional options map as a second argument exmplained below
 
 #### Exempting Args <a name="exempting-args"></a>
 
@@ -192,7 +198,7 @@ as demonstrated below.
 [my-component 1 ^:sub-fn (fn [] @(rf/subscribe [::subs/selected?]))]
 ```
 
-## Known Limitations
+## Known Limitations <a name="limitations"></a>
 
 This library doesn't fully replicate all of the bells and whistles of the `defn` macro or the `fn` form. 
 

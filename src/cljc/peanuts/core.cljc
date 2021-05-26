@@ -115,8 +115,14 @@
           args opts]
       `(defnc ~n {} ~args ~@body))
     (->component n `(fn ~args ~@body) (merge opts {:def? true}))))
+  "Takes similar arguments to defn and returns a similar result.
+   The returned function body will be wrapped in a let-block which will
+   conditionally rebind the function args to values of re-frame subscriptions."
 
 (defmacro fnc
+  "Returns an fn form.
+   The returned function body will be wrapped in a let-block which will
+   conditionally rebind the function args to values of re-frame subscriptions."
   [& [opts args & body]]
   (if (vector? opts)
     (let [body (into [args] body)

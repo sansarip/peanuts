@@ -206,5 +206,13 @@ There are a couple known limitations:
 
 * Function overloading isn't supported
 * `fnc` does not support naming e.g. `(fnc d [])` does not work
+* Function constraints e.g.
 
-It's not that the above limitations can't be fixed; I just haven't run into a necessary use case yet. If there's demand to fix the mentioned limitations, I will do it!
+```clojure
+(defn constrained-sqr [x]
+    {:pre  [(pos? x)]
+     :post [(> % 16), (< % 225)]}
+    (* x x))
+```
+
+It's not that the above limitations can't be fixed; I just haven't run into a necessary use case yet. If there's demand to fix any of the mentioned limitations, I will do it!

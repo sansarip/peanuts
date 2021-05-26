@@ -191,3 +191,14 @@ as demonstrated below.
 
 [my-component 1 ^:sub-fn (fn [] @(rf/subscribe [::subs/selected?]))]
 ```
+
+## Known Limitations
+
+This library doesn't fully replicate all of the bells and whistles of the `defn` macro or the `fn` form. 
+
+There are a couple known limitations:
+
+* Function overloading isn't supported
+* `fnc` does not support naming e.g. `(fnc d [])` does not work
+
+It's not that the above limitations can't be fixed; I just haven't run into a necessary use case yet. If there's demand to fix the mentioned limitations, I will do it!

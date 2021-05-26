@@ -81,7 +81,7 @@
        reverse))
 
 (defn- ->component
-  ([n f {:keys [exempt only def? sub-args] :as opts}]
+  ([n f {:keys [exempt only def? sub-args] :as meta*}]
    (let [[_ args & body] f
          bindings (->> args
                        (remove-deep (set exempt))
@@ -89,8 +89,7 @@
                        (filter-deep (set only))
                        flatten-maps
                        (remove #{'&})
-                       (seq->let-form sub-args))
-         meta* (dissoc opts :exempt :only :def? :sub-args)]
+                       (seq->let-form sub-args))]
      (cond->> body
               '->> (concat bindings)
               '->> list
@@ -112,25 +111,25 @@
   "Takes similar arguments to defn and returns a similar result.
    The returned function body will be wrapped in a let-block which will
    conditionally rebind the function args to values of re-frame subscriptions."
-  [n & [doc-str opts & [args & body :as args-and-body]]]
+  [n & [doc-str meta* & [args & body :as args-and-body]]]
   (cond
     ;; no doc-str or opts
     (vector? doc-str) (let [args* doc-str
-                            body* (into [opts] args-and-body)]
+                            body* (into [meta*] args-and-body)]
                         `(defnc ~n nil {} ~args* ~@body*))
     ;; opts, but no doc-str
-    (map? doc-str) (let [opts* doc-str
-                         args* opts
+    (map? doc-str) (let [meta* doc-str
+                         args* meta*
                          body args-and-body]
-                     `(defnc ~n nil ~opts* ~args* ~@body))
+                     `(defnc ~n nil ~meta* ~args* ~@body))
     ;; doc-str, but no opts
-    (vector? opts) (let [args* opts
-                         body* args-and-body]
-                     `(defnc ~n ~doc-str {} ~args* ~@body*))
+    (vector? meta*) (let [args* meta*
+                          body* args-and-body]
+                      `(defnc ~n ~doc-str {} ~args* ~@body*))
     :else (->component
             n
             `(fn ~args ~@body)
-            (merge opts {:def? true} (if doc-str {:doc doc-str})))))
+            (merge meta* {:def? true} (if doc-str {:doc doc-str})))))
 
 (defmacro fnc
   "Returns an fn form.

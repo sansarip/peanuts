@@ -115,18 +115,21 @@
   [n & [doc-str opts & [args & body :as args-and-body]]]
   (cond
     ;; no doc-str or opts
-    (vector? doc-str) (let [args doc-str
-                            body (into [opts] args-and-body)]
-                        `(defnc ~n nil {} ~args ~@body))
+    (vector? doc-str) (let [args* doc-str
+                            body* (into [opts] args-and-body)]
+                        `(defnc ~n nil {} ~args* ~@body*))
     ;; opts, but no doc-str
-    (map? doc-str) (let [opts doc-str
-                         args opts
+    (map? doc-str) (let [opts* doc-str
+                         args* opts
                          body args-and-body]
-                     `(defnc ~n nil ~opts ~args ~@body))
+                     `(defnc ~n nil ~opts* ~args* ~@body))
     ;; doc-str, but not opts
-    (vector? opts) (let [args opts
-                         body args-and-body]
-                     `(defnc ~n ~doc-str {} ~args ~@body))
+    (vector? opts) (let [args* opts
+                         body* args-and-body]
+                     `(defnc ~n ~doc-str {} ~args* ~@body*))
+    :else (->component
+            n
+            `(fn ~args ~@body)
             (merge opts {:def? true} (if doc-str {:doc doc-str})))))
 
 (defmacro fnc

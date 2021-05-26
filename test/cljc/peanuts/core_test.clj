@@ -4,7 +4,8 @@
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]
             [clojure.test :refer [is use-fixtures testing deftest]]
-            [peanuts.test-utilities :refer [is=]]))
+            [peanuts.test-utilities :refer [is=]]
+            [clojure.string :as string]))
 
 ;; necessary for macro-expanding to work with `lein test`
 (let [ns *ns*]
@@ -100,8 +101,8 @@
 (def destructured-map-gen (gen/one-of [kv-destructured-map-gen keysor-destructured-map-gen]))
 (def fn-args-gen (gen/vector (gen/one-of [gen/symbol destructured-map-gen])))
 (def form-gen (gen/fmap (fn [[s v]] (seq (into [s] v))) (gen/tuple gen/symbol (gen/vector gen/any))))
-(def fn-body-gen (gen/vector form-gen))
-(def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen fn-body-gen)))
+(def forms-gen (gen/vector form-gen))
+(def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen forms-gen)))
 (def partial-peanuts-form-gen
   (gen/fmap
     (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
@@ -126,6 +127,20 @@
                (-> gen/any
                    gen/vector
                    gen/vector))))
+
+(def noop-defnc-form-with-doc-str-gen
+  (gen/fmap
+    (fn [[first-letter uuid opts doc-str]]
+      (let [[_ & uuid] (str uuid)
+            n (symbol (str first-letter (string/join uuid)))]
+        (cond-> (list 'defnc n doc-str)
+                opts (concat (list opts))
+                '-> (concat (list [])))))
+    (gen/tuple
+      gen/char-alpha
+      gen/uuid
+      (gen/elements [nil {}])
+      gen/string-ascii)))
 
 (deftest test-noop-peanuts-macro
   (defc defc** (fn []))
@@ -183,3 +198,9 @@
                            get-subfn-args)]
       (testing "Every specified subscription fn is included in the let bindings"
         (every? (fn [[k v]] (= (get bindings-map k) v)) sub-args)))))
+
+(defspec test-defnc-macro-includes-docstring 20
+  (prop/for-all [peanuts-form noop-defnc-form-with-doc-str-gen]
+    (let [[_ _ expected-doc-str] peanuts-form]
+      (testing "Define var includes the specified doc string in its metadata"
+        (is= expected-doc-str (:doc (meta (eval peanuts-form))))))))

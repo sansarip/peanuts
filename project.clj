@@ -8,4 +8,5 @@
             :url  "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/test.check "1.0.0"]]
-  :repl-options {:init-ns peanuts.core})
+  :repl-options {:init-ns peanuts.core}
+  :profiles {:dev {:source-paths ["dev/cljc"]}})

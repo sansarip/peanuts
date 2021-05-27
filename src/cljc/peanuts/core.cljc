@@ -111,25 +111,25 @@
   "Takes similar arguments to defn and returns a similar result.
    The returned function body will be wrapped in a let-block which will
    conditionally rebind the function args to values of re-frame subscriptions."
-  [n & [doc-str meta* & [args & body :as args-and-body]]]
+  [n & [doc-str metadata & [args & body :as args-and-body]]]
   (cond
     ;; no doc-str or opts
     (vector? doc-str) (let [args* doc-str
-                            body* (into [meta*] args-and-body)]
+                            body* (into [metadata] args-and-body)]
                         `(defnc ~n nil {} ~args* ~@body*))
     ;; opts, but no doc-str
-    (map? doc-str) (let [meta* doc-str
-                         args* meta*
+    (map? doc-str) (let [metadata* doc-str
+                         args* metadata
                          body args-and-body]
-                     `(defnc ~n nil ~meta* ~args* ~@body))
+                     `(defnc ~n nil ~metadata* ~args* ~@body))
     ;; doc-str, but no opts
-    (vector? meta*) (let [args* meta*
-                          body* args-and-body]
-                      `(defnc ~n ~doc-str {} ~args* ~@body*))
+    (vector? metadata) (let [args* metadata
+                             body* args-and-body]
+                         `(defnc ~n ~doc-str {} ~args* ~@body*))
     :else (->component
             n
             `(fn ~args ~@body)
-            (merge meta* {:def? true} (if doc-str {:doc doc-str})))))
+            (merge metadata {:def? true} (if doc-str {:doc doc-str})))))
 
 (defmacro fnc
   "Returns an fn form.

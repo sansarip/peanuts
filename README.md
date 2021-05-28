@@ -86,7 +86,7 @@ See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wi
 
 ### Options <a name="options"></a>
 
-Both `fnc` and `defnc` accept an optional options map as a second argument exmplained below
+Both `fnc` and `defnc` accept an optional options map as a second argument explained below
 
 #### Exempting Args <a name="exempting-args"></a>
 

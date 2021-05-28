@@ -5,7 +5,9 @@
             [clojure.test.check.properties :as prop]
             [clojure.test :refer [is use-fixtures testing deftest]]
             [peanuts.test-utilities :refer [is=]]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clojure.set :as cljset]
+            [re-frame.core]))
 
 ;; necessary for macro-expanding to work with `lein test`
 (let [ns *ns*]
@@ -92,14 +94,40 @@
       (cond->> (not as-map?) (take-nth 2)
                as-map? (apply hash-map))))
 
+(def symbol-name-gen
+  (gen/fmap
+    (fn [[first-letter uuid]]
+      (let [[_ & uuid] (str uuid)]
+        (symbol (str first-letter (string/join uuid)))))
+    (gen/tuple
+      gen/char-alpha
+      gen/uuid)))
+
+(def metadata-gen
+  (gen/map
+    (gen/one-of [gen/string gen/keyword])
+    (gen/one-of [gen/string gen/keyword])))
+
+(def valid-values-gen (gen/one-of
+                        [gen/string
+                         gen/keyword
+                         gen/large-integer]))
+
+(def valid-coll-gen (gen/one-of
+                      [metadata-gen
+                       (gen/vector valid-values-gen)
+                       valid-values-gen]))
+
 (def kv-destructured-map-gen (gen/map
-                               (gen/such-that identity gen/symbol)
+                               (gen/such-that identity symbol-name-gen)
                                (gen/such-that identity gen/keyword)))
 (def keysor-destructured-map-gen (gen/fmap
                                    update-defaults
-                                   (gen/hash-map :keys (gen/vector (gen/tuple gen/symbol gen/any)))))
+                                   (gen/hash-map
+                                     :keys
+                                     (gen/vector (gen/tuple symbol-name-gen valid-coll-gen)))))
 (def destructured-map-gen (gen/one-of [kv-destructured-map-gen keysor-destructured-map-gen]))
-(def fn-args-gen (gen/vector (gen/one-of [gen/symbol destructured-map-gen])))
+(def fn-args-gen (gen/vector (gen/one-of [symbol-name-gen destructured-map-gen])))
 (def form-gen (gen/fmap (fn [[s v]] (seq (into [s] v))) (gen/tuple gen/symbol (gen/vector gen/any))))
 (def forms-gen (gen/vector form-gen))
 (def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen forms-gen)))
@@ -128,19 +156,15 @@
                    gen/vector
                    gen/vector))))
 
-(def noop-defnc-form-with-doc-str-gen
+(def noop-defnc-form-gen
   (gen/fmap
-    (fn [[first-letter uuid opts doc-str]]
-      (let [[_ & uuid] (str uuid)
-            n (symbol (str first-letter (string/join uuid)))]
-        (cond-> (list 'defnc n doc-str)
-                opts (concat (list opts))
-                '-> (concat (list [])))))
+    (fn [[n fn-args doc-str metadata]]
+      (list 'defnc n doc-str metadata fn-args))
     (gen/tuple
-      gen/char-alpha
-      gen/uuid
-      (gen/elements [nil {}])
-      gen/string-ascii)))
+      symbol-name-gen
+      fn-args-gen
+      gen/string-ascii
+      metadata-gen)))
 
 (deftest test-noop-peanuts-macro
   (defc defc** (fn []))
@@ -167,7 +191,7 @@
       (testing "First symbol in returned form is fn*"
         (is= 'fn* first-symbol)))))
 
-(defspec test-peanuts-macros-exempt-specified-params 20
+(defspec test-peanuts-macros-specified-params 20
   (prop/for-all [peanuts-form peanuts-form-with-exempt-opt-gen]
     (let [{exempted :exempt} (get-options peanuts-form)
           bindings (let-form->bindings (get-let-form peanuts-form))]
@@ -200,7 +224,7 @@
         (every? (fn [[k v]] (= (get bindings-map k) v)) sub-args)))))
 
 (defspec test-defnc-macro-includes-docstring 20
-  (prop/for-all [peanuts-form noop-defnc-form-with-doc-str-gen]
+  (prop/for-all [peanuts-form noop-defnc-form-gen]
     (let [[_ _ expected-doc-str] peanuts-form]
       (testing "Define var includes the specified doc string in its metadata"
         (is= expected-doc-str (:doc (meta (eval peanuts-form))))))))

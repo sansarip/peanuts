@@ -228,3 +228,10 @@
     (let [[_ _ expected-doc-str] peanuts-form]
       (testing "Define var includes the specified doc string in its metadata"
         (is= expected-doc-str (:doc (meta (eval peanuts-form))))))))
+
+(defspec test-defnc-metadata 20
+  (prop/for-all [peanuts-form noop-defnc-form-gen]
+    (let [[_ _ _ expected-metadata] peanuts-form]
+      (is (cljset/subset?
+            (set expected-metadata)
+            (set (meta (eval peanuts-form))))))))

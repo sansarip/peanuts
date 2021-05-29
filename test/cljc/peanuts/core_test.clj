@@ -230,8 +230,15 @@
         (is= expected-doc-str (:doc (meta (eval peanuts-form))))))))
 
 (defspec test-defnc-metadata 20
-  (prop/for-all [peanuts-form noop-defnc-form-gen]
-    (let [[_ _ _ expected-metadata] peanuts-form]
-      (is (cljset/subset?
-            (set expected-metadata)
-            (set (meta (eval peanuts-form))))))))
+  (prop/for-all [peanuts-form noop-defnc-form-gen
+                 present-metadata metadata-gen]
+    (let [[peanuts-macro-symbol n & [_ expected-metadata :as rest-of-form]] peanuts-form
+          ;; Also include metadata on the name
+          peanuts-form* (-> n
+                            (with-meta present-metadata)
+                            (->> (list peanuts-macro-symbol))
+                            (concat rest-of-form))]
+      (testing "Metadata arg and metadata present on name are present on evaluated peanuts form"
+        (is (cljset/subset?
+              (cljset/union (set expected-metadata) (set present-metadata))
+              (set (meta (eval peanuts-form*)))))))))

@@ -1,6 +1,8 @@
 (ns peanuts.core
-  (:require [clojure.walk :as w]))
+  (:require
+    [clojure.walk :as w]
     [clojure.set :as cljset]
+    [clojure.walk :as walk]))
 
 (defn- not-empty-coll [thing]
   (if (coll? thing) (not-empty thing) thing))
@@ -81,25 +83,29 @@
        (conj '(let))
        reverse))
 
-  ([n f {:keys [exempt only def? sub-args] :as meta*}]
+(defn- quote-symbols [coll]
+  (walk/postwalk (fn [v] (if (symbol? v) (list 'quote v) v)) coll))
+
 (defn- peanut
   ([n f {:keys [exempt greenlist redlist only def? sub-args] :as metadata}]
    (let [[_ args & body] f
          bindings (->> args
-                       (remove-deep (set exempt))
                        (remove-deep (cljset/union (set exempt) (set redlist)))
                        vec
-                       (filter-deep (set only))
                        (filter-deep (cljset/union (set only) (set greenlist)))
                        flatten-maps
                        (remove #{'&})
-                       (seq->let-form sub-args))]
+                       (seq->let-form sub-args))
+         safe-metadata (quote-symbols metadata)]
      (cond->> body
               '->> (concat bindings)
               '->> list
-              '->> (concat `(fn ~args))
+              '->> (concat `(~'fn ~args))
               def? list
-              def? (concat `(def ~(with-meta n (merge meta* (meta n)))))))))
+              def? (concat `(def ~(->> n
+                                       meta
+                                       (merge safe-metadata)
+                                       (with-meta n))))))))
 (defmacro fc
   ([f opts]
    (peanut nil f (merge opts {:def? false})))

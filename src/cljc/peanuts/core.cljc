@@ -80,8 +80,8 @@
        (conj '(let))
        reverse))
 
-(defn- ->component
   ([n f {:keys [exempt only def? sub-args] :as meta*}]
+(defn- peanut
    (let [[_ args & body] f
          bindings (->> args
                        (remove-deep (set exempt))
@@ -98,12 +98,12 @@
               def? (concat `(def ~(with-meta n (merge meta* (meta n)))))))))
 (defmacro fc
   ([f opts]
-   (->component nil f (merge opts {:def? false})))
+   (peanut nil f (merge opts {:def? false})))
   ([f] `(fc ~f {})))
 
 (defmacro defc
   ([n f opts]
-   (->component n f (merge opts {:def? true})))
+   (peanut n f (merge opts {:def? true})))
   ([n f]
    `(defc ~n ~f {})))
 
@@ -126,7 +126,7 @@
     (vector? metadata) (let [args* metadata
                              body* args-and-body]
                          `(defnc ~n ~doc-str {} ~args* ~@body*))
-    :else (->component
+    :else (peanut
             n
             `(fn ~args ~@body)
             (merge metadata {:def? true} (if doc-str {:doc doc-str})))))
@@ -140,4 +140,4 @@
     (let [body* (into [args] body)
           args* opts]
       `(fnc {} ~args* ~@body*))
-    (->component nil `(fn ~args ~@body) (merge opts {:def? false}))))
+    (peanut nil `(fn ~args ~@body) (merge opts {:def? false}))))

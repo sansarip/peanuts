@@ -11,7 +11,7 @@
     1. [fnc macro](#fnc)
     2. [defnc macro](#defnc)
     3. [Options](#options)
-        1. [Exempting Args](#exempting-args)
+        1. [Redlisting Args](#redlisting-args)
         2. [Greenlisting Args](#greenlisting-args)
         3. [Subscription Args](#subscription-args)
         4. [Subscription Functions](#subscription-functions)
@@ -86,42 +86,43 @@ See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wi
 
 ### Options <a name="options"></a>
 
-Both `fnc` and `defnc` accept an optional options map as a second argument explained below
+Both `fnc` and `defnc` accept an optional metadata map as a second argument that can dictate certain options 
+explained below.
 
-#### Exempting Args <a name="exempting-args"></a>
+#### Redlisting Args <a name="redlisting-args"></a>
 
-There may be instances where a component expects certain args to _always_ be keywords and wishes them to be exempt from being used as subscriptions. In such cases, the `:exempt` option comes in handy.
+There may be instances where a component expects certain args to _always_ be keywords and wishes them to be redlist from being used as subscriptions. In such cases, the `:redlist` option comes in handy.
 
 ```clojure
 (defnc my-component
-  {:exempt [b c]}
+  {:redlist [b c]}
   [a & {:keys [b c d}]
     [:div a b c d])
 ```
 
-In the above example, the values of the `b` and `c` parameters will always be exempt from being rebound to subscriptions.
+In the above example, the values of the `b` and `c` parameters will always be redlist from being rebound to subscriptions.
 
-Arguments can also be exempt dynamically by attaching the `^{:exempt true}` or `^:exempt` metadata.
+Arguments can also be redlist dynamically by attaching the `^{:redlist true}` or `^:redlist` metadata.
 
 ```clojure
-[my-component ^:exempt :some-key]
+[my-component ^:redlist :some-key]
 ```
 
-In the above example, `:some-key` will be used as a regular keyword and will be exempt.
+In the above example, `:some-key` will be used as a regular keyword and will be redlist.
 
 #### Greenlisting Args <a name="greenlisting-args"></a>
 
-Sometimes it's nice to only have certain args involved with subs and have the rest be untouched. The `:only` option is there for such cases, comparable to a greenlist.
+Sometimes it's nice to greenlist have certain args involved with subs and have the rest be untouched. The `:greenlist` option is there for such cases, comparable to a greenlist.
 
 ```clojure
 (defnc my-component
-  {:only [a c]}
+  {:greenlist [a c]}
   [a & {:keys [b c d]}]
     [:div a b c d])
 ```
 
-In the example above, only the `a` and `c` args can be rebound to subscriptions. 
-One thing to note is that the `:exempt` option always takes precedence over the `:only` option in odd cases where both 
+In the example above, greenlist the `a` and `c` args can be rebound to subscriptions. 
+One thing to note is that the `:redlist` option always takes precedence over the `:greenlist` option in odd cases where both 
 options are defined with conflicting args. 
 
 #### Subscription Args <a name="subscription-args"></a>
@@ -130,7 +131,7 @@ Sometimes one may want to pass additional arguments to their subscriptions. The 
 
 ```clojure
 (defnc my-component
-  {:exempt [a]
+  {:redlist [a]
    :sub-args {b [a 1 2 3]}}
   [a & {:keys [b c d]}]
     [:div a b c])
@@ -138,7 +139,7 @@ Sometimes one may want to pass additional arguments to their subscriptions. The 
 
 In the above example, `b` can be a function or a subscription key. Notice that I'm passing both literals and `a` reference as args for `b`. There are a couple caveats to note here.
 
-1. If you define a `sub-arg` key that is also exempt, then the exemption takes precedence.
+1. If you define a `sub-arg` key that is also redlist, then the redlistion takes precedence.
 2. There is an order to things when it comes to the `sub-arg` values. For example, if you define a `sub-arg`, `a`, that uses a component parameter specified later than itself in the function args, `b`, then the value of `b` will be the original value passed into the component and not the subscribed-value.
 
 Here's an example of caveat #2.
@@ -200,7 +201,7 @@ as demonstrated below.
 
 ## Known Limitations <a name="limitations"></a>
 
-This library doesn't fully replicate all of the bells and whistles of the `defn` macro or the `fn` form. 
+This library doesn't fully replicate all the bells and whistles of the `defn` macro or the `fn` form. 
 
 There are a couple known limitations:
 

@@ -191,7 +191,7 @@
       (testing "First symbol in returned form is fn*"
         (is= 'fn* first-symbol)))))
 
-(defspec test-peanuts-macros-specified-params 20
+(defspec test-peanuts-macros-exempt-specified-params 20
   (prop/for-all [peanuts-form peanuts-form-with-exempt-opt-gen]
     (let [{exempted :exempt} (get-options peanuts-form)
           bindings (let-form->bindings (get-let-form peanuts-form))]

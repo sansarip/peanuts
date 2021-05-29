@@ -1,5 +1,6 @@
 (ns peanuts.core
   (:require [clojure.walk :as w]))
+    [clojure.set :as cljset]
 
 (defn- not-empty-coll [thing]
   (if (coll? thing) (not-empty thing) thing))
@@ -82,11 +83,14 @@
 
   ([n f {:keys [exempt only def? sub-args] :as meta*}]
 (defn- peanut
+  ([n f {:keys [exempt greenlist redlist only def? sub-args] :as metadata}]
    (let [[_ args & body] f
          bindings (->> args
                        (remove-deep (set exempt))
+                       (remove-deep (cljset/union (set exempt) (set redlist)))
                        vec
                        (filter-deep (set only))
+                       (filter-deep (cljset/union (set only) (set greenlist)))
                        flatten-maps
                        (remove #{'&})
                        (seq->let-form sub-args))]

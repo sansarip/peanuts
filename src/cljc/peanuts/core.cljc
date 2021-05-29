@@ -64,10 +64,10 @@
 
 (defn- make-cond-form [binding binding-args]
   (let [binding-vec (into [binding] binding-args)]
-    `(cond
-       (-> ~binding meta :exempt) ~binding
-       (keyword? ~binding) (deref (re-frame.core/subscribe ~binding-vec))
-       (or (-> ~binding meta :sub-fn) (and (fn? ~binding) ~binding-args)) ~(seq binding-vec)
+    `(~'cond
+       (~'let [~'{:keys [exempt red-list]} (~'meta ~binding)] ~'(or exempt red-list)) ~binding
+       (~'keyword? ~binding) (~'deref (re-frame.core/subscribe ~binding-vec))
+       (~'or (~'-> ~binding ~'meta :sub-fn) (~'and (~'fn? ~binding) ~binding-args)) ~(seq binding-vec)
        :else ~binding)))
 
 (defn- seq->let-form [args seq*]

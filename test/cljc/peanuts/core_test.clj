@@ -97,7 +97,7 @@
 (def symbol-name-gen
   (gen/fmap
     (fn [[first-letter uuid]]
-      (let [[_ & uuid] (str uuid)]
+      (let [[_ & uuid] (take 8 (str uuid))]
         (symbol (str first-letter (string/join uuid)))))
     (gen/tuple
       gen/char-alpha
@@ -127,7 +127,7 @@
                                      :keys
                                      (gen/vector (gen/tuple symbol-name-gen valid-coll-gen)))))
 (def destructured-map-gen (gen/one-of [kv-destructured-map-gen keysor-destructured-map-gen]))
-(def fn-args-gen (gen/vector (gen/one-of [symbol-name-gen destructured-map-gen])))
+(def fn-args-gen (gen/vector (gen/one-of [symbol-name-gen destructured-map-gen]) 0 5))
 (def form-gen (gen/fmap (fn [[s v]] (seq (into [s] v))) (gen/tuple gen/symbol (gen/vector gen/any))))
 (def forms-gen (gen/vector form-gen))
 (def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen forms-gen)))

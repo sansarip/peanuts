@@ -63,7 +63,7 @@
                       (map? node) (vec (keys node))
                       :else node)))
        flatten
-       dedupe))
+       distinct))
 
 (defn- make-cond-form [binding binding-args]
   (let [binding-vec (into [binding] binding-args)]

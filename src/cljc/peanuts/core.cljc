@@ -55,13 +55,18 @@
          (remove #{'&}))
     data))
 
+(defn- get-associative-destructuring-vector [node]
+  (and (or (map? node) nil)
+       (select-keys node #{:keys :strs :syms})))
+
 (defn- flatten-maps [args]
   (->> args
        (w/prewalk (fn [node]
-                    (cond
-                      (and (map? node) (:keys node)) (:keys node)
-                      (map? node) (vec (keys node))
-                      :else node)))
+                    (let [assoc-dest-vec (get-associative-destructuring-vector node)]
+                      (cond
+                        (not-empty assoc-dest-vec) (vec (vals assoc-dest-vec))
+                        (map? node) (vec (keys node))
+                        :else node))))
        flatten
        distinct))
 

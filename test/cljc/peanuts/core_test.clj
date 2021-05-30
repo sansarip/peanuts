@@ -240,5 +240,5 @@
                             (concat rest-of-form))]
       (testing "Metadata arg and metadata present on name are present on evaluated peanuts form"
         (is (cljset/subset?
-              (cljset/union (set expected-metadata) (set present-metadata))
+              (set (merge expected-metadata present-metadata))
               (set (meta (eval peanuts-form*)))))))))

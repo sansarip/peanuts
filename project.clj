@@ -1,4 +1,4 @@
-(defproject peanuts "0.4.5"
+(defproject peanuts "0.4.6"
   :description "Packing peanuts for decoupling Reagent Form-1 components from Re-frame subscriptions"
   :url "https://github.com/sansarip/peanuts"
   :signing {:gpg-key "pehrans@gmail.com"}

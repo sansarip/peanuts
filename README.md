@@ -2,9 +2,21 @@
 
 # Peanuts
 
-[![Clojars Project](https://img.shields.io/clojars/v/peanuts.svg)](https://clojars.org/peanuts) [![Build Status](https://travis-ci.org/sansarip/peanuts.svg?branch=master)](https://travis-ci.org/sansarip/peanuts) 
+[![Clojars Project](https://img.shields.io/clojars/v/peanuts.svg)](https://clojars.org/peanuts) [![Build Status](https://travis-ci.org/sansarip/peanuts.svg?branch=master)](https://travis-ci.org/sansarip/peanuts)
 
 > Packing peanuts for decoupling Reagent Form-1 components from Re-frame subscriptions
+
+[deps.edn](https://clojure.org/reference/deps_and_cli)
+```clojure
+peanuts/peanuts {:mvn/version "0.5.0"}
+```
+
+[Leiningen](https://github.com/technomancy/leiningen)
+```clojure
+[peanuts "0.5.0"]
+```
+
+## ToC
 
 1. [Rationale](#rationale)
 2. [Usage](#usage)

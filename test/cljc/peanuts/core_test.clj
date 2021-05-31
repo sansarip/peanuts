@@ -106,12 +106,10 @@
     (gen/tuple
       gen/char-alpha
       gen/uuid)))
-
 (def metadata-gen
   (gen/map
     (gen/one-of [gen/string gen/keyword])
     (gen/one-of [gen/string gen/keyword])))
-
 (def valid-values-gen (gen/one-of
                         [gen/string
                          gen/keyword
@@ -161,7 +159,6 @@
                (-> gen/any
                    gen/vector
                    gen/vector))))
-
 (def noop-defnc-form-gen
   (gen/fmap
     (fn [[n fn-args doc-str metadata]]

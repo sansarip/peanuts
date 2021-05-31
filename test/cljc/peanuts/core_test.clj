@@ -20,20 +20,24 @@
 (defn- update* [k f m]
   (update m k f))
 
-(defn- update-defaults [{ks :keys :as m}]
-  (->> ks
+(defn- assoc-defaults [m]
+  (->> m
+       first
+       second
        (reduce (fn [c [symb default]]
                  (if default
                    (update c :or #(assoc % symb default))))
                (assoc m :or {}))
-       (update* :keys #(mapv first %))))
+       (update* (first (first m)) #(mapv first %))))
 
 (defn- get-bindings [args]
   (->> args
-       (mapv (fn [a] (cond (and (map? a) (:keys a)) (:keys a)
-                           (map? a) (vec (keys a))
-                           (vector? a) (get-bindings a)
-                           :else a)))
+       (mapv (fn [a]
+               (let [assoc-dest-vec (get-associative-destructuring-vector a)]
+                 (cond (not-empty assoc-dest-vec) (vec (vals assoc-dest-vec))
+                       (map? a) (vec (keys a))
+                       (vector? a) (get-bindings a)
+                       :else a))))
        flatten
        distinct))
 
@@ -121,12 +125,16 @@
 (def kv-destructured-map-gen (gen/map
                                (gen/such-that identity symbol-name-gen)
                                (gen/such-that identity gen/keyword)))
-(def keysor-destructured-map-gen (gen/fmap
-                                   update-defaults
-                                   (gen/hash-map
-                                     :keys
-                                     (gen/vector (gen/tuple symbol-name-gen valid-coll-gen)))))
-(def destructured-map-gen (gen/one-of [kv-destructured-map-gen keysor-destructured-map-gen]))
+(def associative-destructuring-map-with-defaults-gen
+  (gen/fmap
+    assoc-defaults
+    (gen/not-empty
+      (gen/map
+        (gen/elements [:keys :syms :strs])
+        (gen/vector (gen/tuple symbol-name-gen valid-coll-gen))
+        {:min-elements 0
+         :max-elements 1}))))
+(def destructured-map-gen (gen/one-of [kv-destructured-map-gen associative-destructuring-map-with-defaults-gen]))
 (def fn-args-gen (gen/vector (gen/one-of [symbol-name-gen destructured-map-gen]) 0 5))
 (def form-gen (gen/fmap (fn [[s v]] (seq (into [s] v))) (gen/tuple gen/symbol (gen/vector gen/any))))
 (def forms-gen (gen/vector form-gen))

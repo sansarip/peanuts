@@ -55,7 +55,7 @@
          (remove #{'&}))
     data))
 
-(defn- get-associative-destructuring-vector [node]
+(defn get-associative-destructuring-vector [node]
   (and (or (map? node) nil)
        (select-keys node #{:keys :strs :syms})))
 

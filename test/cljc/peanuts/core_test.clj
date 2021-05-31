@@ -72,13 +72,13 @@
 (defn- get-options [[peanuts-macro-symbol _first second* _third fourth*]]
   (if (= peanuts-macro-symbol 'defc) fourth* second*))
 
-(defn- get-sub-args [bindings-map]
+(defn- get-rf-sub-args [bindings-map]
   (reduce-kv (fn [c k [_ _ _ _ [_ [_ [_ & sub-args]]]]]
                (assoc c k (or sub-args [])))
              {}
              bindings-map))
 
-(defn- get-subfn-args [bindings-map]
+(defn- get-sub-fn-args [bindings-map]
   (reduce-kv (fn [c k [_ _ _ _ _ _ [_ & sub-args]]]
                (assoc c k (or sub-args [])))
              {}
@@ -199,15 +199,15 @@
       (testing "First symbol in returned form is fn*"
         (is= 'fn* first-symbol)))))
 
-(defspec test-peanuts-macros-exempt-specified-params 20
   (prop/for-all [peanuts-form peanuts-form-with-exempt-opt-gen]
     (let [{exempted :exempt} (get-options peanuts-form)
+(defspec test-peanuts-macros-redlist 20
           bindings (let-form->bindings (get-let-form peanuts-form))]
       (testing "Every exempted arg is not included in the let bindings"
         (every? (complement (set bindings)) exempted)))))
 
-(defspec test-peanuts-macros-only-specified-params 20
   (prop/for-all [peanuts-form peanuts-form-with-only-opt-gen]
+(defspec test-peanuts-macros-greenlist 20
     (let [{only :only} (get-options peanuts-form)
           bindings (let-form->bindings (get-let-form peanuts-form))]
       (testing "Every specified only-arg is included in the let bindings"

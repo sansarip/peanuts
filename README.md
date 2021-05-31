@@ -2,7 +2,7 @@
 
 # Peanuts
 
-[![Clojars Project](https://img.shields.io/clojars/v/peanuts.svg)](https://clojars.org/peanuts) [![Build Status](https://travis-ci.org/sansarip/peanuts.svg?branch=master)](https://travis-ci.org/sansarip/peanuts)
+[![Clojars Project](https://img.shields.io/clojars/v/peanuts.svg)](https://clojars.org/peanuts) [![Build Status](https://travis-ci.org/sansarip/peanuts.svg?branch=main)](https://travis-ci.org/sansarip/peanuts)
 
 > Packing peanuts for decoupling Reagent Form-1 components from Re-frame subscriptions
 

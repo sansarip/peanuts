@@ -192,7 +192,7 @@ as demonstrated below.
 
 ```clojure
 (defnc my-component
-  [selected?]
+  [id selected?]
   [:div {:style {:background-color (if selected? :green :white)}} 
     "✋"])
 

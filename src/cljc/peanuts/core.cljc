@@ -122,6 +122,10 @@
   ([n f]
    `(defc ~n ~f {})))
 
+(defn- merge-meta-maps [meta-map1 [meta-map2 :as _fnbody] & other-maps]
+  (cond-> (apply merge meta-map1 other-maps)
+          (map? meta-map2) (merge meta-map2)))
+
 (defmacro defnc
   "Takes similar arguments to defn and returns a similar result.
    The returned function body will be wrapped in a let-block which will
@@ -144,7 +148,11 @@
     :else (peanut
             n
             `(fn ~args ~@body)
-            (merge metadata {:def? true} (if doc-str {:doc doc-str})))))
+            (merge-meta-maps
+              meta-map
+              body
+              {:def? true}
+              (if doc-str {:doc doc-str})))))
 
 (defmacro fnc
   "Returns an fn form.
@@ -155,4 +163,4 @@
     (let [body* (into [args] body)
           args* opts]
       `(fnc {} ~args* ~@body*))
-    (peanut nil `(fn ~args ~@body) (merge opts {:def? false}))))
+    (peanut nil `(fn ~args ~@body) (merge-meta-maps opts body {:def? false}))))

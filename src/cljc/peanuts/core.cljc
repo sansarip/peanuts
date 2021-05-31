@@ -92,7 +92,7 @@
   (walk/postwalk (fn [v] (if (symbol? v) (list 'quote v) v)) coll))
 
 (defn- peanut
-  ([n f {:keys [exempt greenlist redlist only def? sub-args] :as metadata}]
+  ([n f {:keys [exempt greenlist redlist only def? sub-args] :as meta-map}]
    (let [[_ args & body] f
          bindings (->> args
                        (remove-deep (cljset/union (set exempt) (set redlist)))
@@ -101,7 +101,7 @@
                        flatten-maps
                        (remove #{'&})
                        (seq->let-form sub-args))
-         safe-metadata (quote-symbols metadata)]
+         symbol-quoted-meta-map (quote-symbols meta-map)]
      (cond->> body
               '->> (concat bindings)
               '->> list
@@ -109,7 +109,7 @@
               def? list
               def? (concat `(def ~(->> n
                                        meta
-                                       (merge safe-metadata)
+                                       (merge symbol-quoted-meta-map)
                                        (with-meta n))))))))
 (defmacro fc
   ([f opts]
@@ -126,20 +126,20 @@
   "Takes similar arguments to defn and returns a similar result.
    The returned function body will be wrapped in a let-block which will
    conditionally rebind the function args to values of re-frame subscriptions."
-  [n & [doc-str metadata & [args & body :as args-and-body]]]
+  [n & [doc-str meta-map & [args & body :as args&body]]]
   (cond
-    ;; no doc-str or opts
+    ;; no doc-str or metadata map
     (vector? doc-str) (let [args* doc-str
-                            body* (into [metadata] args-and-body)]
+                            body* (into [meta-map] args&body)]
                         `(defnc ~n nil {} ~args* ~@body*))
-    ;; opts, but no doc-str
-    (map? doc-str) (let [metadata* doc-str
-                         args* metadata
-                         body args-and-body]
-                     `(defnc ~n nil ~metadata* ~args* ~@body))
-    ;; doc-str, but no opts
-    (vector? metadata) (let [args* metadata
-                             body* args-and-body]
+    ;; metadata map, but no doc-str
+    (map? doc-str) (let [meta-map* doc-str
+                         args* meta-map
+                         body* args&body]
+                     `(defnc ~n nil ~meta-map* ~args* ~@body*))
+    ;; doc-str, but no metadata map
+    (vector? meta-map) (let [args* meta-map
+                             body* args&body]
                          `(defnc ~n ~doc-str {} ~args* ~@body*))
     :else (peanut
             n

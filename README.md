@@ -203,7 +203,7 @@ as demonstrated below.
 
 This library doesn't fully replicate all the bells and whistles of the `defn` macro or the `fn` form. 
 
-There are a couple known limitations:
+There are some known limitations:
 
 * Function overloading isn't supported
 * `fnc` does not support naming e.g. `(fnc d [])` does not work

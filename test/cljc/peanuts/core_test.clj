@@ -52,15 +52,10 @@
         (concat (list fn-form))
         (concat (list opts)))))
 
-(defn- assemble-peanuts-form-with-vector-options [k [partial-peanuts-form [_fn args :as fn-form]]]
-  (let [opts {k (->> args get-bindings (random-sample 0.5) vec)}]
+(defn- assemble-peanuts-form-with-vector-options
+  [[opt-key partial-peanuts-form [_fn args :as fn-form]]]
+  (let [opts {opt-key (->> args get-bindings (random-sample 0.5) vec)}]
     (assemble-peanuts-form partial-peanuts-form fn-form opts)))
-
-(defn- assemble-peanuts-form-with-exempt-option [f]
-  (assemble-peanuts-form-with-vector-options :exempt f))
-
-(defn- assemble-peanuts-form-with-only-option [f]
-  (assemble-peanuts-form-with-vector-options :only f))
 
 (defn- assemble-peanuts-form-with-sub-args-option
   [[partial-peanuts-form [_fn args :as fn-form] sub-args]]
@@ -141,16 +136,14 @@
     (gen/tuple
       (gen/elements ['(fc) '(defc) '(fnc) '(defnc)])
       gen/symbol)))
-(def peanuts-form-with-exempt-opt-gen
+(def peanuts-form-with-redlist-gen
   (gen/fmap
-    assemble-peanuts-form-with-exempt-option
-    (gen/tuple partial-peanuts-form-gen fn-form-gen)))
-
-(def peanuts-form-with-only-opt-gen
+    assemble-peanuts-form-with-vector-options
+    (gen/tuple (gen/elements [:redlist :exempt]) partial-peanuts-form-gen fn-form-gen)))
+(def peanuts-form-with-greenlist-gen
   (gen/fmap
-    assemble-peanuts-form-with-only-option
-    (gen/tuple partial-peanuts-form-gen fn-form-gen)))
-
+    assemble-peanuts-form-with-vector-options
+    (gen/tuple (gen/elements [:greenlist :only]) partial-peanuts-form-gen fn-form-gen)))
 (def peanuts-form-with-sub-args-opt-gen
   (gen/fmap
     assemble-peanuts-form-with-sub-args-option
@@ -194,15 +187,15 @@
       (testing "First symbol in returned form is fn*"
         (is= 'fn* first-symbol)))))
 
-  (prop/for-all [peanuts-form peanuts-form-with-exempt-opt-gen]
-    (let [{exempted :exempt} (get-options peanuts-form)
 (defspec test-peanuts-macros-redlist 20
+  (prop/for-all [peanuts-form peanuts-form-with-redlist-gen]
+    (let [{:keys [exempt redlist]} (get-options peanuts-form)
           bindings (let-form->bindings (get-let-form peanuts-form))]
       (testing "Every exempted arg is not included in the let bindings"
-        (every? (complement (set bindings)) exempted)))))
+        (every? (complement (set bindings)) (or exempt redlist))))))
 
-  (prop/for-all [peanuts-form peanuts-form-with-only-opt-gen]
 (defspec test-peanuts-macros-greenlist 20
+  (prop/for-all [peanuts-form peanuts-form-with-greenlist-gen]
     (let [{only :only} (get-options peanuts-form)
           bindings (let-form->bindings (get-let-form peanuts-form))]
       (testing "Every specified only-arg is included in the let bindings"

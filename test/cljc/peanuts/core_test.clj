@@ -154,12 +154,13 @@
                    gen/vector))))
 (def noop-defnc-form-gen
   (gen/fmap
-    (fn [[n fn-args doc-str metadata]]
-      (list 'defnc n doc-str metadata fn-args))
+    (fn [[n fn-args doc-str meta-map meta-map2]]
+      (list 'defnc n doc-str meta-map fn-args meta-map2))
     (gen/tuple
       symbol-name-gen
       fn-args-gen
       gen/string-ascii
+      metadata-gen
       metadata-gen)))
 
 (deftest test-noop-peanuts-macro
@@ -221,13 +222,14 @@
 (defspec test-defnc-metadata 20
   (prop/for-all [peanuts-form noop-defnc-form-gen
                  present-metadata metadata-gen]
-    (let [[peanuts-macro-symbol n & [_ expected-metadata :as rest-of-form]] peanuts-form
+    (let [[peanuts-macro-symbol n &
+           [_ expected-meta-map1 _ expected-meta-map2 :as rest-of-form]] peanuts-form
           ;; Also include metadata on the name
           peanuts-form* (-> n
                             (with-meta present-metadata)
                             (->> (list peanuts-macro-symbol))
                             (concat rest-of-form))]
-      (testing "Metadata arg and metadata present on name are present on evaluated peanuts form"
+      (testing "Metadata map arg and metadata present on name are merged on evaluated peanuts form"
         (is (cljset/subset?
-              (set (merge expected-metadata present-metadata))
+              (set (merge expected-meta-map1 expected-meta-map2 present-metadata))
               (set (meta (eval peanuts-form*)))))))))

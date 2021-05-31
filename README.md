@@ -86,8 +86,9 @@ See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wi
 
 ### Options <a name="options"></a>
 
-Both `fnc` and `defnc` accept an optional metadata map as a second argument that can dictate certain options 
-explained below.
+Both `fnc` and `defnc` accept an optional map as an argument that can dictate certain options explained below. 
+In the case of `defnc` the map will also be applied as metadata on the defined name. 
+You can also pass the options map as the second - or third if there's a docstring - argument.
 
 #### Redlisting Args <a name="redlisting-args"></a>
 
@@ -95,9 +96,9 @@ There may be instances where a component expects certain args to _always_ be key
 
 ```clojure
 (defnc my-component
-  {:redlist [b c]}
   [a & {:keys [b c d}]
-    [:div a b c d])
+  {:redlist [b c]}
+  [:div a b c d])
 ```
 
 In the above example, the values of the `b` and `c` parameters will always be redlisted from being rebound to subscriptions.
@@ -116,9 +117,9 @@ Sometimes it's nice to greenlist certain args involved with subs and have the re
 
 ```clojure
 (defnc my-component
-  {:greenlist [a c]}
   [a & {:keys [b c d]}]
-    [:div a b c d])
+  {:greenlist [a c]}
+  [:div a b c d])
 ```
 
 In the example above, only the greenlisted `a` and `c` args can be rebound to subscriptions. 
@@ -131,34 +132,34 @@ Sometimes one may want to pass additional arguments to their subscriptions. The 
 
 ```clojure
 (defnc my-component
+  [a & {:keys [b c d]}]
   {:redlist [a]
    :sub-args {b [a 1 2 3]}}
-  [a & {:keys [b c d]}]
-    [:div a b c])
+  [:div a b c])
 ```
 
 In the above example, `b` can be a function or a subscription key. Notice that I'm passing both literals and `a` reference as args for `b`. There are a couple caveats to note here.
 
-1. If you define a `sub-arg` key that is also redlist, then the redlistion takes precedence.
+1. If you define a `sub-arg` key that is also redlist, then the redlist takes precedence.
 2. There is an order to things when it comes to the `sub-arg` values. For example, if you define a `sub-arg`, `a`, that uses a component parameter specified later than itself in the function args, `b`, then the value of `b` will be the original value passed into the component and not the subscribed-value.
 
 Here's an example of caveat #2.
 
 ```clojure
 (defnc my-component
+  [a & {:keys [b c d]}]
   ;; here the value of 'b' will be the original value provided to the component in 'a's subscription args
   ;; and not the value of 'b's subscription
   {:sub-args {a [b 1 2 3]}}
-  [a & {:keys [b c d]}]
-    [:div a b c])
+  [:div a b c])
 ```
 
 Below are some examples of using a component that contains `sub-args`:
 
 ```clojure
 (defnc my-component
-  {:sub-args {selected? [id]}}
   [id selected?]
+  {:sub-args {selected? [id]}}
   [:div {:style {:background-color (if selected? :green :white)}} 
     "✋"])
 
@@ -178,9 +179,9 @@ As the examples in the previous section show-case, args that are specified in th
 
 ```clojure
 (defnc my-component
+  [selected?]
   ;; Specifying an empty arg-vector will result in a function being called without any args as one might expect
   {:sub-args {selected? []}}
-  [selected?]
   [:div {:style {:background-color (if selected? :green :white)}} 
     "✋"])
 

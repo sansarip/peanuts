@@ -201,23 +201,16 @@
       (testing "Every specified only-arg is included in the let bindings"
         (every? (set bindings) only)))))
 
-(defspec test-peanuts-macros-include-specified-sub-args 20
+(defspec test-peanuts-macros-sub-args 20
   (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
     (let [{sub-args :sub-args} (get-options peanuts-form)
-          bindings-map (-> peanuts-form get-let-form
-                           (let-form->bindings :as-map)
-                           get-sub-args)]
+          bindings (-> peanuts-form get-let-form (let-form->bindings :as-map))
+          rf-sub-args (get-rf-sub-args bindings)
+          sub-fn-args (get-sub-fn-args bindings)]
       (testing "Every specified subscription arg is included in the let bindings"
-        (every? (fn [[k v]] (= (get bindings-map k) v)) sub-args)))))
-
-(defspec test-peanuts-macros-include-specified-subfn-args 20
-  (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
-    (let [{sub-args :sub-args} (get-options peanuts-form)
-          bindings-map (-> peanuts-form get-let-form
-                           (let-form->bindings :as-map)
-                           get-subfn-args)]
-      (testing "Every specified subscription fn is included in the let bindings"
-        (every? (fn [[k v]] (= (get bindings-map k) v)) sub-args)))))
+        (is (every? (fn [[k v]] (= (get rf-sub-args k) v)) sub-args)))
+      (testing "Every specified subscription function arg is included in the let bindings"
+        (is (every? (fn [[k v]] (= (get sub-fn-args k) v)) sub-args))))))
 
 (defspec test-defnc-macro-includes-docstring 20
   (prop/for-all [peanuts-form noop-defnc-form-gen]

@@ -35,7 +35,7 @@
                            (vector? a) (get-bindings a)
                            :else a)))
        flatten
-       dedupe))
+       distinct))
 
 (defn- assemble-peanuts-form
   [[peanuts-macro-symbol :as partial-peanuts-form] [_fn args & body :as fn-form] opts]

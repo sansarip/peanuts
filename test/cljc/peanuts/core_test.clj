@@ -128,12 +128,10 @@
 (def associative-destructuring-map-with-defaults-gen
   (gen/fmap
     assoc-defaults
-    (gen/not-empty
-      (gen/map
-        (gen/elements [:keys :syms :strs])
-        (gen/vector (gen/tuple symbol-name-gen valid-coll-gen))
-        {:min-elements 0
-         :max-elements 1}))))
+    (gen/map
+      (gen/elements [:keys :syms :strs])
+      (gen/vector (gen/tuple symbol-name-gen valid-coll-gen))
+      {:num-elements 1})))
 (def destructured-map-gen (gen/one-of [kv-destructured-map-gen associative-destructuring-map-with-defaults-gen]))
 (def fn-args-gen (gen/vector (gen/one-of [symbol-name-gen destructured-map-gen]) 0 5))
 (def form-gen (gen/fmap (fn [[s v]] (seq (into [s] v))) (gen/tuple gen/symbol (gen/vector gen/any))))

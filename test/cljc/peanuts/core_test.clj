@@ -4,7 +4,7 @@
             [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]
             [clojure.test :refer [is use-fixtures testing deftest]]
-            [peanuts.test-utilities :refer [is=]]
+            [peanuts.test-utilities :refer [is=] :as tu]
             [clojure.string :as string]
             [clojure.set :as cljset]
             [re-frame.core]))
@@ -16,82 +16,6 @@
     (fn [test-fn]
       (binding [*ns* ns]
         (test-fn)))))
-
-(defn- update* [k f m]
-  (update m k f))
-
-(defn- assoc-defaults [m]
-  (->> m
-       first
-       second
-       (reduce (fn [c [symb default]]
-                 (if default
-                   (update c :or #(assoc % symb default))))
-               (assoc m :or {}))
-       (update* (first (first m)) #(mapv first %))))
-
-(defn- get-bindings [args]
-  (->> args
-       (mapv (fn [a]
-               (let [assoc-dest-vec (get-associative-destructuring-vector a)]
-                 (cond (not-empty assoc-dest-vec) (vec (vals assoc-dest-vec))
-                       (map? a) (vec (keys a))
-                       (vector? a) (get-bindings a)
-                       :else a))))
-       flatten
-       distinct))
-
-(defn- assemble-peanuts-form
-  [[peanuts-macro-symbol :as partial-peanuts-form] [_fn args & body :as fn-form] opts]
-  (if (#{'defnc 'fnc} peanuts-macro-symbol)
-    (-> partial-peanuts-form
-        (concat (list opts))
-        (concat (list args))
-        (concat body))
-    (-> partial-peanuts-form
-        (concat (list fn-form))
-        (concat (list opts)))))
-
-(defn- assemble-peanuts-form-with-vector-options
-  [[opt-key partial-peanuts-form [_fn args :as fn-form]]]
-  (let [opts {opt-key (->> args get-bindings (random-sample 0.5) vec)}]
-    (assemble-peanuts-form partial-peanuts-form fn-form opts)))
-
-(defn- assemble-peanuts-form-with-sub-args-option
-  [[partial-peanuts-form [_fn args :as fn-form] sub-args]]
-  (let [binding-vars (vec (get-bindings args))
-        sub-args (-> binding-vars count (take sub-args))
-        opts {:sub-args (reduce-kv (fn [c k v] (assoc c (get binding-vars k) v)) {} (vec sub-args))}]
-    (assemble-peanuts-form partial-peanuts-form fn-form opts)))
-
-(defn- get-options [[peanuts-macro-symbol _first second* _third fourth*]]
-  (if (= peanuts-macro-symbol 'defc) fourth* second*))
-
-(defn- get-rf-sub-args [bindings-map]
-  (reduce-kv (fn [c k [_ _ _ _ [_ [_ [_ & sub-args]]]]]
-               (assoc c k (or sub-args [])))
-             {}
-             bindings-map))
-
-(defn- get-sub-fn-args [bindings-map]
-  (reduce-kv (fn [c k [_ _ _ _ _ _ [_ & sub-args]]]
-               (assoc c k (or sub-args [])))
-             {}
-             bindings-map))
-
-(defn- get-let-form [[peanuts-macro-symbol :as peanuts-form]]
-  (cond-> peanuts-form
-          '-> macroexpand
-          (#{'fnc 'fc} peanuts-macro-symbol) (-> second second)
-          (#{'defnc 'defc} peanuts-macro-symbol) (-> (nth 2) (nth 2))))
-
-;; TODO: Use zippers?
-(defn- let-form->bindings [[let-symbol :as let-form] & [as-map?]]
-  (-> let-form
-      (cond-> (= let-symbol 'clojure.core/let) (nth 2))
-      second
-      (cond->> (not as-map?) (take-nth 2)
-               as-map? (apply hash-map))))
 
 (def symbol-name-gen
   (gen/fmap
@@ -126,7 +50,7 @@
     (gen/such-that identity gen/keyword)))
 (def associative-destructuring-map-with-defaults-gen
   (gen/fmap
-    assoc-defaults
+    tu/assoc-defaults
     (gen/map
       (gen/elements [:keys :syms :strs])
       (gen/vector (gen/tuple symbol-name-gen valid-coll-gen))
@@ -163,15 +87,15 @@
       symbol-name-gen)))
 (def peanuts-form-with-redlist-gen
   (gen/fmap
-    assemble-peanuts-form-with-vector-options
+    tu/assemble-peanuts-form-with-vector-options
     (gen/tuple (gen/elements [:redlist :exempt]) partial-peanuts-form-gen fn-form-gen)))
 (def peanuts-form-with-greenlist-gen
   (gen/fmap
-    assemble-peanuts-form-with-vector-options
+    tu/assemble-peanuts-form-with-vector-options
     (gen/tuple (gen/elements [:greenlist :only]) partial-peanuts-form-gen fn-form-gen)))
 (def peanuts-form-with-sub-args-opt-gen
   (gen/fmap
-    assemble-peanuts-form-with-sub-args-option
+    tu/assemble-peanuts-form-with-sub-args-option
     (gen/tuple partial-peanuts-form-gen
                fn-form-gen
                (-> gen/any
@@ -215,24 +139,24 @@
 
 (defspec test-peanuts-macros-redlist 20
   (prop/for-all [peanuts-form peanuts-form-with-redlist-gen]
-    (let [{:keys [exempt redlist]} (get-options peanuts-form)
-          bindings (let-form->bindings (get-let-form peanuts-form))]
+    (let [{:keys [exempt redlist]} (tu/get-options peanuts-form)
+          bindings (tu/let-form->bindings (tu/get-let-form peanuts-form))]
       (testing "Every exempted arg is not included in the let bindings"
         (every? (complement (set bindings)) (or exempt redlist))))))
 
 (defspec test-peanuts-macros-greenlist 20
   (prop/for-all [peanuts-form peanuts-form-with-greenlist-gen]
-    (let [{only :only} (get-options peanuts-form)
-          bindings (let-form->bindings (get-let-form peanuts-form))]
+    (let [{only :only} (tu/get-options peanuts-form)
+          bindings (tu/let-form->bindings (tu/get-let-form peanuts-form))]
       (testing "Every specified only-arg is included in the let bindings"
         (every? (set bindings) only)))))
 
 (defspec test-peanuts-macros-sub-args 20
   (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
-    (let [{sub-args :sub-args} (get-options peanuts-form)
-          bindings (-> peanuts-form get-let-form (let-form->bindings :as-map))
-          rf-sub-args (get-rf-sub-args bindings)
-          sub-fn-args (get-sub-fn-args bindings)]
+    (let [{sub-args :sub-args} (tu/get-options peanuts-form)
+          bindings (-> peanuts-form tu/get-let-form (tu/let-form->bindings :as-map))
+          rf-sub-args (tu/get-rf-sub-args bindings)
+          sub-fn-args (tu/get-sub-fn-args bindings)]
       (testing "Every specified subscription arg is included in the let bindings"
         (is (every? (fn [[k v]] (= (get rf-sub-args k) v)) sub-args)))
       (testing "Every specified subscription function arg is included in the let bindings"

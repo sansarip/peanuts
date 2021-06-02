@@ -98,7 +98,7 @@
     tu/assemble-peanuts-form-with-sub-args-option
     (gen/tuple partial-peanuts-form-gen
                fn-form-gen
-               (-> gen/any
+               (-> valid-values-gen
                    gen/vector
                    gen/vector))))
 (def defnc-form-gen
@@ -149,6 +149,23 @@
       ;; Then
       (testing "First symbol in returned form is fn*"
         (is= 'fn* first-symbol)))))
+
+(defspec test-peanuts-macros-rf-subscriptions 20
+  ;; Given
+  (prop/for-all [peanuts-form (gen/one-of
+                                [peanuts-form-with-redlist-gen
+                                 peanuts-form-with-greenlist-gen
+                                 peanuts-form-with-sub-args-opt-gen])]
+    (let [rf-subscriptions (atom 0)
+          num-args (count (tu/get-fn-args peanuts-form))]
+      (with-redefs [re-frame.core/subscribe (fn [& _] (swap! rf-subscriptions inc))]
+
+        ;; When
+        (apply (eval peanuts-form) (map (constantly nil) (range num-args))))
+
+      ;; Then
+      (testing "No subscriptions were attempted for non-keywords"
+        (is (zero? @rf-subscriptions))))))
 
 (defspec test-peanuts-macros-redlist 20
   ;; Given

@@ -195,7 +195,7 @@
   ;; Given
   (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
     (let [{sub-args :sub-args} (tu/get-options peanuts-form)
-          bindings (-> peanuts-form tu/get-let-form (tu/let-form->bindings :as-map))
+          bindings (tu/let-form->bindings (tu/get-let-form peanuts-form) :as-map)
 
           ;; When
           rf-sub-args (tu/get-rf-sub-args bindings)

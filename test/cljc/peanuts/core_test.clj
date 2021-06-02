@@ -179,14 +179,12 @@
                    gen/vector))))
 (def defnc-form-gen
   (gen/fmap
-    (fn [[n fn-args doc-str meta-map meta-map2]]
-      (list 'defnc n doc-str meta-map fn-args meta-map2))
+    (fn [[n [_ fn-args hiccup-vec] doc-str meta-map meta-map2]]
+      (list 'defnc n doc-str meta-map fn-args meta-map2 hiccup-vec))
     (gen/tuple
       symbol-name-gen
-      fn-args-gen
+      fn-form-gen
       gen/string-ascii
-      metadata-gen
-      metadata-gen)))
       metadata-map-gen
       metadata-map-gen)))
 

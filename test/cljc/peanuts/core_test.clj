@@ -182,14 +182,14 @@
 (defspec test-peanuts-macros-greenlist 20
   ;; Given
   (prop/for-all [peanuts-form peanuts-form-with-greenlist-gen]
-    (let [{only :only} (tu/get-options peanuts-form)
+    (let [{:keys [only greenlist]} (tu/get-options peanuts-form)
 
           ;; When
           bindings (tu/peanuts-form->let-bindings peanuts-form)]
 
       ;; Then
       (testing "Every specified only-arg is included in the let bindings"
-        (is (every? (set bindings) only))))))
+        (is (every? (set bindings) (or only greenlist)))))))
 
 (defspec test-peanuts-macros-sub-args 20
   ;; Given

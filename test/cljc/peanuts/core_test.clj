@@ -109,11 +109,6 @@
 (def metadata-map-gen
   (gen/map
     (gen/one-of [gen/string gen/keyword])
-
-
-(def kv-destructured-map-gen (gen/map
-                               (gen/such-that identity symbol-name-gen)
-                               (gen/such-that identity gen/keyword)))
     valid-values-gen))
 (def valid-coll-gen
   (gen/one-of
@@ -125,6 +120,10 @@
          (gen/one-of
            [metadata-map-gen
             valid-values-gen])))]))
+(def kv-destructured-map-gen
+  (gen/map
+    (gen/such-that identity symbol-name-gen)
+    (gen/such-that identity gen/keyword)))
 (def associative-destructuring-map-with-defaults-gen
   (gen/fmap
     assoc-defaults

@@ -101,7 +101,7 @@
     (gen/tuple
       gen/char-alpha
       gen/uuid)))
-(def metadata-gen
+(def metadata-map-gen
   (gen/map
     (gen/one-of [gen/string gen/keyword])
     (gen/one-of [gen/string gen/keyword])))
@@ -177,7 +177,7 @@
                (-> gen/any
                    gen/vector
                    gen/vector))))
-(def noop-defnc-form-gen
+(def defnc-form-gen
   (gen/fmap
     (fn [[n fn-args doc-str meta-map meta-map2]]
       (list 'defnc n doc-str meta-map fn-args meta-map2))
@@ -239,14 +239,14 @@
         (is (every? (fn [[k v]] (= (get sub-fn-args k) v)) sub-args))))))
 
 (defspec test-defnc-macro-includes-docstring 20
-  (prop/for-all [peanuts-form noop-defnc-form-gen]
+  (prop/for-all [peanuts-form defnc-form-gen]
     (let [[_ _ expected-doc-str] peanuts-form]
       (testing "Define var includes the specified doc string in its metadata"
         (is= expected-doc-str (:doc (meta (eval peanuts-form))))))))
 
 (defspec test-defnc-metadata 20
-  (prop/for-all [peanuts-form noop-defnc-form-gen
-                 present-metadata metadata-gen]
+  (prop/for-all [peanuts-form defnc-form-gen
+                 present-metadata metadata-map-gen]
     (let [[peanuts-macro-symbol n &
            [_ expected-meta-map1 _ expected-meta-map2 :as rest-of-form]] peanuts-form
           ;; Also include metadata on the name

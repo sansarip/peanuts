@@ -173,7 +173,7 @@
     (let [{:keys [exempt redlist]} (tu/get-options peanuts-form)
 
           ;; When
-          bindings (tu/let-form->bindings (tu/get-let-form peanuts-form))]
+          bindings (tu/peanuts-form->let-bindings peanuts-form)]
 
       ;; Then
       (testing "Every exempted arg is not included in the let bindings"
@@ -185,7 +185,7 @@
     (let [{only :only} (tu/get-options peanuts-form)
 
           ;; When
-          bindings (tu/let-form->bindings (tu/get-let-form peanuts-form))]
+          bindings (tu/peanuts-form->let-bindings peanuts-form)]
 
       ;; Then
       (testing "Every specified only-arg is included in the let bindings"

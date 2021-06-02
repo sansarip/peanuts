@@ -93,6 +93,10 @@
              {}
              bindings-map))
 
+(defn get-fn-args [peanuts-form]
+  (or (some #(if (vector? %) %) peanuts-form)
+      (some #(if (and (seq? %) (= 'fn (first %))) (second %)) peanuts-form)))
+
 (defn get-let-form [[peanuts-macro-symbol :as peanuts-form]]
   (cond-> peanuts-form
           '-> macroexpand
@@ -107,3 +111,5 @@
       (cond->> (not as-map?) (take-nth 2)
                as-map? (apply hash-map))))
 
+(defn peanuts-form->let-bindings [peanuts-form]
+  (let-form->bindings (get-let-form peanuts-form)))

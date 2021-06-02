@@ -113,10 +113,13 @@
       metadata-map-gen)))
 
 (deftest test-noop-peanuts-macro
+  ;; Given
   (defc defc** (fn []))
   (defnc defnc** [])
   (let [fc** (fc (fn []))
         fnc** (fnc [])]
+
+    ;; Then
     (testing "No-op peanuts macros return no-op functions"
       (is (nil? (defc**)))
       (is (nil? (fc**)))
@@ -124,51 +127,83 @@
       (is (nil? (fnc**))))))
 
 (defspec test-defc-always-defs 20
+  ;; Given
   (prop/for-all [fn-form fn-form-gen
                  expected-name gen/symbol]
+
+    ;; When
     (let [[first-symbol actual-name] (macroexpand (list 'defc expected-name fn-form))]
+
+      ;; Then
       (testing "Always defs the correct name"
         (and (is= 'def first-symbol)
              (is= expected-name actual-name))))))
 
 (defspec test-fc-always-fns 20
+  ;; Given
   (prop/for-all [fn-form fn-form-gen]
+
+    ;; When
     (let [[first-symbol] (macroexpand (list 'fc fn-form))]
+
+      ;; Then
       (testing "First symbol in returned form is fn*"
         (is= 'fn* first-symbol)))))
 
 (defspec test-peanuts-macros-redlist 20
+  ;; Given
   (prop/for-all [peanuts-form peanuts-form-with-redlist-gen]
     (let [{:keys [exempt redlist]} (tu/get-options peanuts-form)
+
+          ;; When
           bindings (tu/let-form->bindings (tu/get-let-form peanuts-form))]
+
+      ;; Then
       (testing "Every exempted arg is not included in the let bindings"
         (is (every? (complement (set bindings)) (or exempt redlist)))))))
 
 (defspec test-peanuts-macros-greenlist 20
+  ;; Given
   (prop/for-all [peanuts-form peanuts-form-with-greenlist-gen]
     (let [{only :only} (tu/get-options peanuts-form)
+
+          ;; When
           bindings (tu/let-form->bindings (tu/get-let-form peanuts-form))]
+
+      ;; Then
       (testing "Every specified only-arg is included in the let bindings"
         (is (every? (set bindings) only))))))
 
 (defspec test-peanuts-macros-sub-args 20
+  ;; Given
   (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
     (let [{sub-args :sub-args} (tu/get-options peanuts-form)
           bindings (-> peanuts-form tu/get-let-form (tu/let-form->bindings :as-map))
+
+          ;; When
           rf-sub-args (tu/get-rf-sub-args bindings)
           sub-fn-args (tu/get-sub-fn-args bindings)]
+
+      ;; Then
       (testing "Every specified subscription arg is included in the let bindings"
         (is (every? (fn [[k v]] (= (get rf-sub-args k) v)) sub-args)))
       (testing "Every specified subscription function arg is included in the let bindings"
         (is (every? (fn [[k v]] (= (get sub-fn-args k) v)) sub-args))))))
 
 (defspec test-defnc-macro-includes-docstring 20
+  ;; Given
   (prop/for-all [peanuts-form defnc-form-gen]
-    (let [[_ _ expected-doc-str] peanuts-form]
+    (let [[_ _ expected-doc-str] peanuts-form
+
+          ;; When
+          actual-meta (meta (eval peanuts-form))]
+
+      ;; Then
       (testing "Define var includes the specified doc string in its metadata"
-        (is= expected-doc-str (:doc (meta (eval peanuts-form))))))))
+        (is= expected-doc-str (:doc actual-meta))))))
 
 (defspec test-defnc-metadata 20
+  ;; Given
   (prop/for-all [peanuts-form defnc-form-gen
                  present-metadata metadata-map-gen]
     (let [[peanuts-macro-symbol n &
@@ -177,8 +212,13 @@
           peanuts-form* (-> n
                             (with-meta present-metadata)
                             (->> (list peanuts-macro-symbol))
-                            (concat rest-of-form))]
+                            (concat rest-of-form))
+
+          ;; When
+          actual-meta (meta (eval peanuts-form*))]
+
+      ;; Then
       (testing "Metadata map arg and metadata present on name are merged on evaluated peanuts form"
         (is (cljset/subset?
               (set (merge expected-meta-map1 expected-meta-map2 present-metadata))
-              (set (meta (eval peanuts-form*)))))))))
+              (set actual-meta)))))))

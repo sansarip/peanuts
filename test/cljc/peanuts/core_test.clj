@@ -110,14 +110,20 @@
                          gen/keyword
                          gen/large-integer]))
 
-(def valid-coll-gen (gen/one-of
-                      [metadata-gen
-                       (gen/vector valid-values-gen)
-                       valid-values-gen]))
 
 (def kv-destructured-map-gen (gen/map
                                (gen/such-that identity symbol-name-gen)
                                (gen/such-that identity gen/keyword)))
+(def valid-coll-gen
+  (gen/one-of
+    [metadata-map-gen
+     (gen/fmap
+       (fn [v] (cond-> v (not (coll? v)) vector))
+       (gen/recursive-gen
+         gen/vector
+         (gen/one-of
+           [metadata-map-gen
+            valid-values-gen])))]))
 (def associative-destructuring-map-with-defaults-gen
   (gen/fmap
     assoc-defaults
@@ -127,9 +133,28 @@
       {:num-elements 1})))
 (def destructured-map-gen (gen/one-of [kv-destructured-map-gen associative-destructuring-map-with-defaults-gen]))
 (def fn-args-gen (gen/vector (gen/one-of [symbol-name-gen destructured-map-gen]) 0 5))
-(def form-gen (gen/fmap (fn [[s v]] (seq (into [s] v))) (gen/tuple gen/symbol (gen/vector gen/any))))
-(def forms-gen (gen/vector form-gen))
-(def fn-form-gen (gen/fmap (fn [[s a b]] (seq (into [s a] b))) (gen/tuple (gen/return 'fn) fn-args-gen forms-gen)))
+(defn hiccup-vector-gen
+  ([hiccup-vector-gen*]
+   (gen/fmap
+     (fn [[k hiccup-vector-body hiccup-vector]]
+       (if hiccup-vector
+         [k hiccup-vector]
+         (try (into [k] hiccup-vector-body)
+              (catch Exception _e
+                (println 1)))))
+     (gen/tuple
+       (gen/such-that identity gen/keyword)
+       valid-coll-gen
+       hiccup-vector-gen*)))
+  ([] (hiccup-vector-gen (gen/return false))))
+(def hiccup-vectors-gen
+  (gen/recursive-gen
+    hiccup-vector-gen
+    (hiccup-vector-gen)))
+(def fn-form-gen
+  (gen/fmap
+    (fn [[args body]] (list 'fn args body))
+    (gen/tuple fn-args-gen hiccup-vectors-gen)))
 (def partial-peanuts-form-gen
   (gen/fmap
     (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))

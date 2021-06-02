@@ -101,19 +101,20 @@
     (gen/tuple
       gen/char-alpha
       gen/uuid)))
+(def valid-values-gen
+  (gen/one-of
+    [gen/string
+     gen/keyword
+     gen/small-integer]))
 (def metadata-map-gen
   (gen/map
     (gen/one-of [gen/string gen/keyword])
-    (gen/one-of [gen/string gen/keyword])))
-(def valid-values-gen (gen/one-of
-                        [gen/string
-                         gen/keyword
-                         gen/large-integer]))
 
 
 (def kv-destructured-map-gen (gen/map
                                (gen/such-that identity symbol-name-gen)
                                (gen/such-that identity gen/keyword)))
+    valid-values-gen))
 (def valid-coll-gen
   (gen/one-of
     [metadata-map-gen

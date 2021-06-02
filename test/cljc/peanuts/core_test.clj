@@ -142,14 +142,14 @@
     (let [{:keys [exempt redlist]} (tu/get-options peanuts-form)
           bindings (tu/let-form->bindings (tu/get-let-form peanuts-form))]
       (testing "Every exempted arg is not included in the let bindings"
-        (every? (complement (set bindings)) (or exempt redlist))))))
+        (is (every? (complement (set bindings)) (or exempt redlist)))))))
 
 (defspec test-peanuts-macros-greenlist 20
   (prop/for-all [peanuts-form peanuts-form-with-greenlist-gen]
     (let [{only :only} (tu/get-options peanuts-form)
           bindings (tu/let-form->bindings (tu/get-let-form peanuts-form))]
       (testing "Every specified only-arg is included in the let bindings"
-        (every? (set bindings) only)))))
+        (is (every? (set bindings) only))))))
 
 (defspec test-peanuts-macros-sub-args 20
   (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]

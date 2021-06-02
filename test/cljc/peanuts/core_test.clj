@@ -160,7 +160,7 @@
     (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
     (gen/tuple
       (gen/elements ['(fc) '(defc) '(fnc) '(defnc)])
-      gen/symbol)))
+      symbol-name-gen)))
 (def peanuts-form-with-redlist-gen
   (gen/fmap
     assemble-peanuts-form-with-vector-options

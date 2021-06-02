@@ -187,6 +187,8 @@
       gen/string-ascii
       metadata-gen
       metadata-gen)))
+      metadata-map-gen
+      metadata-map-gen)))
 
 (deftest test-noop-peanuts-macro
   (defc defc** (fn []))

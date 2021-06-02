@@ -176,7 +176,7 @@
           bindings (tu/peanuts-form->let-bindings peanuts-form)]
 
       ;; Then
-      (testing "Every exempted arg is not included in the let bindings"
+      (testing "Every redlisted arg is not included in the let bindings"
         (is (every? (complement (set bindings)) (or exempt redlist)))))))
 
 (defspec test-peanuts-macros-greenlist 20
@@ -188,7 +188,7 @@
           bindings (tu/peanuts-form->let-bindings peanuts-form)]
 
       ;; Then
-      (testing "Every specified only-arg is included in the let bindings"
+      (testing "Every greenlisted arg is included in the let bindings"
         (is (every? (set bindings) (or only greenlist)))))))
 
 (defspec test-peanuts-macros-sub-args 20

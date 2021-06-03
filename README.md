@@ -20,9 +20,10 @@ peanuts/peanuts {:mvn/version "0.5.0"}
 
 1. [Rationale](#rationale)
 2. [Usage](#usage)
-    1. [fnc macro](#fnc)
-    2. [defnc macro](#defnc)
-    3. [Options](#options)
+    1. [devcards](resources/public/index.html)
+    2. [fnc macro](#fnc)
+    3. [defnc macro](#defnc)
+    4. [Options](#options)
         1. [Redlisting Args](#redlisting-args)
         2. [Greenlisting Args](#greenlisting-args)
         3. [Subscription Args](#subscription-args)

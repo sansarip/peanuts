@@ -16,6 +16,7 @@
              :devcards {:source-paths ["devcards/cljs" "devcards/cljc"]
                         :dependencies [[com.bhauman/figwheel-main "0.2.13"]
                                        [org.clojure/clojurescript "1.10.866"]
-                                       [reagent "1.0.0"]
                                        [re-frame "1.2.0"]
-                                       [devcards "0.2.7"]]}})
+                                       [reagent "1.0.0"]
+                                       [devcards "0.2.6"]
+                                       [cljstache "2.0.6"]]}})

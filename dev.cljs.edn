@@ -4,14 +4,11 @@
   :log-level  :info}
 {:main            peanuts.cards
  :devcards        true
- :preloads        [devtools.preload
-                   day8.re-frame-10x.preload]
+ :preloads        [devtools.preload]
  :optimizations   :none
  :pretty-print    true
  :source-map      true
  :asset-path      "/dev/js/compiled/src"
  :output-to       "resources/public/dev/js/compiled/app.js"
  :output-dir      "resources/public/dev/js/compiled/src"
- :closure-defines {"re_frame.trace.trace_enabled_QMARK_"        true
-                   "day8.re_frame.tracing.trace_enabled_QMARK_" true
-                   goog.DEBUG                                   true}}
+ :closure-defines {goog.DEBUG                                   true}}

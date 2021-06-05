@@ -96,25 +96,25 @@
     (or exempt redlist)))
 
 (defn- peanut
-  ([n f {:keys [exempt greenlist redlist only def? sub-args] :as meta-map}]
-   (let [[_ args & body] f
-         bindings (->> args
-                       (remove-deep (cljset/union (set exempt) (set redlist)))
-                       vec
-                       (filter-deep (cljset/union (set only) (set greenlist)))
-                       flatten-maps
-                       (seq->let-form sub-args))
-                       (remove #(or (#{'&} %) (redlist-meta? %)))
-         symbol-quoted-meta-map (quote-symbols meta-map)]
-     (cond->> body
-              '->> (concat bindings)
-              '->> list
-              '->> (concat `(~'fn ~args))
-              def? list
-              def? (concat `(def ~(->> n
-                                       meta
-                                       (merge symbol-quoted-meta-map)
-                                       (with-meta n))))))))
+  [n f {:keys [exempt greenlist redlist only def? sub-args] :as meta-map}]
+  (let [[_ args & body] f
+        bindings (->> args
+                      (remove-deep (cljset/union (set exempt) (set redlist)))
+                      vec
+                      (filter-deep (cljset/union (set only) (set greenlist)))
+                      flatten-maps
+                      (seq->let-form sub-args)
+                      (remove #(or (#{'&} %) (redlist-meta? %))))
+        symbol-quoted-meta-map (quote-symbols meta-map)]
+    (cond->> body
+             '->> (concat bindings)
+             '->> list
+             '->> (concat `(~'fn ~args))
+             def? list
+             def? (concat `(def ~(->> n
+                                      meta
+                                      (merge symbol-quoted-meta-map)
+                                      (with-meta n)))))))
 (defmacro fc
   ([f opts]
    (peanut nil f (merge opts {:def? false})))

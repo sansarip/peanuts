@@ -99,8 +99,8 @@
                        vec
                        (filter-deep (cljset/union (set only) (set greenlist)))
                        flatten-maps
-                       (remove #{'&})
                        (seq->let-form sub-args))
+                       (remove #(or (#{'&} %) (redlist-meta? %)))
          symbol-quoted-meta-map (quote-symbols meta-map)]
      (cond->> body
               '->> (concat bindings)

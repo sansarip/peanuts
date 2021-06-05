@@ -112,11 +112,19 @@ There may be instances where a component expects certain args to _always_ be key
   [a & {:keys [b c d}]
   {:redlist [b c]}
   [:div a b c d])
+
+;; Or
+
+(defnc my-component
+   [a & {:keys [^:redlist b ^:redlist c d]}]
+   [:div a b c d])
 ```
 
-In the above example, the values of the `b` and `c` parameters will always be redlisted from being rebound to subscriptions.
+In the above examples, the values of the `b` and `c` parameters will always be redlisted 
+from being rebound to subscriptions.
 
-Arguments can also be redlisted dynamically by attaching the `^{:redlist true}` or `^:redlist` metadata.
+Arguments can also be redlisted dynamically by attaching the `^{:redlist true}` or 
+`^:redlist` metadata.
 
 ```clojure
 [my-component ^:redlist :some-key]

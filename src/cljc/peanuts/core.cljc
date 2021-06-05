@@ -91,6 +91,10 @@
 (defn- quote-symbols [coll]
   (walk/postwalk (fn [v] (if (symbol? v) (list 'quote v) v)) coll))
 
+(defn- redlist-meta? [binding]
+  (let [{:keys [exempt redlist]} (meta binding)]
+    (or exempt redlist)))
+
 (defn- peanut
   ([n f {:keys [exempt greenlist redlist only def? sub-args] :as meta-map}]
    (let [[_ args & body] f

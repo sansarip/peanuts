@@ -1,7 +1,8 @@
 ^{:open-url   "http://localhost:[[server-port]]/dev/index.html"
   :watch-dirs ["devcards/cljs"]
   :log-file   "log/figwheel-main.log"
-  :log-level  :info}
+  :log-level  :info
+  :npm        {:bundles {"dist/index.bundle.js" "devcards/js/index.js"}}}
 {:main            peanuts.cards
  :devcards        true
  :preloads        [devtools.preload]
@@ -11,4 +12,4 @@
  :asset-path      "/dev/js/compiled/src"
  :output-to       "resources/public/dev/js/compiled/app.js"
  :output-dir      "resources/public/dev/js/compiled/src"
- :closure-defines {goog.DEBUG                                   true}}
+ :closure-defines {goog.DEBUG true}}

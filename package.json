@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "highlight.js": "^10.4.1",
+    "react-highlight.js": "^1.0.7"
+  },
+  "devDependencies": {
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}

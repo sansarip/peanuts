@@ -1,2 +1,2 @@
 (ns peanuts.macros
-  (:require-macros peanuts.macros))
+  (:require-macros [peanuts.macros]))

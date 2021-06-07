@@ -1,15 +1,29 @@
 (ns peanuts.macros
   (:require
-    [clojure.pprint :refer [pprint]]
-    [cljstache.core :refer [render]]))
+    #?(:cljs [cljs.pprint :refer [pprint]]
+       :clj  [clojure.pprint :refer [pprint]])
+    [cljs.env :as env]
+    [clojure.string :as string]))
 
-(defmacro defcard-rg+
-  ([n s f args opts]
-   (let [ds (render "{{#s}}`{{&s}} \uD83D\uDC47`\n\n{{/s}}```clojure\n{{&f}}\n```" {:s s :f (with-out-str (pprint f))})]
-     `(devcards.core/defcard-rg ~n ~ds ~f ~args ~opts)))
-  ([n s f args]
-   `(defcard-rg+ ~n ~s ~f ~args {}))
-  ([n s f]
-   `(defcard-rg+ ~n ~s ~f nil))
-  ([n f]
-   `(defcard-rg+ ~n nil ~f)))
+(defmacro assoc-component-state [component key value]
+  `(do (set! (.. ~component -state ~key) ~value)
+       (-> ~component (.setState (.. ~component -state)))))
+
+(defmacro defcard-ide
+  ([n s ide [_ fn-args & fn-body] args opts]
+   `(devcards.core/defcard-rg
+      ~n
+      ~s
+      (~'fn ~fn-args
+        [:> ~ide
+         {:default-input ~(string/join (map #(with-out-str (pprint %)) fn-body))}])
+      ~args ~opts))
+  ([n s ide f args]
+   `(defcard-ide ~n ~s ~ide ~f ~args {}))
+  ([n s ide f]
+   `(defcard-ide ~n ~s ~ide ~f nil))
+  ([n ide f]
+   `(defcard-ide ~n nil ~ide ~f)))
+
+(defmacro analyzer-state [[_ ns-sym]]
+  `'~(get-in @env/*compiler* [:cljs.analyzer/namespaces ns-sym]))

@@ -17,6 +17,9 @@
                         :dependencies [[com.bhauman/figwheel-main "0.2.13"]
                                        [org.clojure/clojurescript "1.10.866"]
                                        [re-frame "1.2.0"]
-                                       [reagent "1.0.0"]
+                                       [reagent "0.8.1"]
+                                       [re-catch "0.1.4"]
                                        [devcards "0.2.6"]
-                                       [cljstache "2.0.6"]]}})
+                                       [cljstache "2.0.6"]
+                                       [net.dhleong/spade "1.0.4"]]}})
+

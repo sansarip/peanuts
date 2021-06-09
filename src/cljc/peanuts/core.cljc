@@ -1,8 +1,7 @@
 (ns peanuts.core
   (:require
-    [clojure.walk :as w]
-    [clojure.set :as cljset]
-    [clojure.walk :as walk]))
+    [clojure.walk :as walk]
+    [clojure.set :as cljset]))
 
 (defn- not-empty-coll [thing]
   (if (coll? thing) (not-empty thing) thing))
@@ -20,12 +19,12 @@
 (defn- remove-deep [key-set data]
   (if (not-empty key-set)
     (->> data
-         (w/prewalk (fn [node]
-                      (cond
-                        (binding-vector? node) (vec (remove key-set node))
-                        (map? node) (apply dissoc (dissoc node :or) key-set)
-                        (get key-set node) nil
-                        :else node)))
+         (walk/prewalk (fn [node]
+                         (cond
+                           (binding-vector? node) (vec (remove key-set node))
+                           (map? node) (apply dissoc (dissoc node :or) key-set)
+                           (get key-set node) nil
+                           :else node)))
          (filterv not-empty-vals))
     data))
 
@@ -45,12 +44,12 @@
 (defn- filter-deep [key-set data]
   (if (not-empty key-set)
     (->> data
-         (w/prewalk (fn [node]
-                      (cond
-                        (binding-vector? node) (filterv #(symbol-in? key-set %) node)
-                        (map? node) (filter-symbol-keys key-set (dissoc node :or))
-                        (not (symbol-in? key-set node)) nil
-                        :else node)))
+         (walk/prewalk (fn [node]
+                         (cond
+                           (binding-vector? node) (filterv #(symbol-in? key-set %) node)
+                           (map? node) (filter-symbol-keys key-set (dissoc node :or))
+                           (not (symbol-in? key-set node)) nil
+                           :else node)))
          (filterv not-empty-vals)
          (remove #{'&}))
     data))
@@ -61,12 +60,12 @@
 
 (defn- flatten-maps [args]
   (->> args
-       (w/prewalk (fn [node]
-                    (let [assoc-dest-vec (get-associative-destructuring-vector node)]
-                      (cond
-                        (not-empty assoc-dest-vec) (vec (vals assoc-dest-vec))
-                        (map? node) (vec (keys node))
-                        :else node))))
+       (walk/prewalk (fn [node]
+                       (let [assoc-dest-vec (get-associative-destructuring-vector node)]
+                         (cond
+                           (not-empty assoc-dest-vec) (vec (vals assoc-dest-vec))
+                           (map? node) (vec (keys node))
+                           :else node))))
        flatten
        distinct))
 

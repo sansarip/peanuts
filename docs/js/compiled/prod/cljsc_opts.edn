@@ -1,0 +1,1 @@
+{:infer-externs true, :output-dir "resources/public/js/compiled/prod", :optimizations :simple, :aot-cache false, :output-to "resources/public/js/compiled/app.js", :asset-path "js/compiled/prod", :foreign-libs [{:provides ("hljs-kit"), :global-exports {hljs-kit HljsKit}, :file "dist/index.bundle.js"}], :devcards true, :main peanuts.cards.main, :npm-deps false}

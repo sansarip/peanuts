@@ -1,0 +1,7 @@
+^{:npm {:bundles {"dist/index.bundle.js" "devcards/src/js/index.js"}}}
+{:main          peanuts.cards.main
+ :optimizations :simple
+ :devcards      true
+ :asset-path    "js/compiled/prod"
+ :output-to     "resources/public/js/compiled/app.js"
+ :output-dir    "resources/public/js/compiled/prod"}

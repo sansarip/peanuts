@@ -15,6 +15,7 @@
   :profiles {:test     {:source-paths ["test/deps"]}
              :devcards {:source-paths ["devcards/cljs" "devcards/cljc"]
                         :dependencies [[com.bhauman/figwheel-main "0.2.13"]
+                                       [org.clojure/tools.namespace "1.1.0"]
                                        [org.clojure/clojurescript "1.10.866"]
                                        [re-frame "1.2.0"]
                                        [reagent "0.8.1"]

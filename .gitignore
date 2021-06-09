@@ -14,6 +14,7 @@ pom.xml.asc
 *.iml
 .git-bk*
 /resources/public/dev
+/resources/public/js/compiled
 /log
 /node_modules
-/devcards/cljc/peanuts/core.cljc
+/devcards/src/cljc/peanuts/core.cljc

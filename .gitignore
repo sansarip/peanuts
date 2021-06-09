@@ -18,3 +18,4 @@ pom.xml.asc
 /log
 /node_modules
 /devcards/src/cljc/peanuts/core.cljc
+/dist

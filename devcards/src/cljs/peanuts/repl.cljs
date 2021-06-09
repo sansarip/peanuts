@@ -1,4 +1,4 @@
-(ns peanuts.ide
+(ns peanuts.repl
   (:require
     [peanuts.macros :refer [assoc-component-state]]
     [cljs.pprint :refer [pprint]]
@@ -11,7 +11,7 @@
     [hljs-kit :refer [Hljs CljHljs] :rename {Hljs hljs CljHljs clj-hljs}]
     [cljs.spec.alpha :as s]))
 
-(s/def ::hiccup? (s/and vector? #(-> % first keyword?)))
+(s/def ::hiccup? (s/and vector? #(or (-> % first fn?) (-> % first keyword?))))
 
 (defn hiccup? [v]
   (s/valid? ::hiccup? v))
@@ -58,20 +58,18 @@
                               #_[:> icon {:icon-name     "chevron-right"
                                           :strength      "strong"
                                           :extra-classes "prompt"}]
-                              [:div ">"]
+                              [:i.fas.fa-chevron-right]
                               (condp apply [output]
                                 ;; render as hiccup if...
                                 ;; hiccup vector?
                                 hiccup? [:div.hiccup [(fn [] output)]] ; this fn wrapping is necessary to prevent errors
-                                ;; function?
-                                fn? [:div.hiccup [output]]
                                 ;; everything else is treated as Clojure code
                                 [:pre>code.clj
                                  [:span.other
                                   (with-out-str (pprint output))]])]])
      :component-did-mount render-code}))
 
-(def ide
+(def repl
   (create-class
     {:get-initial-state
      (fn [_this]

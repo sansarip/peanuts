@@ -11,7 +11,15 @@
   (pm/sources
     clojure.set
     clojure.walk
-    peanuts.core))
+    peanuts.core
+    peanuts.cards.ex1
+    peanuts.cards.ex2
+    peanuts.cards.ex3
+    peanuts.cards.ex4
+    peanuts.cards.ex5
+    peanuts.cards.ex6
+    peanuts.cards.ex7
+    peanuts.cards.ex8))
 
 (def namespace-declaration
   (literally
@@ -36,7 +44,7 @@
   [s cb]
   (cljs-js/eval-str
     state
-    (str namespace-declaration s)
+    s
     nil
     {:eval cljs-js/js-eval
      :load loader}

@@ -20,7 +20,7 @@ peanuts/peanuts {:mvn/version "0.5.5"}
 
 1. [Rationale](#rationale)
 2. [Usage](#usage)
-    1. [Interactive devcards](https://sansarip.github.io/peanuts)
+    1. [Interactive devcards](https://sansarip.github.io/peanuts/#!/peanuts.cards.main)
     2. [fnc macro](#fnc)
     3. [defnc macro](#defnc)
     4. [Options](#options)

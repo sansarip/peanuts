@@ -14,7 +14,7 @@
                           :border           (str "2px solid " (:primary color-palette))}]
            [:.CodeMirror-gutters {:background-color (:primary color-palette)}]
            [:.CodeMirror-linenumber {:color :white}]
-           [:.CodeMirror-line>span {:background-color (:quaternary color-palette)
+           [:.CodeMirror-line>span {:background-color (str (:quaternary color-palette) "55")
                                     :border-radius    :2px}])
 
 (defclass result-view-class []

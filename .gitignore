@@ -16,3 +16,4 @@ pom.xml.asc
 /resources/public/dev
 /log
 /node_modules
+/devcards/cljc/peanuts/core.cljc

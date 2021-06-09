@@ -123,15 +123,6 @@ There may be instances where a component expects certain args to _always_ be key
 In the above examples, the values of the `b` and `c` parameters will always be redlisted 
 from being rebound to subscriptions.
 
-Arguments can also be redlisted dynamically by attaching the `^{:redlist true}` or 
-`^:redlist` metadata.
-
-```clojure
-[my-component ^:redlist :some-key]
-```
-
-In the above example, `:some-key` will be used as a regular keyword and will be redlisted.
-
 #### Greenlisting Args <a name="greenlisting-args"></a>
 
 Sometimes it's nice to greenlist certain args involved with subs and have the rest be untouched. The `:greenlist` option is there for such cases.

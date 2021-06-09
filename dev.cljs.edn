@@ -1,15 +1,14 @@
-^{:open-url   "http://localhost:[[server-port]]/dev/index.html"
-  :watch-dirs ["devcards/cljs"]
+^{:watch-dirs ["devcards/src/cljs"]
   :log-file   "log/figwheel-main.log"
   :log-level  :info
-  :npm        {:bundles {"dist/index.bundle.js" "devcards/js/index.js"}}}
-{:main            peanuts.cards
+  :npm        {:bundles {"dist/index.bundle.js" "devcards/src/js/index.js"}}}
+{:main            peanuts.cards.main
  :devcards        true
  :preloads        [devtools.preload]
  :optimizations   :none
  :pretty-print    true
  :source-map      true
- :asset-path      "/dev/js/compiled/src"
- :output-to       "resources/public/dev/js/compiled/app.js"
- :output-dir      "resources/public/dev/js/compiled/src"
+ :asset-path      "js/compiled/dev"
+ :output-to       "resources/public/js/compiled/app.js"
+ :output-dir      "resources/public/js/compiled/dev"
  :closure-defines {goog.DEBUG true}}

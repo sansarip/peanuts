@@ -10,12 +10,12 @@
                  [org.clojure/test.check "1.0.0"]]
   :repl-options {:init-ns peanuts.core}
   :source-paths ["src/cljc"]
-  :aliases {"fig:prod"       ["run" "-m" "figwheel.main" "-bo" "prod"]
-            "fig:dev"        ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]
-            "deploy:clojars" ["deploy" "clojars"]}
+  :aliases {"fig:prod"       ["with-profile" "devcards" "run" "-m" "figwheel.main" "-bo" "prod"]
+            "fig:dev"        ["with-profile" "devcards" "trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]
+            "deploy:clojars" ["with-profile" "peanuts" "deploy" "clojars"]}
   :profiles {:test     {:source-paths ["src/cljc" "src/cljs" "test/deps"]}
              :peanuts  {:source-paths ["src/cljc" "src/cljs"]}
-             :devcards {:source-paths ["devcards/cljs" "devcards/cljc"]
+             :devcards {:source-paths ["devcards/src/cljs" "devcards/src/cljc"]
                         :dependencies [[com.bhauman/figwheel-main "0.2.13"]
                                        [org.clojure/tools.namespace "1.1.0"]
                                        [org.clojure/clojurescript "1.10.866"]

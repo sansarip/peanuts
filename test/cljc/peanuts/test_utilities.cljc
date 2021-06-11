@@ -82,13 +82,13 @@
   (if (= peanuts-macro-symbol 'defc) fourth* second*))
 
 (defn get-rf-sub-args [bindings-map]
-  (reduce-kv (fn [c k [_ _ _ _ [_ [_ [_ & sub-args]]]]]
+  (reduce-kv (fn [c k [_ _ _ _ [_ [_ [_ [_ & sub-args]]]]]]
                (assoc c k (or sub-args [])))
              {}
              bindings-map))
 
 (defn get-sub-fn-args [bindings-map]
-  (reduce-kv (fn [c k [_ _ _ _ _ _ [_ & sub-args]]]
+  (reduce-kv (fn [c k [_ _ _ _ _ _ _ _ [_ & sub-args]]]
                (assoc c k (or sub-args [])))
              {}
              bindings-map))
@@ -113,3 +113,6 @@
 
 (defn peanuts-form->let-bindings [peanuts-form]
   (let-form->bindings (get-let-form peanuts-form)))
+
+(defn subscription-vector? [arg]
+  (and (vector? arg) (keyword? (first arg))))

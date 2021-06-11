@@ -158,13 +158,17 @@
                                  peanuts-form-with-sub-args-opt-gen])]
     (let [rf-subscriptions (atom 0)
           num-args (count (tu/get-fn-args peanuts-form))]
-      (with-redefs [re-frame.core/subscribe (fn [& _] (swap! rf-subscriptions inc))]
+      (with-redefs [re-frame.core/subscribe
+                    (fn [sub-vec]
+                      (when (not (tu/subscription-vector? sub-vec))
+                        (swap! rf-subscriptions inc))
+                      nil)]
 
         ;; When
         (apply (eval peanuts-form) (map (constantly nil) (range num-args))))
 
       ;; Then
-      (testing "No subscriptions were attempted for non-keywords"
+      (testing "No subscriptions were attempted for non-subscription-vector args"
         (is (zero? @rf-subscriptions))))))
 
 (defspec test-peanuts-macros-redlist 20

@@ -69,11 +69,17 @@
        flatten
        distinct))
 
+(defn- subscribe-form [binding-vec default]
+  `(~'if-let [~'sub (re-frame.core/subscribe ~binding-vec)]
+     ~'(deref sub)
+     ~default))
+
 (defn- make-cond-form [binding binding-args]
   (let [binding-vec (into [binding] binding-args)]
     `(~'cond
        (~'let [~'{:keys [exempt redlist]} (~'meta ~binding)] ~'(or exempt redlist)) ~binding
-       (~'keyword? ~binding) (~'deref (re-frame.core/subscribe ~binding-vec))
+       (~'keyword? ~binding) ~(subscribe-form binding-vec binding)
+       (~'and (~'vector? ~binding) (~'keyword? (~'first ~binding))) ~(subscribe-form binding binding)
        (~'or (~'-> ~binding ~'meta :sub-fn) (~'and (~'fn? ~binding) ~binding-args)) ~(seq binding-vec)
        :else ~binding)))
 

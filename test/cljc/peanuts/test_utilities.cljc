@@ -93,7 +93,7 @@
              {}
              bindings-map))
 
-(defn get-fn-args [peanuts-form]
+(defn get-fn-params [peanuts-form]
   (or (some #(if (vector? %) %) peanuts-form)
       (some #(if (and (seq? %) (= 'fn (first %))) (second %)) peanuts-form)))
 

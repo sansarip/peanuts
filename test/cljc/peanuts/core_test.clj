@@ -44,19 +44,20 @@
          (gen/one-of
            [metadata-map-gen
             valid-values-gen])))]))
-(def kv-destructured-map-gen
-  (gen/map
-    (gen/such-that identity symbol-name-gen)
-    (gen/such-that identity gen/keyword)))
-(def associative-destructuring-map-with-defaults-gen
-  (gen/fmap
-    tu/assoc-defaults
-    (gen/map
-      (gen/elements [:keys :syms :strs])
-      (gen/vector (gen/tuple symbol-name-gen valid-coll-gen))
-      {:num-elements 1})))
-(def destructured-map-gen (gen/one-of [kv-destructured-map-gen associative-destructuring-map-with-defaults-gen]))
-(def fn-args-gen (gen/vector (gen/one-of [symbol-name-gen destructured-map-gen]) 0 5))
+(def associative-destructuring-map-gen
+  (gen/one-of
+    [(gen/map
+       (gen/such-that identity symbol-name-gen)
+       (gen/such-that identity (gen/one-of [gen/keyword gen/string-ascii])))
+     (gen/fmap
+       tu/assoc-defaults
+       (gen/map
+         (gen/elements [:keys :syms :strs])
+         (gen/vector (gen/tuple symbol-name-gen valid-coll-gen))
+         {:num-elements 1}))]))
+(def fn-params-gen
+  (gen/vector
+    (gen/one-of [symbol-name-gen associative-destructuring-map-gen]) 0 5))
 (defn hiccup-vector-gen
   ([hiccup-vector-gen*]
    (gen/fmap
@@ -77,8 +78,8 @@
     (hiccup-vector-gen)))
 (def fn-form-gen
   (gen/fmap
-    (fn [[args body]] (list 'fn args body))
-    (gen/tuple fn-args-gen hiccup-vectors-gen)))
+    (fn [[params body]] (list 'fn params body))
+    (gen/tuple fn-params-gen hiccup-vectors-gen)))
 (def partial-peanuts-form-gen
   (gen/fmap
     (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
@@ -103,8 +104,8 @@
                    gen/vector))))
 (def defnc-form-gen
   (gen/fmap
-    (fn [[n [_ fn-args hiccup-vec] doc-str meta-map meta-map2]]
-      (list 'defnc n doc-str meta-map fn-args meta-map2 hiccup-vec))
+    (fn [[n [_ fn-params hiccup-vec] doc-str meta-map meta-map2]]
+      (list 'defnc n doc-str meta-map fn-params meta-map2 hiccup-vec))
     (gen/tuple
       symbol-name-gen
       fn-form-gen
@@ -157,7 +158,7 @@
                                  peanuts-form-with-greenlist-gen
                                  peanuts-form-with-sub-args-opt-gen])]
     (let [rf-subscriptions (atom 0)
-          num-args (count (tu/get-fn-args peanuts-form))]
+          num-params (count (tu/get-fn-params peanuts-form))]
       (with-redefs [re-frame.core/subscribe
                     (fn [sub-vec]
                       (when (not (tu/subscription-vector? sub-vec))
@@ -165,7 +166,7 @@
                       nil)]
 
         ;; When
-        (apply (eval peanuts-form) (map (constantly nil) (range num-args))))
+        (apply (eval peanuts-form) (map (constantly nil) (range num-params))))
 
       ;; Then
       (testing "No subscriptions were attempted for non-subscription-vector args"

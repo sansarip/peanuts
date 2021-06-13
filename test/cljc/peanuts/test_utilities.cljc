@@ -45,24 +45,24 @@
        distinct))
 
 (defn assemble-peanuts-form
-  [[peanuts-macro-symbol :as partial-peanuts-form] [_fn args & body :as fn-form] opts]
+  [[peanuts-macro-symbol :as partial-peanuts-form] [_fn params & body :as fn-form] opts]
   (if (#{'defnc 'fnc} peanuts-macro-symbol)
     (-> partial-peanuts-form
         (concat (list opts))
-        (concat (list args))
+        (concat (list params))
         (concat body))
     (-> partial-peanuts-form
         (concat (list fn-form))
         (concat (list opts)))))
 
 (defn assemble-peanuts-form-with-vector-options
-  [[opt-key partial-peanuts-form [_fn args :as fn-form]]]
-  (let [opts {opt-key (->> args get-bindings (random-sample 0.5) vec)}]
+  [[opt-key partial-peanuts-form [_fn params :as fn-form]]]
+  (let [opts {opt-key (->> params get-bindings (random-sample 0.5) vec)}]
     (assemble-peanuts-form partial-peanuts-form fn-form opts)))
 
 (defn assemble-peanuts-form-with-sub-args-option
-  [[partial-peanuts-form [_fn args :as fn-form] sub-args]]
-  (let [binding-vars (vec (get-bindings args))
+  [[partial-peanuts-form [_fn params :as fn-form] sub-args]]
+  (let [binding-vars (vec (get-bindings params))
         sub-args (-> binding-vars count (take sub-args))
         opts {:sub-args (reduce-kv (fn [c k v] (assoc c (get binding-vars k) v)) {} (vec sub-args))}]
     (assemble-peanuts-form partial-peanuts-form fn-form opts)))

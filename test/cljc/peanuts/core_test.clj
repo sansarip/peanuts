@@ -158,7 +158,7 @@
                                  peanuts-form-with-greenlist-gen
                                  peanuts-form-with-sub-args-opt-gen])]
     (let [rf-subscriptions (atom 0)
-          num-params (count (tu/get-fn-params peanuts-form))]
+          fn-args (tu/fn-params->args (tu/get-fn-params peanuts-form))]
       (with-redefs [re-frame.core/subscribe
                     (fn [sub-vec]
                       (when (not (tu/subscription-vector? sub-vec))
@@ -166,7 +166,7 @@
                       nil)]
 
         ;; When
-        (apply (eval peanuts-form) (map (constantly nil) (range num-params))))
+        (apply (eval peanuts-form) fn-args))
 
       ;; Then
       (testing "No subscriptions were attempted for non-subscription-vector args"

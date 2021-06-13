@@ -158,3 +158,23 @@
 
 (defn subscription-vector? [arg]
   (and (vector? arg) (keyword? (first arg))))
+
+(def constantly-nil (constantly nil))
+
+(defn fn-params->args
+  {:test (do (is (= [nil nil nil]
+                    (fn-params->args ['a 'b 'c])))
+             (is (= ["a" "b" []]
+                    (fn-params->args ['a 'b ['c 'd]]
+                                     {:when-vector (fn [_] [])
+                                      :else str}))))}
+  [params & [{:keys [when-vector when-map else]
+              :or   {when-vector constantly-nil
+                     when-map    constantly-nil
+                     else        constantly-nil}}]]
+  (mapv
+    #(cond
+       (vector? %) (when-vector %)
+       (map? %) (when-map %)
+       :else (else %))
+    params))

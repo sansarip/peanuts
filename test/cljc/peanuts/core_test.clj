@@ -55,7 +55,7 @@
          (gen/elements [:keys :syms :strs])
          (gen/vector (gen/tuple symbol-name-gen valid-coll-gen))
          {:num-elements 1}))]))
-(def fn-params-gen
+(defn fn-params-gen []
   (gen/vector
     (gen/one-of [symbol-name-gen associative-destructuring-map-gen]) 0 5))
 (defn hiccup-vector-gen
@@ -76,39 +76,48 @@
   (gen/recursive-gen
     hiccup-vector-gen
     (hiccup-vector-gen)))
-(def fn-form-gen
+(defn fn-form-gen []
   (gen/fmap
     (fn [[params body]] (list 'fn params body))
-    (gen/tuple fn-params-gen hiccup-vectors-gen)))
+    (gen/tuple (fn-params-gen) hiccup-vectors-gen)))
 (def partial-peanuts-form-gen
   (gen/fmap
     (fn [[l s]] (cond-> l (#{'(defc) '(defnc)} l) (concat (list s))))
     (gen/tuple
       (gen/elements ['(fc) '(defc) '(fnc) '(defnc)])
       symbol-name-gen)))
-(def peanuts-form-with-redlist-gen
+(defn peanuts-form-with-redlist-gen []
+  (gen/fmap
+      tu/assemble-peanuts-form-with-vector-options
+      (gen/tuple (gen/elements [:redlist :exempt]) partial-peanuts-form-gen (fn-form-gen))))
+(defn peanuts-form-with-greenlist-gen []
   (gen/fmap
     tu/assemble-peanuts-form-with-vector-options
-    (gen/tuple (gen/elements [:redlist :exempt]) partial-peanuts-form-gen fn-form-gen)))
-(def peanuts-form-with-greenlist-gen
-  (gen/fmap
-    tu/assemble-peanuts-form-with-vector-options
-    (gen/tuple (gen/elements [:greenlist :only]) partial-peanuts-form-gen fn-form-gen)))
-(def peanuts-form-with-sub-args-opt-gen
+    (gen/tuple (gen/elements [:greenlist :only]) partial-peanuts-form-gen (fn-form-gen))))
+(defn peanuts-form-with-sub-args-opt-gen []
   (gen/fmap
     tu/assemble-peanuts-form-with-sub-args-option
     (gen/tuple partial-peanuts-form-gen
-               fn-form-gen
+               (fn-form-gen)
                (-> valid-values-gen
                    gen/vector
                    gen/vector))))
+(defn peanuts-form-gen
+  [& [{:keys [fn-params-gen*]
+       :or   {fn-params-gen* fn-params-gen}}]]
+  (with-redefs
+    [peanuts.core-test/fn-params-gen fn-params-gen*]
+    (gen/one-of
+      [(peanuts-form-with-redlist-gen)
+       (peanuts-form-with-greenlist-gen)
+       (peanuts-form-with-sub-args-opt-gen)])))
 (def defnc-form-gen
   (gen/fmap
     (fn [[n [_ fn-params hiccup-vec] doc-str meta-map meta-map2]]
       (list 'defnc n doc-str meta-map fn-params meta-map2 hiccup-vec))
     (gen/tuple
       symbol-name-gen
-      fn-form-gen
+      (fn-form-gen)
       gen/string-ascii
       metadata-map-gen
       metadata-map-gen)))
@@ -129,7 +138,7 @@
 
 (defspec test-defc-always-defs 20
   ;; Given
-  (prop/for-all [fn-form fn-form-gen
+  (prop/for-all [fn-form (fn-form-gen)
                  expected-name gen/symbol]
 
     ;; When
@@ -142,7 +151,7 @@
 
 (defspec test-fc-always-fns 20
   ;; Given
-  (prop/for-all [fn-form fn-form-gen]
+  (prop/for-all [fn-form (fn-form-gen)]
 
     ;; When
     (let [[first-symbol] (macroexpand (list 'fc fn-form))]
@@ -151,12 +160,9 @@
       (testing "First symbol in returned form is fn*"
         (is= 'fn* first-symbol)))))
 
-(defspec test-peanuts-macros-rf-subscriptions 20
+(defspec test-peanuts-macros-rf-subscriptions-1 20
   ;; Given
-  (prop/for-all [peanuts-form (gen/one-of
-                                [peanuts-form-with-redlist-gen
-                                 peanuts-form-with-greenlist-gen
-                                 peanuts-form-with-sub-args-opt-gen])]
+  (prop/for-all [peanuts-form (peanuts-form-gen)]
     (let [rf-subscriptions (atom 0)
           fn-args (tu/fn-params->args (tu/get-fn-params peanuts-form))]
       (with-redefs [re-frame.core/subscribe
@@ -174,7 +180,7 @@
 
 (defspec test-peanuts-macros-redlist 20
   ;; Given
-  (prop/for-all [peanuts-form peanuts-form-with-redlist-gen]
+  (prop/for-all [peanuts-form (peanuts-form-with-redlist-gen)]
     (let [{:keys [exempt redlist]} (tu/get-options peanuts-form)
 
           ;; When
@@ -186,7 +192,7 @@
 
 (defspec test-peanuts-macros-greenlist 20
   ;; Given
-  (prop/for-all [peanuts-form peanuts-form-with-greenlist-gen]
+  (prop/for-all [peanuts-form (peanuts-form-with-greenlist-gen)]
     (let [{:keys [only greenlist]} (tu/get-options peanuts-form)
 
           ;; When
@@ -198,7 +204,7 @@
 
 (defspec test-peanuts-macros-sub-args 20
   ;; Given
-  (prop/for-all [peanuts-form peanuts-form-with-sub-args-opt-gen]
+  (prop/for-all [peanuts-form (peanuts-form-with-sub-args-opt-gen)]
     (let [{sub-args :sub-args} (tu/get-options peanuts-form)
           bindings (tu/let-form->bindings (tu/get-let-form peanuts-form) :as-map)
 

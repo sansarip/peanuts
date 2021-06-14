@@ -121,6 +121,14 @@
       gen/string-ascii
       metadata-map-gen
       metadata-map-gen)))
+(defn subscription-vector-gen []
+  (gen/fmap
+    (fn [[sub-id sub-args]]
+      (into [sub-id] sub-args))
+    (gen/tuple
+      gen/keyword
+      (gen/vector
+        valid-values-gen))))
 
 (deftest test-noop-peanuts-macro
   ;; Given
@@ -177,6 +185,43 @@
       ;; Then
       (testing "No subscriptions were attempted for non-subscription-vector args"
         (is (zero? @rf-subscriptions))))))
+
+(defspec test-peanuts-macros-rf-subscriptions-2 20
+  ;; Given
+  (prop/for-all [sub-vec (subscription-vector-gen)]
+    (let [baz (fnc [oo] oo)
+          bar (fnc [ar] (baz ar))
+          foo (fnc [az] (bar az))
+          rf-subscriptions (atom 0)]
+      (with-redefs [re-frame.core/subscribe
+                    (fn [sub-vec]
+                      (swap! rf-subscriptions inc)
+                      (atom sub-vec))]
+
+        ;; When
+        (foo (with-meta sub-vec {:redlist true}))
+
+        ;; Then
+        (testing "No subscriptions were attempted for a meta-redlisted arg"
+          (is (zero? @rf-subscriptions)))
+
+        ;; When
+        (foo (first sub-vec))
+
+        ;; Then
+        (testing "Subscription attempted for subscription keyword id"
+          ;; 1 fn call * 3 subs per fn call
+          (is (= 3 @rf-subscriptions)))
+
+        ;; When
+        (let [actual-sub-vec (foo sub-vec)]
+
+          ;; Then
+          (testing "Subscription vector is passed through to re-frame.core/subscribe"
+            (is (= sub-vec actual-sub-vec))))))))
+
+
+
 
 (defspec test-peanuts-macros-redlist 20
   ;; Given

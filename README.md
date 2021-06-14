@@ -8,12 +8,12 @@
 
 [deps.edn](https://clojure.org/reference/deps_and_cli)
 ```clojure
-peanuts/peanuts {:mvn/version "0.5.5"}
+peanuts/peanuts {:mvn/version "0.6.1"}
 ```
 
 [Leiningen](https://github.com/technomancy/leiningen)
 ```clojure
-[peanuts "0.5.5"]
+[peanuts "0.6.1"]
 ```
 
 ## ToC

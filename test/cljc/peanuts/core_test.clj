@@ -168,6 +168,14 @@
       (testing "First symbol in returned form is fn*"
         (is= 'fn* first-symbol)))))
 
+(deftest test-&-symbol
+  ;; Given
+  (let [bindings (tu/peanuts-form->let-bindings '(defnc foo [& [oo]] oo))]
+
+    ;; Then
+    (testing "& symbol is not in let-bindings"
+      (is (not (some #{'&} bindings))))))
+
 (defspec test-peanuts-macros-rf-subscriptions-1 20
   ;; Given
   (prop/for-all [peanuts-form (peanuts-form-gen)]
@@ -219,9 +227,6 @@
           ;; Then
           (testing "Subscription vector is passed through to re-frame.core/subscribe"
             (is (= sub-vec actual-sub-vec))))))))
-
-
-
 
 (defspec test-peanuts-macros-redlist 20
   ;; Given

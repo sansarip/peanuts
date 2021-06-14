@@ -88,8 +88,8 @@
       symbol-name-gen)))
 (defn peanuts-form-with-redlist-gen []
   (gen/fmap
-      tu/assemble-peanuts-form-with-vector-options
-      (gen/tuple (gen/elements [:redlist :exempt]) partial-peanuts-form-gen (fn-form-gen))))
+    tu/assemble-peanuts-form-with-vector-options
+    (gen/tuple (gen/elements [:redlist :exempt]) partial-peanuts-form-gen (fn-form-gen))))
 (defn peanuts-form-with-greenlist-gen []
   (gen/fmap
     tu/assemble-peanuts-form-with-vector-options

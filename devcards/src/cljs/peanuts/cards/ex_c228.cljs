@@ -1,7 +1,7 @@
-(ns peanuts.cards.ex1)
+(ns peanuts.cards.ex-c228)
 
 (defn greeting []
   (let [n @(re-frame.core/subscribe [:name])]
-    [:p "Hello, " n "!"]))
+    [:p (str "Hello, " n "!")]))
 
 [greeting]

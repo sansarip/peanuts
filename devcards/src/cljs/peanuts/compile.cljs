@@ -12,14 +12,13 @@
     clojure.set
     clojure.walk
     peanuts.core
-    peanuts.cards.ex1
-    peanuts.cards.ex2
-    peanuts.cards.ex3
-    peanuts.cards.ex4
-    peanuts.cards.ex5
-    peanuts.cards.ex6
-    peanuts.cards.ex7
-    peanuts.cards.ex8))
+    peanuts.cards.ex-c228
+    peanuts.cards.ex-e6c7
+    peanuts.cards.ex-a226
+    peanuts.cards.ex-f82c
+    peanuts.cards.ex-b6a6
+    peanuts.cards.ex-dd80
+    peanuts.cards.ex-aa95))
 
 (def namespace-declaration
   (literally

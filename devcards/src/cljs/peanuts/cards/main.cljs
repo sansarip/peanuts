@@ -26,7 +26,7 @@
 (defn repl* [source-ns-str]
   [:> repl/repl
    {:eval-fn       compile/evaluate
-    :default-input (compile/dependencies source-ns-str)}])
+    :default-input (compile/dependencies (str source-ns-str))}])
 
 (dc/defcard-rg
   form-1-components
@@ -34,7 +34,7 @@
   Components defined like this can be more difficult to reuse
   in other projects, and can contribute to making test code more complex."
   (fn []
-    [repl* "peanuts.cards.ex1"]))
+    [repl* 'peanuts.cards.ex-c228]))
 
 (dc/defcard-rg
   form-1-components
@@ -42,7 +42,7 @@
   but that comes at the cost of wrapping every component with another
   stateful component."
   (fn []
-    [repl* "peanuts.cards.ex2"]))
+    [repl* 'peanuts.cards.ex-e6c7]))
 
 (dc/defcard-rg
   defnc
@@ -51,14 +51,22 @@
   Also, note how one can easily swap between a re-frame subscription and
   a passed-in value!"
   (fn []
-    [repl* "peanuts.cards.ex3"]))
+    [repl* 'peanuts.cards.ex-a226]))
 
 (dc/defcard-rg
   redlist
   "You may be wondering, _what if I just want to use the keyword as is?_ \uD83E\uDD14
-  This can be done when you're defining your function with the `:redlist` option."
+  This can be done when you're defining your function with the `:redlist` option.
+  This is only really useful if your arg is a keyword that coincides with a subscription id
+  or if you want to reduce the amount of code the macro emits."
   (fn []
-    [repl* "peanuts.cards.ex4"]))
+    [repl* 'peanuts.cards.ex-b6a6]))
+
+(dc/defcard-rg
+  redlist
+  "You can also redlist args with metadata."
+  (fn []
+    [repl* 'peanuts.cards.ex-f82c]))
 
 (dc/defcard-rg
   greenlist
@@ -66,27 +74,14 @@
   to be candidates for subscriptions. This can be done when you're defining
   your function with the `:greenlist` option."
   (fn []
-    [repl* "peanuts.cards.ex5"]))
+    [repl* 'peanuts.cards.ex-aa95]))
 
 (dc/defcard-rg
   sub-args
-  "Sometimes one may want to pass additional arguments to their subscriptions.
-  The `:sub-args` option assists with this use-case."
+  "Subscription vectors work normally.
+  Here's a slightly more advanced example that makes use of subscription args."
   (fn []
-    [repl* "peanuts.cards.ex6"]))
-
-(dc/defcard-rg
-  sub-args
-  "Keys in the `:sub-args` map can also be functions, and in such cases
-  the functions will be called with the expressed arguments."
-  (fn []
-    [repl* "peanuts.cards.ex7"]))
-
-(dc/defcard-rg
-  sub-fn
-  "One can force an argument to be called with the `:sub-fn` metadata."
-  (fn []
-    [repl* "peanuts.cards.ex8"]))
+    [repl* 'peanuts.cards.ex-dd80]))
 
 (defn ^:export init []
   (dc/start-devcard-ui!))

@@ -57,8 +57,8 @@
   redlist
   "You may be wondering, _what if I just want to use the keyword as is?_ \uD83E\uDD14
   This can be done when you're defining your function with the `:redlist` option.
-  This is only really useful if your arg is a keyword that coincides with a subscription id
-  or if you want to reduce the amount of code the macro emits."
+  This is useful if your arg coincides with a subscription-id/vector
+  which you'd like to pass down to a nested component or if you want to reduce the amount of code the macro emits."
   (fn []
     [repl* 'peanuts.cards.ex-b6a6]))
 

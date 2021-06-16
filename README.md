@@ -103,7 +103,7 @@ There are older supported options available that you can [read about here](https
 
 #### Redlisting Args <a name="redlisting-args"></a>
 
-In rare cases where you want args that coincide with valid subscription identifiers/vectors passed through without being rebound to their respective subscription values, then the `:redlist` options are for you.
+The `:redlist` options are there for instances where you'd want certain args that coincide with valid subscription-identifiers/vectors to pass through without being rebound to their respective subscription values.
 
 ```clojure
 (defnc foo

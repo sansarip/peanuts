@@ -127,7 +127,7 @@ You can also redlist args with metadata when calling the function/component.
    [adj n]
    [:p (str "Hello, " adj " " n "!")])
 
-[foo ^:redlist adj n]
+[foo ^:redlist [:my-adj] :my-name]
 ```
 
 One thing to note with the above example though is that although the `adj` arg will be exempt from being rebound to a subscription value if a valid subscription identifier/vector is passed in, it won't change the amount of code the `defnc` macro emits. In contrast, omitting parameters via the `:redlist` (or `:greenlist`) options does result in less code being emitted - if you care about that!

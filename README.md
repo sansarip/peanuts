@@ -26,8 +26,6 @@ peanuts/peanuts {:mvn/version "0.6.2"}
     4. [Options](#options)
         1. [Redlisting Args](#redlisting-args)
         2. [Greenlisting Args](#greenlisting-args)
-        3. [Subscription Args](#subscription-args)
-        4. [Subscription Functions](#subscription-functions)
 3. [Known Limitations](#limitations)
 
 ## Rationale <a name="rationale"></a>
@@ -49,13 +47,13 @@ I prefer something like this...
 ```clojure
 ;; Method B
 
-(defn my-component [& {:keys [arg-0 ... arg-n]}]
+(defn my-component [{:keys [... args ...]}]
   [:div "hiccup stuff"])
 ```
 
 In my preferred method (Method B) the subscriptions would happen outside of the components (in a root component/view), and the data would just simply be passed in. The problem with my preferred method is that it can noticeably affect performance when you have nested components - due to Re-frame subscription mumbo-jumbo.
 
-Enter Peanuts. Peanuts component macros are intended to wrap components implemented like Method B, turning them into components that behave like Method A. The component will use any args passed in as is _or_ subscribe to them if the args are keywords!
+Enter Peanuts. Peanuts component macros are intended to wrap components implemented like Method B, turning them into components that behave like Method A. The component will use any args passed in as is _or_ subscribe to them if the args are valid subscription ids/vectors!
 
 I've utilize this simple library in production to great extents, and it has really scratched an itch for me!
 
@@ -78,7 +76,7 @@ Similar to `fn`
 (ns my-ns
   (:require [peanuts.core :refer [defnc]]))
 
-(def a (fnc [& {:keys [a b c]}] [:div a b c]))
+(def foo (fnc [n] [:p (str "Hello, " n "!")]))
 ```
 
 #### defnc <a name="defnc"></a>
@@ -89,13 +87,11 @@ Similar to `defn`
 (ns my-ns 
   (:require [peanuts.core :refer [defnc]]))
 
-;; Usages of 'a' might be syntax highlighted as your IDE may think it's undefined
-(defnc a [& {:keys [a b c]}]
-  [:div a b c])
+(defnc foo [n]
+  [:p (str "Hello, " n "!")])
 ```
 
-If you're using Cursive with IntelliJ as your IDE, then you can resolve `defnc` as a `defn` and be a-ok! 
-See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wish to do that!
+See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wish to resolve `defnc` as a `defn` and `fnc` as an `fn` in IntelliJ with Cursive!
 
 ### Options <a name="options"></a>
 
@@ -103,114 +99,41 @@ Both `fnc` and `defnc` accept an optional map as an argument that can dictate ce
 In the case of `defnc` the map will also be applied as metadata on the defined name. 
 You can also pass the options map as the second - or third if there's a docstring - argument.
 
+There are older supported options available that you can [read about here](https://github.com/sansarip/peanuts/tree/5499859a2a00d37454256312b1d784c80ddb6587#options). But, I'm only supporting them for backward compatibility's sake and would advise _against_ using those options!
+
 #### Redlisting Args <a name="redlisting-args"></a>
 
-There may be instances where a component expects certain args to _always_ be keywords and wishes them to be redlist from being used as subscriptions. In such cases, the `:redlist` option comes in handy.
+In rare cases where args coincide with subscription identifiers the `:redlist` option comes in handy.
 
 ```clojure
-(defnc my-component
-  [a & {:keys [b c d}]
-  {:redlist [b c]}
-  [:div a b c d])
+(defnc foo
+  [adj n]
+  {:redlist [adj]}
+  [:p (str "Hello, " adj " " n "!")])
 
 ;; Or
 
-(defnc my-component
-   [a & {:keys [^:redlist b ^:redlist c d]}]
-   [:div a b c d])
+(defnc foo
+   [^:redlist adj n]
+   [:p (str "Hello, " adj " " n "!")])
 ```
 
-In the above examples, the values of the `b` and `c` parameters will always be redlisted 
-from being rebound to subscriptions.
+In the above examples, the `adj` args will always be redlisted/excluded from being rebound to subscription values.
 
 #### Greenlisting Args <a name="greenlisting-args"></a>
 
-Sometimes it's nice to greenlist certain args involved with subs and have the rest be untouched. The `:greenlist` option is there for such cases.
+An alternative to the `:redlist` option is the `:greenlist` option. If the `:greenlist` option is specified, then only those specified parameters will be candidates for being rebound subscription values.
 
 ```clojure
-(defnc my-component
-  [a & {:keys [b c d]}]
-  {:greenlist [a c]}
-  [:div a b c d])
+(defnc foo
+  [adj n]
+  {:greenlist [n]}
+  [:p (str "Hello, " adj " " n "!")])
 ```
 
-In the example above, only the greenlisted `a` and `c` args can be rebound to subscriptions. 
+The above example is equivalent to the example in the [Redlisting Args section](#redlisting-args). In the example above, only the greenlisted `n` parameter can be rebound to a subscription value. 
 One thing to note is that the `:redlist` option always takes precedence over the `:greenlist` option in odd cases where both 
-options are defined with conflicting args. 
-
-#### Subscription Args <a name="subscription-args"></a>
-
-Sometimes one may want to pass additional arguments to their subscriptions. The `:sub-args` option assists with this use-case.
-
-```clojure
-(defnc my-component
-  [a & {:keys [b c d]}]
-  {:redlist [a]
-   :sub-args {b [a 1 2 3]}}
-  [:div a b c])
-```
-
-In the above example, `b` can be a function or a subscription key. Notice that I'm passing both literals and `a` reference as args for `b`. There are a couple caveats to note here.
-
-1. If you define a `sub-arg` key that is also redlisted, then the redlist takes precedence.
-2. There is an order to things when it comes to the `sub-arg` values. For example, if you define a `sub-arg`, `a`, that uses a component parameter specified later than itself in the function args, `b`, then the value of `b` will be the original value passed into the component and not the subscribed-value.
-
-Here's an example of caveat #2.
-
-```clojure
-(defnc my-component
-  [a & {:keys [b c d]}]
-  ;; here the value of 'b' will be the original value provided to the component in 'a's subscription args
-  ;; and not the value of 'b's subscription
-  {:sub-args {a [b 1 2 3]}}
-  [:div a b c])
-```
-
-Below are some examples of using a component that contains `sub-args`:
-
-```clojure
-(defnc my-component
-  [id selected?]
-  {:sub-args {selected? [id]}}
-  [:div {:style {:background-color (if selected? :green :white)}} 
-    "✋"])
-
-;; Use a subscription keyword directly
-[my-component 1 ::subs/selected?]
-
-;; Subscribe in a function
-[my-component 1 (fn [id] @(rf/subscribe [::subs/selected? id]))]
-
-;; Do w/e you want - you don't need Re-frame! This is especially great for testing components!
-[my-component 1 (fn [id] (selected? id))]
-```
-
-#### More on Subscription Functions <a name="subscription-functions"></a>
-
-As the examples in the previous section show-case, args that are specified in the `sub-args` option - that are functions - will be called. If you want a function to be called without any args passed to it, that's fine too.
-
-```clojure
-(defnc my-component
-  [selected?]
-  ;; Specifying an empty arg-vector will result in a function being called without any args as one might expect
-  {:sub-args {selected? []}}
-  [:div {:style {:background-color (if selected? :green :white)}} 
-    "✋"])
-
-[my-component 1 (fn [] @(rf/subscribe [::subs/selected?]))]
-```
-
-An alternative way to have function arguments be called (dynamically) is with the `sub-fn` metadata 
-as demonstrated below.
-
-```clojure
-(defnc my-component
-  [id selected?]
-  [:div {:style {:background-color (if selected? :green :white)}} 
-    "✋"])
-
-[my-component 1 ^:sub-fn (fn [] @(rf/subscribe [::subs/selected?]))]
-```
+options are defined with conflicting args.
 
 ## Known Limitations <a name="limitations"></a>
 

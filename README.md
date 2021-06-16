@@ -103,7 +103,7 @@ There are older supported options available that you can [read about here](https
 
 #### Redlisting Args <a name="redlisting-args"></a>
 
-In rare cases where args coincide with subscription identifiers the `:redlist` option comes in handy.
+In rare cases where you want args that coincide with valid subscription identifiers/vectors passed through without being rebound to their respective subscription values, then the `:redlist` options are for you.
 
 ```clojure
 (defnc foo
@@ -118,7 +118,17 @@ In rare cases where args coincide with subscription identifiers the `:redlist` o
    [:p (str "Hello, " adj " " n "!")])
 ```
 
-In the above examples, the `adj` args will always be redlisted/excluded from being rebound to subscription values.
+In the above examples, the `adj` parameter will always be redlisted/excluded from being rebound to subscription values.
+
+You can also redlist args with metadata when calling the function/component.
+
+```clojure
+(defnc foo
+   [adj n]
+   [:p (str "Hello, " adj " " n "!")])
+
+[foo ^:redlist adj n]
+```
 
 #### Greenlisting Args <a name="greenlisting-args"></a>
 

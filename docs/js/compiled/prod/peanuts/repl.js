@@ -112,8 +112,8 @@ return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMP
 var temp__5724__auto___30337 = reagent.ratom._STAR_ratom_context_STAR_;
 if((temp__5724__auto___30337 == null)){
 } else {
-var c__11911__auto___30338 = temp__5724__auto___30337;
-if((with_let30335.generation === c__11911__auto___30338.ratomGeneration)){
+var c__12529__auto___30338 = temp__5724__auto___30337;
+if((with_let30335.generation === c__12529__auto___30338.ratomGeneration)){
 if(cljs.core.truth_(reagent.debug.has_console)){
 (cljs.core.truth_(reagent.debug.tracking)?reagent.debug.track_console:console).error(["Warning: The same with-let is being used more ","than once in the same reactive context."].join(''));
 } else {
@@ -121,7 +121,7 @@ if(cljs.core.truth_(reagent.debug.has_console)){
 } else {
 }
 
-(with_let30335.generation = c__11911__auto___30338.ratomGeneration);
+(with_let30335.generation = c__12529__auto___30338.ratomGeneration);
 }
 
 
@@ -137,8 +137,8 @@ this$.setState(this$.state);
 return this$.setState(this$.state);
 }));
 })], null)], null)):(with_let30335[(0)]));
-var res__11912__auto__ = editor_STAR_;
+var res__12530__auto__ = editor_STAR_;
 
-return res__11912__auto__;
+return res__12530__auto__;
 })(),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),cljs.core.with_meta(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [peanuts.repl.result_view,new cljs.core.Keyword(null,"value","value",305978217).cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"output","output",-1105869043).cljs$core$IFn$_invoke$arity$1(state))], null),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"key","key",-1516042587),new cljs.core.Keyword(null,"key","key",-1516042587).cljs$core$IFn$_invoke$arity$1(state)], null))], null)], null);
 })], null));

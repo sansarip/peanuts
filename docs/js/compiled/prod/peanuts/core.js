@@ -12,8 +12,8 @@ return thing;
 });
 peanuts.core.not_empty_vals = (function peanuts$core$not_empty_vals(thing){
 if(cljs.core.map_QMARK_.call(null,thing)){
-return cljs.core.some.call(null,(function (p1__16230_SHARP_){
-return peanuts.core.not_empty_coll.call(null,cljs.core.second.call(null,p1__16230_SHARP_));
+return cljs.core.some.call(null,(function (p1__16860_SHARP_){
+return peanuts.core.not_empty_coll.call(null,cljs.core.second.call(null,p1__16860_SHARP_));
 }),thing);
 } else {
 if(cljs.core.coll_QMARK_.call(null,thing)){
@@ -73,8 +73,8 @@ peanuts.core.filter_deep = (function peanuts$core$filter_deep(key_set,data){
 if(cljs.core.truth_(cljs.core.not_empty.call(null,key_set))){
 return cljs.core.remove.call(null,new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Symbol(null,"&","&",-2144855648,null),null], null), null),cljs.core.filterv.call(null,peanuts.core.not_empty_vals,clojure.walk.prewalk.call(null,(function (node){
 if(peanuts.core.binding_vector_QMARK_.call(null,node)){
-return cljs.core.filterv.call(null,(function (p1__16231_SHARP_){
-return peanuts.core.symbol_in_QMARK_.call(null,key_set,p1__16231_SHARP_);
+return cljs.core.filterv.call(null,(function (p1__16861_SHARP_){
+return peanuts.core.symbol_in_QMARK_.call(null,key_set,p1__16861_SHARP_);
 }),node);
 } else {
 if(cljs.core.map_QMARK_.call(null,node)){
@@ -144,10 +144,10 @@ return v;
 }),coll);
 });
 peanuts.core.redlist_meta_QMARK_ = (function peanuts$core$redlist_meta_QMARK_(binding){
-var map__16232 = cljs.core.meta.call(null,binding);
-var map__16232__$1 = cljs.core.__destructure_map.call(null,map__16232);
-var exempt = cljs.core.get.call(null,map__16232__$1,new cljs.core.Keyword(null,"exempt","exempt",-1170429472));
-var redlist = cljs.core.get.call(null,map__16232__$1,new cljs.core.Keyword(null,"redlist","redlist",-268599431));
+var map__16862 = cljs.core.meta.call(null,binding);
+var map__16862__$1 = cljs.core.__destructure_map.call(null,map__16862);
+var exempt = cljs.core.get.call(null,map__16862__$1,new cljs.core.Keyword(null,"exempt","exempt",-1170429472));
+var redlist = cljs.core.get.call(null,map__16862__$1,new cljs.core.Keyword(null,"redlist","redlist",-268599431));
 var or__4223__auto__ = exempt;
 if(cljs.core.truth_(or__4223__auto__)){
 return or__4223__auto__;
@@ -155,52 +155,52 @@ return or__4223__auto__;
 return redlist;
 }
 });
-peanuts.core.peanut = (function peanuts$core$peanut(n,f,p__16234){
-var map__16235 = p__16234;
-var map__16235__$1 = cljs.core.__destructure_map.call(null,map__16235);
-var meta_map = map__16235__$1;
-var exempt = cljs.core.get.call(null,map__16235__$1,new cljs.core.Keyword(null,"exempt","exempt",-1170429472));
-var greenlist = cljs.core.get.call(null,map__16235__$1,new cljs.core.Keyword(null,"greenlist","greenlist",473690767));
-var redlist = cljs.core.get.call(null,map__16235__$1,new cljs.core.Keyword(null,"redlist","redlist",-268599431));
-var only = cljs.core.get.call(null,map__16235__$1,new cljs.core.Keyword(null,"only","only",1907811652));
-var def_QMARK_ = cljs.core.get.call(null,map__16235__$1,new cljs.core.Keyword(null,"def?","def?",963608395));
-var sub_args = cljs.core.get.call(null,map__16235__$1,new cljs.core.Keyword(null,"sub-args","sub-args",-1973611866));
-var vec__16236 = f;
-var seq__16237 = cljs.core.seq.call(null,vec__16236);
-var first__16238 = cljs.core.first.call(null,seq__16237);
-var seq__16237__$1 = cljs.core.next.call(null,seq__16237);
-var _ = first__16238;
-var first__16238__$1 = cljs.core.first.call(null,seq__16237__$1);
-var seq__16237__$2 = cljs.core.next.call(null,seq__16237__$1);
-var args = first__16238__$1;
-var body = seq__16237__$2;
-var bindings = peanuts.core.seq__GT_let_form.call(null,sub_args,cljs.core.remove.call(null,(function (p1__16233_SHARP_){
-var or__4223__auto__ = new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Symbol(null,"&","&",-2144855648,null),null], null), null).call(null,p1__16233_SHARP_);
+peanuts.core.peanut = (function peanuts$core$peanut(n,f,p__16864){
+var map__16865 = p__16864;
+var map__16865__$1 = cljs.core.__destructure_map.call(null,map__16865);
+var meta_map = map__16865__$1;
+var exempt = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"exempt","exempt",-1170429472));
+var greenlist = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"greenlist","greenlist",473690767));
+var redlist = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"redlist","redlist",-268599431));
+var only = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"only","only",1907811652));
+var def_QMARK_ = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"def?","def?",963608395));
+var sub_args = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"sub-args","sub-args",-1973611866));
+var vec__16866 = f;
+var seq__16867 = cljs.core.seq.call(null,vec__16866);
+var first__16868 = cljs.core.first.call(null,seq__16867);
+var seq__16867__$1 = cljs.core.next.call(null,seq__16867);
+var _ = first__16868;
+var first__16868__$1 = cljs.core.first.call(null,seq__16867__$1);
+var seq__16867__$2 = cljs.core.next.call(null,seq__16867__$1);
+var args = first__16868__$1;
+var body = seq__16867__$2;
+var bindings = peanuts.core.seq__GT_let_form.call(null,sub_args,cljs.core.remove.call(null,(function (p1__16863_SHARP_){
+var or__4223__auto__ = new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Symbol(null,"&","&",-2144855648,null),null], null), null).call(null,p1__16863_SHARP_);
 if(cljs.core.truth_(or__4223__auto__)){
 return or__4223__auto__;
 } else {
-return peanuts.core.redlist_meta_QMARK_.call(null,p1__16233_SHARP_);
+return peanuts.core.redlist_meta_QMARK_.call(null,p1__16863_SHARP_);
 }
 }),peanuts.core.flatten_maps.call(null,peanuts.core.filter_deep.call(null,clojure.set.union.call(null,cljs.core.set.call(null,only),cljs.core.set.call(null,greenlist)),cljs.core.vec.call(null,peanuts.core.remove_deep.call(null,clojure.set.union.call(null,cljs.core.set.call(null,exempt),cljs.core.set.call(null,redlist)),args))))));
 var symbol_quoted_meta_map = peanuts.core.quote_symbols.call(null,meta_map);
-var G__16239 = body;
-var G__16239__$1 = cljs.core.concat.call(null,bindings,G__16239)
+var G__16869 = body;
+var G__16869__$1 = cljs.core.concat.call(null,bindings,G__16869)
 ;
-var G__16239__$2 = (new cljs.core.List(null,G__16239__$1,null,(1),null))
+var G__16869__$2 = (new cljs.core.List(null,G__16869__$1,null,(1),null))
 ;
-var G__16239__$3 = cljs.core.concat.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"fn","fn",465265323,null),null,(1),null)),(new cljs.core.List(null,args,null,(1),null))))),G__16239__$2)
+var G__16869__$3 = cljs.core.concat.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"fn","fn",465265323,null),null,(1),null)),(new cljs.core.List(null,args,null,(1),null))))),G__16869__$2)
 ;
-var G__16239__$4 = (cljs.core.truth_(def_QMARK_)?(new cljs.core.List(null,G__16239__$3,null,(1),null)):G__16239__$3);
+var G__16869__$4 = (cljs.core.truth_(def_QMARK_)?(new cljs.core.List(null,G__16869__$3,null,(1),null)):G__16869__$3);
 if(cljs.core.truth_(def_QMARK_)){
-return cljs.core.concat.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"def","def",597100991,null),null,(1),null)),(new cljs.core.List(null,cljs.core.with_meta.call(null,n,cljs.core.merge.call(null,symbol_quoted_meta_map,cljs.core.meta.call(null,n))),null,(1),null))))),G__16239__$4);
+return cljs.core.concat.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"def","def",597100991,null),null,(1),null)),(new cljs.core.List(null,cljs.core.with_meta.call(null,n,cljs.core.merge.call(null,symbol_quoted_meta_map,cljs.core.meta.call(null,n))),null,(1),null))))),G__16869__$4);
 } else {
-return G__16239__$4;
+return G__16869__$4;
 }
 });
-var ret__4878__auto___16242 = (function (){
+var ret__4878__auto___16872 = (function (){
 peanuts.core.fc = (function peanuts$core$fc(var_args){
-var G__16241 = arguments.length;
-switch (G__16241) {
+var G__16871 = arguments.length;
+switch (G__16871) {
 case 4:
 return peanuts.core.fc.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]));
 
@@ -230,10 +230,10 @@ return null;
 ;
 (peanuts.core.fc.cljs$lang$macro = true);
 
-var ret__4878__auto___16246 = (function (){
+var ret__4878__auto___16876 = (function (){
 peanuts.core.defc = (function peanuts$core$defc(var_args){
-var G__16245 = arguments.length;
-switch (G__16245) {
+var G__16875 = arguments.length;
+switch (G__16875) {
 case 5:
 return peanuts.core.defc.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]),(arguments[(4)]));
 
@@ -265,14 +265,14 @@ return null;
 
 peanuts.core.merge_meta_maps = (function peanuts$core$merge_meta_maps(var_args){
 var args__4835__auto__ = [];
-var len__4829__auto___16256 = arguments.length;
-var i__4830__auto___16257 = (0);
+var len__4829__auto___16886 = arguments.length;
+var i__4830__auto___16887 = (0);
 while(true){
-if((i__4830__auto___16257 < len__4829__auto___16256)){
-args__4835__auto__.push((arguments[i__4830__auto___16257]));
+if((i__4830__auto___16887 < len__4829__auto___16886)){
+args__4835__auto__.push((arguments[i__4830__auto___16887]));
 
-var G__16258 = (i__4830__auto___16257 + (1));
-i__4830__auto___16257 = G__16258;
+var G__16888 = (i__4830__auto___16887 + (1));
+i__4830__auto___16887 = G__16888;
 continue;
 } else {
 }
@@ -283,31 +283,31 @@ var argseq__4836__auto__ = ((((2) < args__4835__auto__.length))?(new cljs.core.I
 return peanuts.core.merge_meta_maps.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),argseq__4836__auto__);
 });
 
-(peanuts.core.merge_meta_maps.cljs$core$IFn$_invoke$arity$variadic = (function (meta_map1,p__16251,other_maps){
-var vec__16252 = p__16251;
-var meta_map2 = cljs.core.nth.call(null,vec__16252,(0),null);
-var _fnbody = vec__16252;
-var G__16255 = cljs.core.apply.call(null,cljs.core.merge,meta_map1,other_maps);
+(peanuts.core.merge_meta_maps.cljs$core$IFn$_invoke$arity$variadic = (function (meta_map1,p__16881,other_maps){
+var vec__16882 = p__16881;
+var meta_map2 = cljs.core.nth.call(null,vec__16882,(0),null);
+var _fnbody = vec__16882;
+var G__16885 = cljs.core.apply.call(null,cljs.core.merge,meta_map1,other_maps);
 if(cljs.core.map_QMARK_.call(null,meta_map2)){
-return cljs.core.merge.call(null,G__16255,meta_map2);
+return cljs.core.merge.call(null,G__16885,meta_map2);
 } else {
-return G__16255;
+return G__16885;
 }
 }));
 
 (peanuts.core.merge_meta_maps.cljs$lang$maxFixedArity = (2));
 
 /** @this {Function} */
-(peanuts.core.merge_meta_maps.cljs$lang$applyTo = (function (seq16248){
-var G__16249 = cljs.core.first.call(null,seq16248);
-var seq16248__$1 = cljs.core.next.call(null,seq16248);
-var G__16250 = cljs.core.first.call(null,seq16248__$1);
-var seq16248__$2 = cljs.core.next.call(null,seq16248__$1);
+(peanuts.core.merge_meta_maps.cljs$lang$applyTo = (function (seq16878){
+var G__16879 = cljs.core.first.call(null,seq16878);
+var seq16878__$1 = cljs.core.next.call(null,seq16878);
+var G__16880 = cljs.core.first.call(null,seq16878__$1);
+var seq16878__$2 = cljs.core.next.call(null,seq16878__$1);
 var self__4816__auto__ = this;
-return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16249,G__16250,seq16248__$2);
+return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16879,G__16880,seq16878__$2);
 }));
 
-var ret__4878__auto___16270 = (function (){
+var ret__4878__auto___16900 = (function (){
 /**
  * Takes similar arguments to defn and returns a similar result.
  * The returned function body will be wrapped in a let-block which will
@@ -315,14 +315,14 @@ var ret__4878__auto___16270 = (function (){
  */
 peanuts.core.defnc = (function peanuts$core$defnc(var_args){
 var args__4835__auto__ = [];
-var len__4829__auto___16271 = arguments.length;
-var i__4830__auto___16272 = (0);
+var len__4829__auto___16901 = arguments.length;
+var i__4830__auto___16902 = (0);
 while(true){
-if((i__4830__auto___16272 < len__4829__auto___16271)){
-args__4835__auto__.push((arguments[i__4830__auto___16272]));
+if((i__4830__auto___16902 < len__4829__auto___16901)){
+args__4835__auto__.push((arguments[i__4830__auto___16902]));
 
-var G__16273 = (i__4830__auto___16272 + (1));
-i__4830__auto___16272 = G__16273;
+var G__16903 = (i__4830__auto___16902 + (1));
+i__4830__auto___16902 = G__16903;
 continue;
 } else {
 }
@@ -333,22 +333,22 @@ var argseq__4836__auto__ = ((((3) < args__4835__auto__.length))?(new cljs.core.I
 return peanuts.core.defnc.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4836__auto__);
 });
 
-(peanuts.core.defnc.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,n,p__16263){
-var vec__16264 = p__16263;
-var seq__16265 = cljs.core.seq.call(null,vec__16264);
-var first__16266 = cljs.core.first.call(null,seq__16265);
-var seq__16265__$1 = cljs.core.next.call(null,seq__16265);
-var doc_str = first__16266;
-var first__16266__$1 = cljs.core.first.call(null,seq__16265__$1);
-var seq__16265__$2 = cljs.core.next.call(null,seq__16265__$1);
-var meta_map = first__16266__$1;
-var vec__16267 = seq__16265__$2;
-var seq__16268 = cljs.core.seq.call(null,vec__16267);
-var first__16269 = cljs.core.first.call(null,seq__16268);
-var seq__16268__$1 = cljs.core.next.call(null,seq__16268);
-var args = first__16269;
-var body = seq__16268__$1;
-var args_AMPERSAND_body = vec__16267;
+(peanuts.core.defnc.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,n,p__16893){
+var vec__16894 = p__16893;
+var seq__16895 = cljs.core.seq.call(null,vec__16894);
+var first__16896 = cljs.core.first.call(null,seq__16895);
+var seq__16895__$1 = cljs.core.next.call(null,seq__16895);
+var doc_str = first__16896;
+var first__16896__$1 = cljs.core.first.call(null,seq__16895__$1);
+var seq__16895__$2 = cljs.core.next.call(null,seq__16895__$1);
+var meta_map = first__16896__$1;
+var vec__16897 = seq__16895__$2;
+var seq__16898 = cljs.core.seq.call(null,vec__16897);
+var first__16899 = cljs.core.first.call(null,seq__16898);
+var seq__16898__$1 = cljs.core.next.call(null,seq__16898);
+var args = first__16899;
+var body = seq__16898__$1;
+var args_AMPERSAND_body = vec__16897;
 if(cljs.core.vector_QMARK_.call(null,doc_str)){
 var args_STAR_ = doc_str;
 var body_STAR_ = cljs.core.into.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [meta_map], null),args_AMPERSAND_body);
@@ -375,15 +375,15 @@ return peanuts.core.peanut.call(null,n,cljs.core.sequence.call(null,cljs.core.se
 (peanuts.core.defnc.cljs$lang$maxFixedArity = (3));
 
 /** @this {Function} */
-(peanuts.core.defnc.cljs$lang$applyTo = (function (seq16259){
-var G__16260 = cljs.core.first.call(null,seq16259);
-var seq16259__$1 = cljs.core.next.call(null,seq16259);
-var G__16261 = cljs.core.first.call(null,seq16259__$1);
-var seq16259__$2 = cljs.core.next.call(null,seq16259__$1);
-var G__16262 = cljs.core.first.call(null,seq16259__$2);
-var seq16259__$3 = cljs.core.next.call(null,seq16259__$2);
+(peanuts.core.defnc.cljs$lang$applyTo = (function (seq16889){
+var G__16890 = cljs.core.first.call(null,seq16889);
+var seq16889__$1 = cljs.core.next.call(null,seq16889);
+var G__16891 = cljs.core.first.call(null,seq16889__$1);
+var seq16889__$2 = cljs.core.next.call(null,seq16889__$1);
+var G__16892 = cljs.core.first.call(null,seq16889__$2);
+var seq16889__$3 = cljs.core.next.call(null,seq16889__$2);
 var self__4816__auto__ = this;
-return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16260,G__16261,G__16262,seq16259__$3);
+return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16890,G__16891,G__16892,seq16889__$3);
 }));
 
 return null;
@@ -391,7 +391,7 @@ return null;
 ;
 (peanuts.core.defnc.cljs$lang$macro = true);
 
-var ret__4878__auto___16281 = (function (){
+var ret__4878__auto___16911 = (function (){
 /**
  * Returns an fn form.
  * The returned function body will be wrapped in a let-block which will
@@ -399,14 +399,14 @@ var ret__4878__auto___16281 = (function (){
  */
 peanuts.core.fnc = (function peanuts$core$fnc(var_args){
 var args__4835__auto__ = [];
-var len__4829__auto___16282 = arguments.length;
-var i__4830__auto___16283 = (0);
+var len__4829__auto___16912 = arguments.length;
+var i__4830__auto___16913 = (0);
 while(true){
-if((i__4830__auto___16283 < len__4829__auto___16282)){
-args__4835__auto__.push((arguments[i__4830__auto___16283]));
+if((i__4830__auto___16913 < len__4829__auto___16912)){
+args__4835__auto__.push((arguments[i__4830__auto___16913]));
 
-var G__16284 = (i__4830__auto___16283 + (1));
-i__4830__auto___16283 = G__16284;
+var G__16914 = (i__4830__auto___16913 + (1));
+i__4830__auto___16913 = G__16914;
 continue;
 } else {
 }
@@ -417,16 +417,16 @@ var argseq__4836__auto__ = ((((2) < args__4835__auto__.length))?(new cljs.core.I
 return peanuts.core.fnc.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),argseq__4836__auto__);
 });
 
-(peanuts.core.fnc.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,p__16277){
-var vec__16278 = p__16277;
-var seq__16279 = cljs.core.seq.call(null,vec__16278);
-var first__16280 = cljs.core.first.call(null,seq__16279);
-var seq__16279__$1 = cljs.core.next.call(null,seq__16279);
-var opts = first__16280;
-var first__16280__$1 = cljs.core.first.call(null,seq__16279__$1);
-var seq__16279__$2 = cljs.core.next.call(null,seq__16279__$1);
-var args = first__16280__$1;
-var body = seq__16279__$2;
+(peanuts.core.fnc.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,p__16907){
+var vec__16908 = p__16907;
+var seq__16909 = cljs.core.seq.call(null,vec__16908);
+var first__16910 = cljs.core.first.call(null,seq__16909);
+var seq__16909__$1 = cljs.core.next.call(null,seq__16909);
+var opts = first__16910;
+var first__16910__$1 = cljs.core.first.call(null,seq__16909__$1);
+var seq__16909__$2 = cljs.core.next.call(null,seq__16909__$1);
+var args = first__16910__$1;
+var body = seq__16909__$2;
 if(cljs.core.vector_QMARK_.call(null,opts)){
 var body_STAR_ = cljs.core.into.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [args], null),body);
 var args_STAR_ = opts;
@@ -439,13 +439,13 @@ return peanuts.core.peanut.call(null,null,cljs.core.sequence.call(null,cljs.core
 (peanuts.core.fnc.cljs$lang$maxFixedArity = (2));
 
 /** @this {Function} */
-(peanuts.core.fnc.cljs$lang$applyTo = (function (seq16274){
-var G__16275 = cljs.core.first.call(null,seq16274);
-var seq16274__$1 = cljs.core.next.call(null,seq16274);
-var G__16276 = cljs.core.first.call(null,seq16274__$1);
-var seq16274__$2 = cljs.core.next.call(null,seq16274__$1);
+(peanuts.core.fnc.cljs$lang$applyTo = (function (seq16904){
+var G__16905 = cljs.core.first.call(null,seq16904);
+var seq16904__$1 = cljs.core.next.call(null,seq16904);
+var G__16906 = cljs.core.first.call(null,seq16904__$1);
+var seq16904__$2 = cljs.core.next.call(null,seq16904__$1);
 var self__4816__auto__ = this;
-return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16275,G__16276,seq16274__$2);
+return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16905,G__16906,seq16904__$2);
 }));
 
 return null;

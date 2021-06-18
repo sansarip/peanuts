@@ -1,6 +1,5 @@
 sym-link-peanuts:
-	cd devcards/src/cljc/peanuts && \
-	ln -sf ../../../src/cljc/peanuts/core.cljc core.cljc  || true
+	ln -s $$(pwd)/src/cljc/peanuts/core.cljc devcards/src/cljc/peanuts/core.cljc
 
 build-docs:
 	lein clean

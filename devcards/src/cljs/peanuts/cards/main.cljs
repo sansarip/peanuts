@@ -77,7 +77,7 @@
     [repl* 'peanuts.cards.ex-aa95]))
 
 (dc/defcard-rg
-  sub-args
+  subscription-vectors
   "Subscription vectors work normally.
   Here's a slightly more advanced example that makes use of subscription args."
   (fn []

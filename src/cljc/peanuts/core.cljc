@@ -74,7 +74,7 @@
      ~'(deref sub)
      ~default))
 
-(defn- make-cond-form [binding binding-args]
+(defn- cond-form [binding binding-args]
   (let [binding-vec (into [binding] binding-args)]
     `(~'cond
        (~'let [~'{:keys [exempt redlist]} (~'meta ~binding)] ~'(or exempt redlist)) ~binding
@@ -88,7 +88,7 @@
        (reduce (fn [c b]
                  (-> c
                      (conj b)
-                     (conj (make-cond-form b (get args b)))))
+                     (conj (cond-form b (get args b)))))
                [])
        (conj '(let))
        reverse))

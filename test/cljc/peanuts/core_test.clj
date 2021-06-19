@@ -207,18 +207,30 @@
                       (atom sub-vec))]
 
         ;; When
-        (foo (with-meta sub-vec {:redlist true}))
+        (foo (with-meta sub-vec {:redlist true})) ; foo = 3 fnc calls
+        (foo (with-meta sub-vec {:rl true}))
+        (foo (with-meta sub-vec {:exempt true}))
 
         ;; Then
         (testing "No subscriptions were attempted for a meta-redlisted arg"
           (is (zero? @rf-subscriptions)))
 
         ;; When
+        (foo (with-meta sub-vec {:rl1 true}))
+        (foo (with-meta sub-vec {:redlist1 true}))
+
+        ;; Then
+        (testing "Subscriptions not attempted once per call with redlist-once option"
+          ;; 2 subs not attempted, so 4 sub attempts
+          (is (= 4 @rf-subscriptions)))
+        (reset! rf-subscriptions 0)
+
+        ;; When
         (foo (first sub-vec))
 
         ;; Then
         (testing "Subscription attempted for subscription keyword id"
-          ;; 1 fn call * 3 subs per fn call
+          ;; 1 sub attempt per fnc call, foo -> bar -> baz
           (is (= 3 @rf-subscriptions)))
 
         ;; When

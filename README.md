@@ -127,10 +127,33 @@ You can also redlist args with metadata when calling the function/component.
    [adj n]
    [:p (str "Hello, " adj " " n "!")])
 
+;; You can also use :rl instead of :redlist
 [foo ^:redlist [:my-adj] :my-name]
 ```
 
 One thing to note with the above example though is that although the `adj` arg will be exempt from being rebound to a subscription value if a valid subscription identifier/vector is passed in, it won't change the amount of code the `defnc` macro emits. In contrast, omitting parameters via the `:redlist` (or `:greenlist`) options does result in less code being emitted - if you care about that!
+
+In addition, you can redlist an arg _once_ with metadata.
+This can be handy when you want to pass down a subscription-id/vector to a nested
+peanuts component. This is a similar behavior to using the `:redlist` option
+in the peanuts component definition.
+
+```clojure
+(defnc bar
+       [adj n]
+       ;; adj will be rebound to subscription value
+       [:p (str n " is an " adj " name!")])
+
+(defnc foo
+       [adj n]
+       [:<> 
+        ;; adj will be used as is e.g. [:my-adj]
+        [:p (str "Hello, " adj " " n "!")]
+        [bar adj n]])
+
+;; You can also use :rl1 instead of redlist1
+[foo ^:redlist1 [:my-adj] :my-name]
+```
 
 #### Greenlisting Args <a name="greenlisting-args"></a>
 

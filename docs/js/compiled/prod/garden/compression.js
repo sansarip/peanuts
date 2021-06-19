@@ -5,10 +5,10 @@ goog.require('cljs.core');
  * Return a function which when given a string will return a map
  *   containing the chunk of text matched by re, it's size, and tag.
  */
-garden.compression.token_fn = (function garden$compression$token_fn(p__27438){
-var vec__27439 = p__27438;
-var tag = cljs.core.nth.call(null,vec__27439,(0),null);
-var re = cljs.core.nth.call(null,vec__27439,(1),null);
+garden.compression.token_fn = (function garden$compression$token_fn(p__27437){
+var vec__27438 = p__27437;
+var tag = cljs.core.nth.call(null,vec__27438,(0),null);
+var re = cljs.core.nth.call(null,vec__27438,(1),null);
 return (function (s){
 var temp__5720__auto__ = cljs.core.re_find.call(null,re,s);
 if(cljs.core.truth_(temp__5720__auto__)){
@@ -27,14 +27,14 @@ return null;
  */
 garden.compression.tokenizer = (function garden$compression$tokenizer(var_args){
 var args__4835__auto__ = [];
-var len__4829__auto___27444 = arguments.length;
-var i__4830__auto___27445 = (0);
+var len__4829__auto___27443 = arguments.length;
+var i__4830__auto___27444 = (0);
 while(true){
-if((i__4830__auto___27445 < len__4829__auto___27444)){
-args__4835__auto__.push((arguments[i__4830__auto___27445]));
+if((i__4830__auto___27444 < len__4829__auto___27443)){
+args__4835__auto__.push((arguments[i__4830__auto___27444]));
 
-var G__27446 = (i__4830__auto___27445 + (1));
-i__4830__auto___27445 = G__27446;
+var G__27445 = (i__4830__auto___27444 + (1));
+i__4830__auto___27444 = G__27445;
 continue;
 } else {
 }
@@ -48,8 +48,8 @@ return garden.compression.tokenizer.cljs$core$IFn$_invoke$arity$variadic(argseq_
 (garden.compression.tokenizer.cljs$core$IFn$_invoke$arity$variadic = (function (tags_PLUS_regexes){
 var fs = cljs.core.map.call(null,garden.compression.token_fn,tags_PLUS_regexes);
 return (function (s){
-return cljs.core.some.call(null,(function (p1__27442_SHARP_){
-return p1__27442_SHARP_.call(null,s);
+return cljs.core.some.call(null,(function (p1__27441_SHARP_){
+return p1__27441_SHARP_.call(null,s);
 }),fs);
 });
 }));
@@ -57,9 +57,9 @@ return p1__27442_SHARP_.call(null,s);
 (garden.compression.tokenizer.cljs$lang$maxFixedArity = (0));
 
 /** @this {Function} */
-(garden.compression.tokenizer.cljs$lang$applyTo = (function (seq27443){
+(garden.compression.tokenizer.cljs$lang$applyTo = (function (seq27442){
 var self__4817__auto__ = this;
-return self__4817__auto__.cljs$core$IFn$_invoke$arity$variadic(cljs.core.seq.call(null,seq27443));
+return self__4817__auto__.cljs$core$IFn$_invoke$arity$variadic(cljs.core.seq.call(null,seq27442));
 }));
 
 /**
@@ -75,15 +75,15 @@ var s2 = "";
 while(true){
 var temp__5718__auto__ = garden.compression.stylesheet_tokenizer.call(null,s1);
 if(cljs.core.truth_(temp__5718__auto__)){
-var map__27447 = temp__5718__auto__;
-var map__27447__$1 = cljs.core.__destructure_map.call(null,map__27447);
-var tag = cljs.core.get.call(null,map__27447__$1,new cljs.core.Keyword(null,"tag","tag",-1290361223));
-var chunk = cljs.core.get.call(null,map__27447__$1,new cljs.core.Keyword(null,"chunk","chunk",-1191159620));
-var size = cljs.core.get.call(null,map__27447__$1,new cljs.core.Keyword(null,"size","size",1098693007));
-var G__27450 = cljs.core.subs.call(null,s1,size);
-var G__27451 = [s2,cljs.core.str.cljs$core$IFn$_invoke$arity$1((function (){var G__27449 = tag;
-var G__27449__$1 = (((G__27449 instanceof cljs.core.Keyword))?G__27449.fqn:null);
-switch (G__27449__$1) {
+var map__27446 = temp__5718__auto__;
+var map__27446__$1 = cljs.core.__destructure_map.call(null,map__27446);
+var tag = cljs.core.get.call(null,map__27446__$1,new cljs.core.Keyword(null,"tag","tag",-1290361223));
+var chunk = cljs.core.get.call(null,map__27446__$1,new cljs.core.Keyword(null,"chunk","chunk",-1191159620));
+var size = cljs.core.get.call(null,map__27446__$1,new cljs.core.Keyword(null,"size","size",1098693007));
+var G__27449 = cljs.core.subs.call(null,s1,size);
+var G__27450 = [s2,cljs.core.str.cljs$core$IFn$_invoke$arity$1((function (){var G__27448 = tag;
+var G__27448__$1 = (((G__27448 instanceof cljs.core.Keyword))?G__27448.fqn:null);
+switch (G__27448__$1) {
 case "string":
 return chunk;
 
@@ -133,8 +133,8 @@ return chunk;
 
 }
 })())].join('');
-s1 = G__27450;
-s2 = G__27451;
+s1 = G__27449;
+s2 = G__27450;
 continue;
 } else {
 return s2;

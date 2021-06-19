@@ -125,13 +125,17 @@ return node;
 peanuts.core.subscribe_form = (function peanuts$core$subscribe_form(binding_vec,default$){
 return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"if-let","if-let",1803593690,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"sub","sub",-453228498,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("re-frame.core","subscribe","re-frame.core/subscribe",-774932115,null),null,(1),null)),(new cljs.core.List(null,binding_vec,null,(1),null))))),null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.list(new cljs.core.Symbol(null,"deref","deref",1494944732,null),new cljs.core.Symbol(null,"sub","sub",-453228498,null)),null,(1),null)),(new cljs.core.List(null,default$,null,(1),null)))));
 });
-peanuts.core.make_cond_form = (function peanuts$core$make_cond_form(binding,binding_args){
+peanuts.core.redlist_options = new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"exempt","exempt",-1170429472),new cljs.core.Keyword(null,"redlist","redlist",-268599431),new cljs.core.Keyword(null,"rl","rl",69027109),new cljs.core.Keyword(null,"redlist1","redlist1",-1006491465),new cljs.core.Keyword(null,"rl1","rl1",-1534676771)], null);
+peanuts.core.rm_rl1_meta_form = (function peanuts$core$rm_rl1_meta_form(binding){
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"vary-meta","vary-meta",-1580067831,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"dissoc","dissoc",1039760994,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Keyword(null,"rl1","rl1",-1534676771),null,(1),null)),(new cljs.core.List(null,new cljs.core.Keyword(null,"redlist1","redlist1",-1006491465),null,(1),null)))));
+});
+peanuts.core.cond_form = (function peanuts$core$cond_form(binding,binding_args){
 var binding_vec = cljs.core.into.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [binding], null),binding_args);
-return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"cond","cond",1606708055,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"let","let",358118826,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"keys","keys",1068423698),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Symbol(null,"exempt","exempt",470102055,null),new cljs.core.Symbol(null,"redlist","redlist",1371932096,null)], null)], null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"meta","meta",-1154898805,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.list(new cljs.core.Symbol(null,"or","or",1876275696,null),new cljs.core.Symbol(null,"exempt","exempt",470102055,null),new cljs.core.Symbol(null,"redlist","redlist",1371932096,null)),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"keyword?","keyword?",1917797069,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null)),(new cljs.core.List(null,peanuts.core.subscribe_form.call(null,binding_vec,binding),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"and","and",668631710,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"vector?","vector?",-61367869,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"keyword?","keyword?",1917797069,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"first","first",996428481,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null))))),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,peanuts.core.subscribe_form.call(null,binding,binding),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"or","or",1876275696,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"->","->",-2139605430,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"meta","meta",-1154898805,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Keyword(null,"sub-fn","sub-fn",1326750580),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"and","and",668631710,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"fn?","fn?",1820990818,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null)),(new cljs.core.List(null,binding_args,null,(1),null))))),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,cljs.core.seq.call(null,binding_vec),null,(1),null)),(new cljs.core.List(null,new cljs.core.Keyword(null,"else","else",-1508377146),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null)))));
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"cond","cond",1606708055,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"let","let",358118826,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"rl-opts","rl-opts",-1231267689,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"select-keys","select-keys",-708556589,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"meta","meta",-1154898805,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null)),(new cljs.core.List(null,peanuts.core.redlist_options,null,(1),null))))),null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.list(new cljs.core.Symbol(null,"some","some",-310548046,null),new cljs.core.Symbol(null,"identity","identity",-1007039734,null),new cljs.core.Symbol(null,"rl-opts","rl-opts",-1231267689,null)),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,peanuts.core.rm_rl1_meta_form.call(null,binding),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"keyword?","keyword?",1917797069,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null)),(new cljs.core.List(null,peanuts.core.subscribe_form.call(null,binding_vec,binding),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"and","and",668631710,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"vector?","vector?",-61367869,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"keyword?","keyword?",1917797069,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"first","first",996428481,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null))))),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,peanuts.core.subscribe_form.call(null,binding,binding),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"or","or",1876275696,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"->","->",-2139605430,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"meta","meta",-1154898805,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Keyword(null,"sub-fn","sub-fn",1326750580),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"and","and",668631710,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"fn?","fn?",1820990818,null),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null))))),null,(1),null)),(new cljs.core.List(null,binding_args,null,(1),null))))),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,cljs.core.seq.call(null,binding_vec),null,(1),null)),(new cljs.core.List(null,new cljs.core.Keyword(null,"else","else",-1508377146),null,(1),null)),(new cljs.core.List(null,binding,null,(1),null)))));
 });
 peanuts.core.seq__GT_let_form = (function peanuts$core$seq__GT_let_form(args,seq_STAR_){
 return cljs.core.reverse.call(null,cljs.core.conj.call(null,cljs.core.list(new cljs.core.Symbol(null,"let","let",358118826,null)),cljs.core.reduce.call(null,(function (c,b){
-return cljs.core.conj.call(null,cljs.core.conj.call(null,c,b),peanuts.core.make_cond_form.call(null,b,cljs.core.get.call(null,args,b)));
+return cljs.core.conj.call(null,cljs.core.conj.call(null,c,b),peanuts.core.cond_form.call(null,b,cljs.core.get.call(null,args,b)));
 }),cljs.core.PersistentVector.EMPTY,seq_STAR_)));
 });
 peanuts.core.quote_symbols = (function peanuts$core$quote_symbols(coll){
@@ -155,52 +159,45 @@ return or__4223__auto__;
 return redlist;
 }
 });
-peanuts.core.peanut = (function peanuts$core$peanut(n,f,p__16864){
-var map__16865 = p__16864;
-var map__16865__$1 = cljs.core.__destructure_map.call(null,map__16865);
-var meta_map = map__16865__$1;
-var exempt = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"exempt","exempt",-1170429472));
-var greenlist = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"greenlist","greenlist",473690767));
-var redlist = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"redlist","redlist",-268599431));
-var only = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"only","only",1907811652));
-var def_QMARK_ = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"def?","def?",963608395));
-var sub_args = cljs.core.get.call(null,map__16865__$1,new cljs.core.Keyword(null,"sub-args","sub-args",-1973611866));
-var vec__16866 = f;
-var seq__16867 = cljs.core.seq.call(null,vec__16866);
-var first__16868 = cljs.core.first.call(null,seq__16867);
-var seq__16867__$1 = cljs.core.next.call(null,seq__16867);
-var _ = first__16868;
-var first__16868__$1 = cljs.core.first.call(null,seq__16867__$1);
-var seq__16867__$2 = cljs.core.next.call(null,seq__16867__$1);
-var args = first__16868__$1;
-var body = seq__16867__$2;
-var bindings = peanuts.core.seq__GT_let_form.call(null,sub_args,cljs.core.remove.call(null,(function (p1__16863_SHARP_){
-var or__4223__auto__ = new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Symbol(null,"&","&",-2144855648,null),null], null), null).call(null,p1__16863_SHARP_);
-if(cljs.core.truth_(or__4223__auto__)){
-return or__4223__auto__;
-} else {
-return peanuts.core.redlist_meta_QMARK_.call(null,p1__16863_SHARP_);
-}
-}),peanuts.core.flatten_maps.call(null,peanuts.core.filter_deep.call(null,clojure.set.union.call(null,cljs.core.set.call(null,only),cljs.core.set.call(null,greenlist)),cljs.core.vec.call(null,peanuts.core.remove_deep.call(null,clojure.set.union.call(null,cljs.core.set.call(null,exempt),cljs.core.set.call(null,redlist)),args))))));
+peanuts.core.peanut = (function peanuts$core$peanut(n,f,p__16863){
+var map__16864 = p__16863;
+var map__16864__$1 = cljs.core.__destructure_map.call(null,map__16864);
+var meta_map = map__16864__$1;
+var exempt = cljs.core.get.call(null,map__16864__$1,new cljs.core.Keyword(null,"exempt","exempt",-1170429472));
+var greenlist = cljs.core.get.call(null,map__16864__$1,new cljs.core.Keyword(null,"greenlist","greenlist",473690767));
+var redlist = cljs.core.get.call(null,map__16864__$1,new cljs.core.Keyword(null,"redlist","redlist",-268599431));
+var only = cljs.core.get.call(null,map__16864__$1,new cljs.core.Keyword(null,"only","only",1907811652));
+var def_QMARK_ = cljs.core.get.call(null,map__16864__$1,new cljs.core.Keyword(null,"def?","def?",963608395));
+var sub_args = cljs.core.get.call(null,map__16864__$1,new cljs.core.Keyword(null,"sub-args","sub-args",-1973611866));
+var vec__16865 = f;
+var seq__16866 = cljs.core.seq.call(null,vec__16865);
+var first__16867 = cljs.core.first.call(null,seq__16866);
+var seq__16866__$1 = cljs.core.next.call(null,seq__16866);
+var _ = first__16867;
+var first__16867__$1 = cljs.core.first.call(null,seq__16866__$1);
+var seq__16866__$2 = cljs.core.next.call(null,seq__16866__$1);
+var args = first__16867__$1;
+var body = seq__16866__$2;
+var bindings = peanuts.core.seq__GT_let_form.call(null,sub_args,cljs.core.remove.call(null,cljs.core.some_fn.call(null,new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Symbol(null,"&","&",-2144855648,null),null], null), null),peanuts.core.redlist_meta_QMARK_),peanuts.core.flatten_maps.call(null,peanuts.core.filter_deep.call(null,clojure.set.union.call(null,cljs.core.set.call(null,only),cljs.core.set.call(null,greenlist)),cljs.core.vec.call(null,peanuts.core.remove_deep.call(null,clojure.set.union.call(null,cljs.core.set.call(null,exempt),cljs.core.set.call(null,redlist)),args))))));
 var symbol_quoted_meta_map = peanuts.core.quote_symbols.call(null,meta_map);
-var G__16869 = body;
-var G__16869__$1 = cljs.core.concat.call(null,bindings,G__16869)
+var G__16868 = body;
+var G__16868__$1 = cljs.core.concat.call(null,bindings,G__16868)
 ;
-var G__16869__$2 = (new cljs.core.List(null,G__16869__$1,null,(1),null))
+var G__16868__$2 = (new cljs.core.List(null,G__16868__$1,null,(1),null))
 ;
-var G__16869__$3 = cljs.core.concat.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"fn","fn",465265323,null),null,(1),null)),(new cljs.core.List(null,args,null,(1),null))))),G__16869__$2)
+var G__16868__$3 = cljs.core.concat.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"fn","fn",465265323,null),null,(1),null)),(new cljs.core.List(null,args,null,(1),null))))),G__16868__$2)
 ;
-var G__16869__$4 = (cljs.core.truth_(def_QMARK_)?(new cljs.core.List(null,G__16869__$3,null,(1),null)):G__16869__$3);
+var G__16868__$4 = (cljs.core.truth_(def_QMARK_)?(new cljs.core.List(null,G__16868__$3,null,(1),null)):G__16868__$3);
 if(cljs.core.truth_(def_QMARK_)){
-return cljs.core.concat.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"def","def",597100991,null),null,(1),null)),(new cljs.core.List(null,cljs.core.with_meta.call(null,n,cljs.core.merge.call(null,symbol_quoted_meta_map,cljs.core.meta.call(null,n))),null,(1),null))))),G__16869__$4);
+return cljs.core.concat.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"def","def",597100991,null),null,(1),null)),(new cljs.core.List(null,cljs.core.with_meta.call(null,n,cljs.core.merge.call(null,symbol_quoted_meta_map,cljs.core.meta.call(null,n))),null,(1),null))))),G__16868__$4);
 } else {
-return G__16869__$4;
+return G__16868__$4;
 }
 });
-var ret__4878__auto___16872 = (function (){
+var ret__4878__auto___16871 = (function (){
 peanuts.core.fc = (function peanuts$core$fc(var_args){
-var G__16871 = arguments.length;
-switch (G__16871) {
+var G__16870 = arguments.length;
+switch (G__16870) {
 case 4:
 return peanuts.core.fc.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]));
 
@@ -230,10 +227,10 @@ return null;
 ;
 (peanuts.core.fc.cljs$lang$macro = true);
 
-var ret__4878__auto___16876 = (function (){
+var ret__4878__auto___16875 = (function (){
 peanuts.core.defc = (function peanuts$core$defc(var_args){
-var G__16875 = arguments.length;
-switch (G__16875) {
+var G__16874 = arguments.length;
+switch (G__16874) {
 case 5:
 return peanuts.core.defc.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]),(arguments[(4)]));
 
@@ -265,14 +262,14 @@ return null;
 
 peanuts.core.merge_meta_maps = (function peanuts$core$merge_meta_maps(var_args){
 var args__4835__auto__ = [];
-var len__4829__auto___16886 = arguments.length;
-var i__4830__auto___16887 = (0);
+var len__4829__auto___16885 = arguments.length;
+var i__4830__auto___16886 = (0);
 while(true){
-if((i__4830__auto___16887 < len__4829__auto___16886)){
-args__4835__auto__.push((arguments[i__4830__auto___16887]));
+if((i__4830__auto___16886 < len__4829__auto___16885)){
+args__4835__auto__.push((arguments[i__4830__auto___16886]));
 
-var G__16888 = (i__4830__auto___16887 + (1));
-i__4830__auto___16887 = G__16888;
+var G__16887 = (i__4830__auto___16886 + (1));
+i__4830__auto___16886 = G__16887;
 continue;
 } else {
 }
@@ -283,31 +280,31 @@ var argseq__4836__auto__ = ((((2) < args__4835__auto__.length))?(new cljs.core.I
 return peanuts.core.merge_meta_maps.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),argseq__4836__auto__);
 });
 
-(peanuts.core.merge_meta_maps.cljs$core$IFn$_invoke$arity$variadic = (function (meta_map1,p__16881,other_maps){
-var vec__16882 = p__16881;
-var meta_map2 = cljs.core.nth.call(null,vec__16882,(0),null);
-var _fnbody = vec__16882;
-var G__16885 = cljs.core.apply.call(null,cljs.core.merge,meta_map1,other_maps);
+(peanuts.core.merge_meta_maps.cljs$core$IFn$_invoke$arity$variadic = (function (meta_map1,p__16880,other_maps){
+var vec__16881 = p__16880;
+var meta_map2 = cljs.core.nth.call(null,vec__16881,(0),null);
+var _fnbody = vec__16881;
+var G__16884 = cljs.core.apply.call(null,cljs.core.merge,meta_map1,other_maps);
 if(cljs.core.map_QMARK_.call(null,meta_map2)){
-return cljs.core.merge.call(null,G__16885,meta_map2);
+return cljs.core.merge.call(null,G__16884,meta_map2);
 } else {
-return G__16885;
+return G__16884;
 }
 }));
 
 (peanuts.core.merge_meta_maps.cljs$lang$maxFixedArity = (2));
 
 /** @this {Function} */
-(peanuts.core.merge_meta_maps.cljs$lang$applyTo = (function (seq16878){
-var G__16879 = cljs.core.first.call(null,seq16878);
-var seq16878__$1 = cljs.core.next.call(null,seq16878);
-var G__16880 = cljs.core.first.call(null,seq16878__$1);
-var seq16878__$2 = cljs.core.next.call(null,seq16878__$1);
+(peanuts.core.merge_meta_maps.cljs$lang$applyTo = (function (seq16877){
+var G__16878 = cljs.core.first.call(null,seq16877);
+var seq16877__$1 = cljs.core.next.call(null,seq16877);
+var G__16879 = cljs.core.first.call(null,seq16877__$1);
+var seq16877__$2 = cljs.core.next.call(null,seq16877__$1);
 var self__4816__auto__ = this;
-return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16879,G__16880,seq16878__$2);
+return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16878,G__16879,seq16877__$2);
 }));
 
-var ret__4878__auto___16900 = (function (){
+var ret__4878__auto___16899 = (function (){
 /**
  * Takes similar arguments to defn and returns a similar result.
  * The returned function body will be wrapped in a let-block which will
@@ -315,14 +312,14 @@ var ret__4878__auto___16900 = (function (){
  */
 peanuts.core.defnc = (function peanuts$core$defnc(var_args){
 var args__4835__auto__ = [];
-var len__4829__auto___16901 = arguments.length;
-var i__4830__auto___16902 = (0);
+var len__4829__auto___16900 = arguments.length;
+var i__4830__auto___16901 = (0);
 while(true){
-if((i__4830__auto___16902 < len__4829__auto___16901)){
-args__4835__auto__.push((arguments[i__4830__auto___16902]));
+if((i__4830__auto___16901 < len__4829__auto___16900)){
+args__4835__auto__.push((arguments[i__4830__auto___16901]));
 
-var G__16903 = (i__4830__auto___16902 + (1));
-i__4830__auto___16902 = G__16903;
+var G__16902 = (i__4830__auto___16901 + (1));
+i__4830__auto___16901 = G__16902;
 continue;
 } else {
 }
@@ -333,22 +330,22 @@ var argseq__4836__auto__ = ((((3) < args__4835__auto__.length))?(new cljs.core.I
 return peanuts.core.defnc.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4836__auto__);
 });
 
-(peanuts.core.defnc.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,n,p__16893){
-var vec__16894 = p__16893;
-var seq__16895 = cljs.core.seq.call(null,vec__16894);
-var first__16896 = cljs.core.first.call(null,seq__16895);
-var seq__16895__$1 = cljs.core.next.call(null,seq__16895);
-var doc_str = first__16896;
-var first__16896__$1 = cljs.core.first.call(null,seq__16895__$1);
-var seq__16895__$2 = cljs.core.next.call(null,seq__16895__$1);
-var meta_map = first__16896__$1;
-var vec__16897 = seq__16895__$2;
-var seq__16898 = cljs.core.seq.call(null,vec__16897);
-var first__16899 = cljs.core.first.call(null,seq__16898);
-var seq__16898__$1 = cljs.core.next.call(null,seq__16898);
-var args = first__16899;
-var body = seq__16898__$1;
-var args_AMPERSAND_body = vec__16897;
+(peanuts.core.defnc.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,n,p__16892){
+var vec__16893 = p__16892;
+var seq__16894 = cljs.core.seq.call(null,vec__16893);
+var first__16895 = cljs.core.first.call(null,seq__16894);
+var seq__16894__$1 = cljs.core.next.call(null,seq__16894);
+var doc_str = first__16895;
+var first__16895__$1 = cljs.core.first.call(null,seq__16894__$1);
+var seq__16894__$2 = cljs.core.next.call(null,seq__16894__$1);
+var meta_map = first__16895__$1;
+var vec__16896 = seq__16894__$2;
+var seq__16897 = cljs.core.seq.call(null,vec__16896);
+var first__16898 = cljs.core.first.call(null,seq__16897);
+var seq__16897__$1 = cljs.core.next.call(null,seq__16897);
+var args = first__16898;
+var body = seq__16897__$1;
+var args_AMPERSAND_body = vec__16896;
 if(cljs.core.vector_QMARK_.call(null,doc_str)){
 var args_STAR_ = doc_str;
 var body_STAR_ = cljs.core.into.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [meta_map], null),args_AMPERSAND_body);
@@ -375,15 +372,15 @@ return peanuts.core.peanut.call(null,n,cljs.core.sequence.call(null,cljs.core.se
 (peanuts.core.defnc.cljs$lang$maxFixedArity = (3));
 
 /** @this {Function} */
-(peanuts.core.defnc.cljs$lang$applyTo = (function (seq16889){
-var G__16890 = cljs.core.first.call(null,seq16889);
-var seq16889__$1 = cljs.core.next.call(null,seq16889);
-var G__16891 = cljs.core.first.call(null,seq16889__$1);
-var seq16889__$2 = cljs.core.next.call(null,seq16889__$1);
-var G__16892 = cljs.core.first.call(null,seq16889__$2);
-var seq16889__$3 = cljs.core.next.call(null,seq16889__$2);
+(peanuts.core.defnc.cljs$lang$applyTo = (function (seq16888){
+var G__16889 = cljs.core.first.call(null,seq16888);
+var seq16888__$1 = cljs.core.next.call(null,seq16888);
+var G__16890 = cljs.core.first.call(null,seq16888__$1);
+var seq16888__$2 = cljs.core.next.call(null,seq16888__$1);
+var G__16891 = cljs.core.first.call(null,seq16888__$2);
+var seq16888__$3 = cljs.core.next.call(null,seq16888__$2);
 var self__4816__auto__ = this;
-return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16890,G__16891,G__16892,seq16889__$3);
+return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16889,G__16890,G__16891,seq16888__$3);
 }));
 
 return null;
@@ -391,7 +388,7 @@ return null;
 ;
 (peanuts.core.defnc.cljs$lang$macro = true);
 
-var ret__4878__auto___16911 = (function (){
+var ret__4878__auto___16910 = (function (){
 /**
  * Returns an fn form.
  * The returned function body will be wrapped in a let-block which will
@@ -399,14 +396,14 @@ var ret__4878__auto___16911 = (function (){
  */
 peanuts.core.fnc = (function peanuts$core$fnc(var_args){
 var args__4835__auto__ = [];
-var len__4829__auto___16912 = arguments.length;
-var i__4830__auto___16913 = (0);
+var len__4829__auto___16911 = arguments.length;
+var i__4830__auto___16912 = (0);
 while(true){
-if((i__4830__auto___16913 < len__4829__auto___16912)){
-args__4835__auto__.push((arguments[i__4830__auto___16913]));
+if((i__4830__auto___16912 < len__4829__auto___16911)){
+args__4835__auto__.push((arguments[i__4830__auto___16912]));
 
-var G__16914 = (i__4830__auto___16913 + (1));
-i__4830__auto___16913 = G__16914;
+var G__16913 = (i__4830__auto___16912 + (1));
+i__4830__auto___16912 = G__16913;
 continue;
 } else {
 }
@@ -417,16 +414,16 @@ var argseq__4836__auto__ = ((((2) < args__4835__auto__.length))?(new cljs.core.I
 return peanuts.core.fnc.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),argseq__4836__auto__);
 });
 
-(peanuts.core.fnc.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,p__16907){
-var vec__16908 = p__16907;
-var seq__16909 = cljs.core.seq.call(null,vec__16908);
-var first__16910 = cljs.core.first.call(null,seq__16909);
-var seq__16909__$1 = cljs.core.next.call(null,seq__16909);
-var opts = first__16910;
-var first__16910__$1 = cljs.core.first.call(null,seq__16909__$1);
-var seq__16909__$2 = cljs.core.next.call(null,seq__16909__$1);
-var args = first__16910__$1;
-var body = seq__16909__$2;
+(peanuts.core.fnc.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,p__16906){
+var vec__16907 = p__16906;
+var seq__16908 = cljs.core.seq.call(null,vec__16907);
+var first__16909 = cljs.core.first.call(null,seq__16908);
+var seq__16908__$1 = cljs.core.next.call(null,seq__16908);
+var opts = first__16909;
+var first__16909__$1 = cljs.core.first.call(null,seq__16908__$1);
+var seq__16908__$2 = cljs.core.next.call(null,seq__16908__$1);
+var args = first__16909__$1;
+var body = seq__16908__$2;
 if(cljs.core.vector_QMARK_.call(null,opts)){
 var body_STAR_ = cljs.core.into.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [args], null),body);
 var args_STAR_ = opts;
@@ -439,13 +436,13 @@ return peanuts.core.peanut.call(null,null,cljs.core.sequence.call(null,cljs.core
 (peanuts.core.fnc.cljs$lang$maxFixedArity = (2));
 
 /** @this {Function} */
-(peanuts.core.fnc.cljs$lang$applyTo = (function (seq16904){
-var G__16905 = cljs.core.first.call(null,seq16904);
-var seq16904__$1 = cljs.core.next.call(null,seq16904);
-var G__16906 = cljs.core.first.call(null,seq16904__$1);
-var seq16904__$2 = cljs.core.next.call(null,seq16904__$1);
+(peanuts.core.fnc.cljs$lang$applyTo = (function (seq16903){
+var G__16904 = cljs.core.first.call(null,seq16903);
+var seq16903__$1 = cljs.core.next.call(null,seq16903);
+var G__16905 = cljs.core.first.call(null,seq16903__$1);
+var seq16903__$2 = cljs.core.next.call(null,seq16903__$1);
 var self__4816__auto__ = this;
-return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16905,G__16906,seq16904__$2);
+return self__4816__auto__.cljs$core$IFn$_invoke$arity$variadic(G__16904,G__16905,seq16903__$2);
 }));
 
 return null;

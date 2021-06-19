@@ -108,7 +108,7 @@
                       vec
                       (filter-deep (cljset/union (set only) (set greenlist)))
                       flatten-maps
-                      (remove #(or (#{'&} %) (redlist-meta? %)))
+                      (remove (some-fn #{'&} redlist-meta?))
                       (seq->let-form sub-args))
         symbol-quoted-meta-map (quote-symbols meta-map)]
     (cond->> body

@@ -18,7 +18,8 @@
     peanuts.cards.ex-f82c
     peanuts.cards.ex-b6a6
     peanuts.cards.ex-dd80
-    peanuts.cards.ex-aa95))
+    peanuts.cards.ex-aa95
+    peanuts.cards.ex-c4d3))
 
 (def namespace-declaration
   (literally

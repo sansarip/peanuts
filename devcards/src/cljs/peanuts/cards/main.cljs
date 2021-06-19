@@ -58,7 +58,8 @@
   "You may be wondering, _what if I just want to use the keyword as is?_ \uD83E\uDD14
   This can be done when you're defining your function with the `:redlist` option.
   This is useful if your arg coincides with a subscription-id/vector
-  which you'd like to pass down to a nested component or if you want to reduce the amount of code the macro emits."
+  which you'd like to pass down to a nested peanuts component
+  or if you want to reduce the amount of code the macro emits."
   (fn []
     [repl* 'peanuts.cards.ex-b6a6]))
 
@@ -67,6 +68,15 @@
   "You can also redlist args with metadata."
   (fn []
     [repl* 'peanuts.cards.ex-f82c]))
+
+(dc/defcard-rg
+  redlist
+  "You can redlist an arg once with metadata.
+  This can be handy when you want to pass down a subscription-id/vector to a nested
+  peanuts component. This is a similar behavior to using the `:redlist` option
+  in the peanuts component definition."
+  (fn []
+    [repl* 'peanuts.cards.ex-c4d3]))
 
 (dc/defcard-rg
   greenlist

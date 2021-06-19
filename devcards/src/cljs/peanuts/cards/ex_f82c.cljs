@@ -6,4 +6,5 @@
 
 [:div
  ;; Here [:name] will retain its original value
+ ;; You can also use the shorter :rl keyword instead of :redlist
  [greeting ^:redlist [:name]]]

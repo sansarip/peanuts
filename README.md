@@ -53,7 +53,7 @@ I prefer something like this...
 
 In my preferred method (Method B) the subscriptions would happen outside of the components (in a root component/view), and the data would just simply be passed in. The problem with my preferred method is that it can noticeably affect performance when you have nested components - due to Re-frame subscription mumbo-jumbo.
 
-Enter Peanuts. Peanuts component macros are intended to wrap components implemented like Method B, turning them into components that behave like Method A. The component will use any args passed in as is _or_ subscribe to them if the args are valid subscription ids/vectors!
+Enter Peanuts. Peanuts component macros are intended to wrap components implemented like Method B, turning them into components that behave like Method A without the performance drawback. The component will use any args passed in as is _or_ subscribe to them if the args are valid subscription ids/vectors!
 
 I've utilize this simple library in production to great extents, and it has really scratched an itch for me!
 

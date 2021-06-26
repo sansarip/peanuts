@@ -59,7 +59,7 @@ I've utilize this simple library in production to great extents, and it has real
 
 ## Usage <a name="usage"></a>
 
-[![Image from Gyazo](https://i.gyazo.com/541408228e8a9a313b99f5278d59caef.gif)](https://gyazo.com/541408228e8a9a313b99f5278d59caef)
+[![Image from Gyazo](https://i.gyazo.com/5b43a839b7f7f8af7e547eef44efb56c.gif)](https://gyazo.com/5b43a839b7f7f8af7e547eef44efb56c)
 
 *An example of wrapping an existing Form-1 component*
 

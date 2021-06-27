@@ -166,7 +166,7 @@
               meta-map
               body
               {:def? true}
-              (if doc-str {:doc doc-str})))))
+              (when doc-str {:doc doc-str})))))
 
 (defmacro fnc
   "Returns an fn form.

@@ -1,0 +1,2 @@
+{:lint-as {peanuts.core/defnc clojure.core/defn
+           peanuts.core/fnc   clojure.core/fn}}

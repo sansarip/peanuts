@@ -93,6 +93,12 @@ Similar to `defn`
 
 See this [little blurb](https://cursive-ide.com/userguide/macros.html) if you wish to resolve `defnc` as a `defn` and `fnc` as an `fn` in IntelliJ with Cursive!
 
+You can also import the clj-kondo config like so:
+
+```clojure
+{:config-paths ["peanuts/peanuts"]}
+```
+
 ### Options <a name="options"></a>
 
 Both `fnc` and `defnc` accept an optional map as an argument that can dictate certain options explained below. 

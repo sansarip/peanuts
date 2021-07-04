@@ -1,4 +1,4 @@
-(defproject peanuts "0.7.0"
+(defproject peanuts "0.7.1"
   :description "Packing peanuts for decoupling Reagent Form-1 components from Re-frame subscriptions"
   :url "https://github.com/sansarip/peanuts"
   :signing {:gpg-key "pehrans@gmail.com"}
@@ -10,6 +10,7 @@
                  [org.clojure/test.check "1.0.0"]]
   :repl-options {:init-ns peanuts.core}
   :source-paths []
+  :resource-paths ["resources/clj-kondo"]
   :aliases {"fig:prod"       ["with-profile" "devcards" "run" "-m" "figwheel.main" "-bo" "prod"]
             "fig:dev"        ["with-profile" "devcards" "trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]
             "deploy:clojars" ["with-profile" "peanuts" "deploy" "clojars"]
